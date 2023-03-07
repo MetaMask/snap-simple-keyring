@@ -14,6 +14,7 @@ import {
   SendHelloButton,
   Card,
 } from '../components';
+import { defaultSnapOrigin } from '../config';
 
 const Container = styled.div`
   display: flex;
@@ -98,6 +99,143 @@ const ErrorMessage = styled.div`
     max-width: 100%;
   }
 `;
+
+const WalletManagementCard = () => {
+
+  const snapId = defaultSnapOrigin;
+
+  const badPublicKey = "ff";
+  const publicAddress = "0x77ac616693b24c0c49cb148dbcb3fac8ccf0c96c";
+  const publicKey = "deadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef";
+
+  async function createAccount (publicKey) {
+    try {
+      const account = [ publicKey, { value: 'Secret data' } ];
+      const response = await window.ethereum.request({
+        method: 'wallet_invokeSnap',
+        params: {
+          snapId,
+          request: {
+            method: 'manageAccounts',
+            params: ["create", account]
+          },
+        }
+      })
+      console.log("Account created", response);
+    } catch (err) {
+      console.error(err)
+      alert('Problem happened: ' + err.message || err)
+    }
+  }
+
+  async function readAccount () {
+    try {
+      const response = await window.ethereum.request({
+        method: 'wallet_invokeSnap',
+        params: {
+          snapId,
+          request: {
+            method: 'manageAccounts',
+            params: ["read", publicKey]
+          },
+        }
+      })
+      console.log("Account read", response);
+    } catch (err) {
+      console.error(err)
+      alert('Problem happened: ' + err.message || err)
+    }
+  }
+
+  async function updateAccount (privateData) {
+    try {
+      const account = [ publicKey, privateData ];
+
+      const response = await window.ethereum.request({
+        method: 'wallet_invokeSnap',
+        params: {
+          snapId,
+          request: {
+            method: 'manageAccounts',
+            params: ["update", account]
+          },
+        }
+      })
+      console.log("Account updated", response);
+    } catch (err) {
+      console.error(err)
+      alert('Problem happened: ' + err.message || err)
+    }
+  }
+
+  async function deleteAccount (_address) {
+    try {
+      const response = await window.ethereum.request({
+        method: 'wallet_invokeSnap',
+        params: {
+          snapId,
+          request: {
+            method: 'manageAccounts',
+            params: ["delete", publicKey]
+          },
+        }
+      })
+      console.log("Account delete", response);
+    } catch (err) {
+      console.error(err)
+      alert('Problem happened: ' + err.message || err)
+    }
+  }
+
+  return (
+    <Card
+      content={{
+        title: 'Send Hello message',
+        description: 'Display a custom message within a confirmation screen in MetaMask.',
+      }}
+    >
+      <h2>Operations</h2>
+      <div>
+        <p id="publicAddress"></p>
+        <button
+          onClick={()=>{createAccount(publicKey)}}
+          className="createAccount"
+        >
+          Create account
+        </button>
+        <button
+          onClick={()=>{readAccount()}}
+          className="readAccount"
+        >
+          Read account
+        </button>
+        <button
+          onClick={()=>{updateAccount({value: "new updated value"})}}
+          className="updateAccount"
+        >
+          Update account
+        </button>
+        <button
+          onClick={()=>{deleteAccount(badPublicKey)}}
+          className="deleteAccount"
+        >
+          Delete account
+        </button>
+      </div>
+
+      <h2>Errors</h2>
+      <div>
+        <button
+          onClick={()=>{createAccount(badPublicKey)}}
+          className="badCreateAccount"
+        >
+          Create account with bad public key
+        </button>
+      </div>
+
+    </Card>
+  )
+}
 
 const Index = () => {
   const [state, dispatch] = useContext(MetaMaskContext);
@@ -202,6 +340,9 @@ const Index = () => {
             !shouldDisplayReconnectButton(state.installedSnap)
           }
         />
+        {state.installedSnap && (
+          <WalletManagementCard/>
+        )}
         <Notice>
           <p>
             Please note that the <b>snap.manifest.json</b> and{' '}
