@@ -1,11 +1,16 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import styled from 'styled-components';
+
 import { MetamaskActions, MetaMaskContext } from '../hooks';
 import {
   connectSnap,
   getSnap,
   sendHello,
   shouldDisplayReconnectButton,
+  getSnapState,
+  createNewAccount,
+  approvePendingRequest,
+  clearPendingRequests,
 } from '../utils';
 import {
   ConnectButton,
@@ -100,33 +105,35 @@ const ErrorMessage = styled.div`
   }
 `;
 
-const WalletManagementCard = () => {
+const snapId = defaultSnapOrigin;
 
-  const snapId = defaultSnapOrigin;
+const initialState = {
+  pendingRequests: {},
+}
+
+const PendingConfirmationCard = (props) => {
+  const { id, request } = props;
+
+  return (
+    <Card
+      content={{
+        title: 'Pending Signature Request...',
+        description: 'Display a custom message within a confirmation screen in MetaMask.',
+        button: (
+          <SendHelloButton onClick={() => approvePendingRequest(snapId, id, request)} />
+        )
+      }}>
+        <pre>{JSON.stringify(request, null, 2)}</pre>
+      </Card>
+  )
+}
+
+const WalletManagementCard = (props) => {
+  const { updateSnapState, createAccount } = props;
 
   const badPublicKey = "ff";
   const publicAddress = "0x77ac616693b24c0c49cb148dbcb3fac8ccf0c96c";
   const publicKey = "deadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef";
-
-  async function createAccount (publicKey) {
-    try {
-      const account = [ publicKey, { value: 'Secret data' } ];
-      const response = await window.ethereum.request({
-        method: 'wallet_invokeSnap',
-        params: {
-          snapId,
-          request: {
-            method: 'manageAccounts',
-            params: ["create", account]
-          },
-        }
-      })
-      console.log("Account created", response);
-    } catch (err) {
-      console.error(err)
-      alert('Problem happened: ' + err.message || err)
-    }
-  }
 
   async function readAccount () {
     try {
@@ -136,7 +143,7 @@ const WalletManagementCard = () => {
           snapId,
           request: {
             method: 'manageAccounts',
-            params: ["read", publicKey]
+            params: ["read"]
           },
         }
       })
@@ -190,7 +197,7 @@ const WalletManagementCard = () => {
   return (
     <Card
       content={{
-        title: 'Send Hello message',
+        title: 'Wallet Mgmt',
         description: 'Display a custom message within a confirmation screen in MetaMask.',
       }}
     >
@@ -198,7 +205,7 @@ const WalletManagementCard = () => {
       <div>
         <p id="publicAddress"></p>
         <button
-          onClick={()=>{createAccount(publicKey)}}
+          onClick={()=>{createAccount()}}
           className="createAccount"
         >
           Create account
@@ -223,15 +230,12 @@ const WalletManagementCard = () => {
         </button>
       </div>
 
-      <h2>Errors</h2>
-      <div>
         <button
-          onClick={()=>{createAccount(badPublicKey)}}
-          className="badCreateAccount"
+          onClick={()=>{updateSnapState()}}
+          className="updateSnapState"
         >
-          Create account with bad public key
+          Get state
         </button>
-      </div>
 
     </Card>
   )
@@ -239,6 +243,18 @@ const WalletManagementCard = () => {
 
 const Index = () => {
   const [state, dispatch] = useContext(MetaMaskContext);
+  const [snapState, setSnapState] = useState(initialState);
+
+  async function updateSnapState (publicKey) {
+    try {
+      const response = await getSnapState(snapId);
+      console.log("Got state", response);
+      setSnapState(response);
+    } catch (err) {
+      console.error(err)
+      alert('Problem happened: ' + err.message || err)
+    }
+  }
 
   const handleConnectClick = async () => {
     try {
@@ -258,6 +274,15 @@ const Index = () => {
   const handleSendHelloClick = async () => {
     try {
       await sendHello();
+    } catch (e) {
+      console.error(e);
+      dispatch({ type: MetamaskActions.SetError, payload: e });
+    }
+  };
+
+  const createAccount = async () => {
+    try {
+      await createNewAccount();
     } catch (e) {
       console.error(e);
       dispatch({ type: MetamaskActions.SetError, payload: e });
@@ -305,43 +330,39 @@ const Index = () => {
             disabled={!state.isFlask}
           />
         )}
-        {shouldDisplayReconnectButton(state.installedSnap) && (
-          <Card
-            content={{
-              title: 'Reconnect',
-              description:
-                'While connected to a local running snap this button will always be displayed in order to update the snap if a change is made.',
-              button: (
-                <ReconnectButton
-                  onClick={handleConnectClick}
-                  disabled={!state.installedSnap}
-                />
-              ),
-            }}
-            disabled={!state.installedSnap}
-          />
-        )}
         <Card
-          content={{
-            title: 'Send Hello message',
-            description:
-              'Display a custom message within a confirmation screen in MetaMask.',
-            button: (
-              <SendHelloButton
-                onClick={handleSendHelloClick}
-                disabled={!state.installedSnap}
-              />
-            ),
-          }}
-          disabled={!state.installedSnap}
-          fullWidth={
-            state.isFlask &&
-            Boolean(state.installedSnap) &&
-            !shouldDisplayReconnectButton(state.installedSnap)
-          }
+        content={{
+          title: 'Update Snap State',
+          description: 'get latest snap state',
+          button: (
+            <SendHelloButton
+              onClick={updateSnapState}
+              disabled={!state.installedSnap}
+            />
+          ),
+        }}
+        />
+        <Card
+        content={{
+          title: 'Reset Pending',
+          description: 'clear pending requests',
+          button: (
+            <SendHelloButton
+              onClick={()=>clearPendingRequests(snapId)}
+              disabled={!state.installedSnap}
+            />
+          ),
+        }}
         />
         {state.installedSnap && (
-          <WalletManagementCard/>
+          <WalletManagementCard updateSnapState={updateSnapState} createAccount={createAccount}/>
+        )}
+        {state.installedSnap && (
+          Object.entries(snapState.pendingRequests).map(([id, request]) => {
+            return (
+              <PendingConfirmationCard key={id} id={id} request={request} />
+            )
+          })
         )}
         <Notice>
           <p>
