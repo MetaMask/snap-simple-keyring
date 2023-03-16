@@ -14,33 +14,36 @@ const allowedAdminOrigins = ['localhost:8000', 'lavamoat.github.io'];
  * @throws If the request method is not valid for this snap.
  */
 
-type WalletState = {
+type KeyringState = {
   accounts: Record<string, string>;
   pendingRequests: Record<string, any>;
 };
 
+type RpcCall = {
+  origin: string;
+  request: any;
+};
+
 /**
- *
+ * Returns the current state of the snap.
  */
-async function getState(): Promise<WalletState> {
+async function getState(): Promise<KeyringState> {
   const persistedData = await snap.request({
     method: 'snap_manageState',
     params: { operation: 'get' },
   });
-  if (!persistedData) {
-    return {
-      accounts: {},
-      pendingRequests: {},
-    };
-  }
-  return persistedData as WalletState;
+
+  return persistedData === null
+    ? { accounts: {}, pendingRequests: {} }
+    : (persistedData as KeyringState);
 }
 
 /**
+ * Persists the given snap state.
  *
- * @param state
+ * @param state - New snap state.
  */
-async function saveState(state: any) {
+async function saveState(state: KeyringState) {
   await snap.request({
     method: 'snap_manageState',
     params: { operation: 'update', newState: state },
@@ -61,22 +64,24 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
 };
 
 /**
+ * Handles RPC calls from the wallet.
  *
- * @param options0
- * @param options0.origin
- * @param options0.request
+ * @param call - RPC call.
+ * @param call.request - Request.
  */
-async function handleHostInteraction({ origin, request }) {
+async function handleHostInteraction({ request }: RpcCall) {
   switch (request.method) {
     // incomming signature requests
     case 'snap_keyring_sign_request': {
       const { params: signatureRequest } = request;
       const { id } = signatureRequest;
       const state = await getState();
+
       state.pendingRequests[id] = signatureRequest;
       await saveState(state);
       return;
     }
+
     // error on unknown methods
     default: {
       throw new Error('Method not found.');
@@ -85,12 +90,13 @@ async function handleHostInteraction({ origin, request }) {
 }
 
 /**
+ * Handles a request from the snap UI.
  *
- * @param options0
- * @param options0.origin
- * @param options0.request
+ * @param call - RPC call.
+ * @param call.origin - Caller origin.
+ * @param call.request - Request.
  */
-async function handleAdminUiInteraction({ origin, request }) {
+async function handleAdminUiInteraction({ origin, request }: RpcCall) {
   switch (request.method) {
     case 'hello': {
       return snap.request({
@@ -107,6 +113,7 @@ async function handleAdminUiInteraction({ origin, request }) {
         },
       });
     }
+
     // forward all management requests to metamask to be handled by the snap-keyring
     case 'manageAccounts': {
       // forwarding to snap-keyring
@@ -115,18 +122,21 @@ async function handleAdminUiInteraction({ origin, request }) {
         params: request.params,
       });
     }
+
     // state mgmt
     case 'snap_keyring_state_get': {
       const state = await getState();
       console.log('snap_keyring_state get', state);
       return state;
     }
+
     case 'snap_keyring_state_set': {
       const { state } = request.params;
       await saveState(state);
       console.log('snap_keyring_state set', state);
       return;
     }
+
     // forward all management requests to metamask to be handled by the snap-keyring
     case 'snap_keyring_sign_approve': {
       const { id, signature } = request.params;
@@ -145,6 +155,7 @@ async function handleAdminUiInteraction({ origin, request }) {
       await saveState(state);
       return;
     }
+
     // error on unknown methods
     default: {
       throw new Error('Method not found.');
@@ -153,18 +164,22 @@ async function handleAdminUiInteraction({ origin, request }) {
 }
 
 /**
+ * Checks if the origin is the wallet.
  *
- * @param origin
+ * @param origin - Caller origin.
+ * @returns `true` if the caller is the wallet, `false` otherwise.
  */
-function originIsWallet(origin) {
+function originIsWallet(origin: string): boolean {
   return origin === 'metamask';
 }
 
 /**
+ * Checks if the origin a (trusted) snap UI.
  *
- * @param origin
+ * @param origin - Caller origin.
+ * @returns `true` if the caller is a trusted snap UI, `false` otherwise.
  */
-function originIsSnapUi(origin) {
+function originIsSnapUi(origin: string): boolean {
   const { host } = new URL(origin);
   return allowedAdminOrigins.includes(host);
 }
