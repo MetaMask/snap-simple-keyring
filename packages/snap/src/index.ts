@@ -117,10 +117,15 @@ async function handleAdminUiInteraction({ origin, request }) {
     // forward all management requests to metamask to be handled by the snap-keyring
     case 'manageAccounts': {
       // forwarding to snap-keyring
-      return await snap.request({
+      await snap.request({
         method: 'snap_manageAccounts',
         params: request.params,
       });
+      if (request.params[0] === 'delete') {
+        const state = await getState();
+        delete state.accounts[request.params[1]];
+        await saveState(state);
+      }
     }
     // state mgmt
     case 'snap_keyring_state_get': {

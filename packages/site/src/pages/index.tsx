@@ -109,7 +109,8 @@ const snapId = defaultSnapOrigin;
 
 const initialState = {
   pendingRequests: {},
-}
+  accounts: null,
+};
 
 const PendingConfirmationCard = (props) => {
   const { id, request } = props;
@@ -118,24 +119,28 @@ const PendingConfirmationCard = (props) => {
     <Card
       content={{
         title: 'Pending Signature Request...',
-        description: 'Display a custom message within a confirmation screen in MetaMask.',
+        description:
+          'Display a custom message within a confirmation screen in MetaMask.',
         button: (
-          <SendHelloButton onClick={() => approvePendingRequest(snapId, id, request)} />
-        )
-      }}>
-        <pre>{JSON.stringify(request, null, 2)}</pre>
-      </Card>
-  )
-}
+          <SendHelloButton
+            onClick={() => approvePendingRequest(snapId, id, request)}
+          />
+        ),
+      }}
+    >
+      <pre>{JSON.stringify(request, null, 2)}</pre>
+    </Card>
+  );
+};
 
 const WalletManagementCard = (props) => {
-  const { updateSnapState, createAccount } = props;
+  const { updateSnapState, createAccount, selectedAccount } = props;
 
-  const badPublicKey = "ff";
-  const publicAddress = "0x77ac616693b24c0c49cb148dbcb3fac8ccf0c96c";
-  const publicKey = "deadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef";
+  const publicAddress = '0x77ac616693b24c0c49cb148dbcb3fac8ccf0c96c';
+  const publicKey =
+    'deadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef';
 
-  async function readAccount () {
+  async function readAccount() {
     try {
       const response = await window.ethereum.request({
         method: 'wallet_invokeSnap',
@@ -143,20 +148,20 @@ const WalletManagementCard = (props) => {
           snapId,
           request: {
             method: 'manageAccounts',
-            params: ["read"]
+            params: ['read'],
           },
-        }
-      })
-      console.log("Account read", response);
+        },
+      });
+      console.log('Account read', response);
     } catch (err) {
-      console.error(err)
-      alert('Problem happened: ' + err.message || err)
+      console.error(err);
+      alert('Problem happened: ' + err.message || err);
     }
   }
 
-  async function updateAccount (privateData) {
+  async function updateAccount(privateData) {
     try {
-      const account = [ publicKey, privateData ];
+      const account = [publicKey, privateData];
 
       const response = await window.ethereum.request({
         method: 'wallet_invokeSnap',
@@ -164,18 +169,18 @@ const WalletManagementCard = (props) => {
           snapId,
           request: {
             method: 'manageAccounts',
-            params: ["update", account]
+            params: ['update', account],
           },
-        }
-      })
-      console.log("Account updated", response);
+        },
+      });
+      console.log('Account updated', response);
     } catch (err) {
-      console.error(err)
-      alert('Problem happened: ' + err.message || err)
+      console.error(err);
+      alert('Problem happened: ' + err.message || err);
     }
   }
 
-  async function deleteAccount (_address) {
+  async function deleteAccount() {
     try {
       const response = await window.ethereum.request({
         method: 'wallet_invokeSnap',
@@ -183,14 +188,15 @@ const WalletManagementCard = (props) => {
           snapId,
           request: {
             method: 'manageAccounts',
-            params: ["delete", publicKey]
+            params: ['delete', selectedAccount],
           },
-        }
-      })
-      console.log("Account delete", response);
+        },
+      });
+      console.log('Account delete', response);
+      await updateSnapState();
     } catch (err) {
-      console.error(err)
-      alert('Problem happened: ' + err.message || err)
+      console.error(err);
+      alert('Problem happened: ' + err.message || err);
     }
   }
 
@@ -198,61 +204,103 @@ const WalletManagementCard = (props) => {
     <Card
       content={{
         title: 'Wallet Mgmt',
-        description: 'Display a custom message within a confirmation screen in MetaMask.',
+        description:
+          'Display a custom message within a confirmation screen in MetaMask.',
       }}
     >
       <h2>Operations</h2>
       <div>
         <p id="publicAddress"></p>
         <button
-          onClick={()=>{createAccount()}}
+          onClick={() => {
+            createAccount();
+          }}
           className="createAccount"
         >
           Create account
         </button>
         <button
-          onClick={()=>{readAccount()}}
+          onClick={() => {
+            readAccount();
+          }}
           className="readAccount"
         >
           Read account
         </button>
         <button
-          onClick={()=>{updateAccount({value: "new updated value"})}}
+          onClick={() => {
+            updateAccount({ value: 'new updated value' });
+          }}
           className="updateAccount"
         >
           Update account
         </button>
         <button
-          onClick={()=>{deleteAccount(badPublicKey)}}
+          onClick={() => {
+            deleteAccount();
+            console.log('deleted account', selectedAccount);
+          }}
           className="deleteAccount"
         >
           Delete account
         </button>
       </div>
 
-        <button
-          onClick={()=>{updateSnapState()}}
-          className="updateSnapState"
-        >
-          Get state
-        </button>
-
+      <button
+        onClick={() => {
+          updateSnapState();
+        }}
+        className="updateSnapState"
+      >
+        Get state
+      </button>
     </Card>
-  )
-}
+  );
+};
+const AccountListCard = (props) => {
+  const { state, selectAccount } = props;
+
+  return (
+    <Card
+      content={{
+        title: 'Account List',
+        description: 'Displays all the accounts of the snap',
+      }}
+    >
+      <b>Selected Account: {selectAccount}</b>
+      <select
+        onChange={(event) => {
+          console.log('selected', event.target.value);
+          selectAccount(event.target.value);
+        }}
+      >
+        <option value="">Select Account</option>
+        {state.accounts &&
+          Object.keys(state.accounts).map((account, i) => {
+            return (
+              <option key={i} value={account}>
+                {account}
+              </option>
+            );
+          })}
+      </select>
+    </Card>
+  );
+};
 
 const Index = () => {
   const [state, dispatch] = useContext(MetaMaskContext);
   const [snapState, setSnapState] = useState(initialState);
+  const [selectedAccount, setSelectedAccount] = useState(null);
 
-  async function updateSnapState (publicKey) {
+  async function updateSnapState() {
     try {
       const response = await getSnapState(snapId);
-      console.log("Got state", response);
+      console.log('Got state', response);
       setSnapState(response);
     } catch (err) {
-      console.error(err)
-      alert('Problem happened: ' + err.message || err)
+      console.error(err);
+      alert('Problem happened: ' + err.message || err);
     }
   }
 
@@ -283,6 +331,7 @@ const Index = () => {
   const createAccount = async () => {
     try {
       await createNewAccount();
+      await updateSnapState();
     } catch (e) {
       console.error(e);
       dispatch({ type: MetamaskActions.SetError, payload: e });
@@ -331,38 +380,47 @@ const Index = () => {
           />
         )}
         <Card
-        content={{
-          title: 'Update Snap State',
-          description: 'get latest snap state',
-          button: (
-            <SendHelloButton
-              onClick={updateSnapState}
-              disabled={!state.installedSnap}
-            />
-          ),
-        }}
+          content={{
+            title: 'Update Snap State',
+            description: 'get latest snap state',
+            button: (
+              <SendHelloButton
+                onClick={updateSnapState}
+                disabled={!state.installedSnap}
+              />
+            ),
+          }}
         />
         <Card
-        content={{
-          title: 'Reset Pending',
-          description: 'clear pending requests',
-          button: (
-            <SendHelloButton
-              onClick={()=>clearPendingRequests(snapId)}
-              disabled={!state.installedSnap}
-            />
-          ),
-        }}
+          content={{
+            title: 'Reset Pending',
+            description: 'clear pending requests',
+            button: (
+              <SendHelloButton
+                onClick={() => clearPendingRequests(snapId)}
+                disabled={!state.installedSnap}
+              />
+            ),
+          }}
         />
         {state.installedSnap && (
-          <WalletManagementCard updateSnapState={updateSnapState} createAccount={createAccount}/>
+          <WalletManagementCard
+            updateSnapState={updateSnapState}
+            createAccount={createAccount}
+            selectedAccount={selectedAccount}
+          />
         )}
-        {state.installedSnap && (
+        {state.installedSnap &&
           Object.entries(snapState.pendingRequests).map(([id, request]) => {
             return (
               <PendingConfirmationCard key={id} id={id} request={request} />
-            )
-          })
+            );
+          })}
+        {state.installedSnap && snapState.accounts && (
+          <AccountListCard
+            state={snapState}
+            selectAccount={setSelectedAccount}
+          />
         )}
         <Notice>
           <p>
