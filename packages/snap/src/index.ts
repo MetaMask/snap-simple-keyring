@@ -77,6 +77,13 @@ async function handleHostInteraction({ origin, request }) {
       await saveState(state);
       return;
     }
+    case 'snap_manageAccounts': {
+      // forwarding to snap-keyring
+      return await snap.request({
+        method: 'snap_manageAccounts',
+        params: request.params,
+      });
+    }
     // error on unknown methods
     default: {
       throw new Error('Method not found.');
