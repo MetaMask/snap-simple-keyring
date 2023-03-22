@@ -76,21 +76,6 @@ async function handleHostInteraction({ origin, request }) {
  */
 async function handleAdminUiInteraction({ origin, request }) {
   switch (request.method) {
-    case 'hello': {
-      return snap.request({
-        method: 'snap_dialog',
-        params: {
-          type: 'Confirmation',
-          content: panel([
-            text(`Hello, **${origin}**!`),
-            text('This custom confirmation is just for display purposes.'),
-            text(
-              'But you can edit the snap source code to make it do something, if you want to!',
-            ),
-          ]),
-        },
-      });
-    }
     // forward all management requests to metamask to be handled by the snap-keyring
     case 'manageAccounts': {
       // forwarding to snap-keyring
