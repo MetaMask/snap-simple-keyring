@@ -1,5 +1,8 @@
 import { OnRpcRequestHandler } from '@metamask/snaps-types';
 
+import { getState, saveState } from './stateManagement';
+import { signPersonalMessage } from './transactionManagementOperation';
+
 const allowedAdminOrigins = ['localhost:8000', 'lavamoat.github.io'];
 
 /**
@@ -21,7 +24,7 @@ export type WalletState = {
 export type SerializedWalletState = {
   accounts: string[]; // string of caip10accounts
   pendingRequests: Record<string, any>;
-    };
+};
 
 export const onRpcRequest: OnRpcRequestHandler = async ({
   origin,
@@ -48,10 +51,15 @@ async function handleHostInteraction({ origin, request }) {
     // incomming signature requests
     case 'snap_keyring_sign_request': {
       const { params: signatureRequest } = request;
-      const { id } = signatureRequest;
-      const state = await getState();
-      state.pendingRequests[id] = signatureRequest;
-      await saveState(state);
+      console.log('request', request);
+      const { id, method } = signatureRequest;
+      console.log('signature request', signatureRequest);
+      // state.pendingRequests[id] = signatureRequest;
+      // await saveState(state);
+      if (method === 'personal_sign') {
+        console.log(method, address, signatureRequest);
+        return signPersonalMessage(address, signatureRequest);
+      }
       return;
     }
     case 'snap_manageAccounts': {
@@ -88,6 +96,7 @@ async function handleAdminUiInteraction({ origin, request }) {
         delete state.accounts[request.params[1]];
         await saveState(state);
       }
+      return;
     }
     // state mgmt
     case 'snap_keyring_state_get': {
