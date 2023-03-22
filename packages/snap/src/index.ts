@@ -134,7 +134,7 @@ async function handleAdminUiInteraction({ origin, request }: RpcCall) {
       const { state } = request.params;
       await saveState(state);
       console.log('snap_keyring_state set', state);
-      return;
+      return null;
     }
 
     // forward all management requests to metamask to be handled by the snap-keyring
@@ -153,7 +153,7 @@ async function handleAdminUiInteraction({ origin, request }: RpcCall) {
       // delete the pending request
       delete state.pendingRequests[id];
       await saveState(state);
-      return;
+      return null;
     }
 
     // error on unknown methods
