@@ -1,5 +1,4 @@
 import { OnRpcRequestHandler } from '@metamask/snaps-types';
-import { panel, text } from '@metamask/snaps-ui';
 
 const allowedAdminOrigins = ['localhost:8000', 'lavamoat.github.io'];
 
@@ -14,44 +13,22 @@ const allowedAdminOrigins = ['localhost:8000', 'lavamoat.github.io'];
  * @throws If the request method is not valid for this snap.
  */
 
-type WalletState = {
+export type WalletState = {
   accounts: Record<string, string>;
   pendingRequests: Record<string, any>;
 };
 
-/**
- *
- */
-async function getState(): Promise<WalletState> {
-  const persistedData = await snap.request({
-    method: 'snap_manageState',
-    params: { operation: 'get' },
-  });
-  if (!persistedData) {
-    return {
-      accounts: {},
-      pendingRequests: {},
+export type SerializedWalletState = {
+  accounts: string[]; // string of caip10accounts
+  pendingRequests: Record<string, any>;
     };
-  }
-  return persistedData as WalletState;
-}
-
-/**
- *
- * @param state
- */
-async function saveState(state: any) {
-  await snap.request({
-    method: 'snap_manageState',
-    params: { operation: 'update', newState: state },
-  });
-}
 
 export const onRpcRequest: OnRpcRequestHandler = async ({
   origin,
   request,
 }) => {
   console.log('snap saw request:', origin, request);
+
   if (originIsWallet(origin)) {
     return handleHostInteraction({ origin, request });
   } else if (originIsSnapUi(origin)) {
