@@ -22,7 +22,7 @@ export async function sendMessageToSnap(
 
 export async function getSnapState(snapId: string = defaultSnapOrigin) {
   return sendMessageToSnap(snapId, {
-    method: 'snap_keyring_state_get',
+    method: 'snap.internal.getState',
     params: [],
   });
 }
@@ -32,7 +32,7 @@ export async function setSnapState(
   snapState: any,
 ) {
   return sendMessageToSnap(snapId, {
-    method: 'snap_keyring_state_set',
+    method: 'snap.internal.setState',
     params: { state: snapState },
   });
 }
@@ -50,7 +50,7 @@ export async function createNewAccount(snapId: string = defaultSnapOrigin) {
 
   // report address to snap-keyring
   const response = await sendMessageToSnap(snapId, {
-    method: 'manageAccounts',
+    method: 'snap.internal.manageAccounts',
     params: ['create', account.address],
   });
 
@@ -117,7 +117,7 @@ export async function approvePendingRequest(snapId, id, request) {
     // submit
     console.log('Approving request', id, request);
     const response = await sendMessageToSnap(snapId, {
-      method: 'manageAccounts',
+      method: 'snap.internal.manageAccounts',
       params: ['submit', { id, result }],
     });
     console.log('Request approved', response);

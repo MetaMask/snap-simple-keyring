@@ -1,8 +1,6 @@
 import { OnRpcRequestHandler } from '@metamask/snaps-types';
 import { panel, text } from '@metamask/snaps-ui';
 
-const allowedAdminOrigins = ['localhost:8000', 'lavamoat.github.io'];
-
 /**
  * Handle incoming JSON-RPC requests, sent through `wallet_invokeSnap`.
  *
@@ -17,11 +15,6 @@ const allowedAdminOrigins = ['localhost:8000', 'lavamoat.github.io'];
 type KeyringState = {
   accounts: Record<string, string>;
   pendingRequests: Record<string, any>;
-};
-
-type RpcCall = {
-  origin: string;
-  request: any;
 };
 
 /**
@@ -50,136 +43,201 @@ async function saveState(state: KeyringState) {
   });
 }
 
+/**
+ * Handle request to sign a transaction or message.
+ *
+ * @param request - Signature request.
+ */
+async function handleSubmitRequest(request: any) {
+  const { params: signatureRequest } = request;
+  const { id } = signatureRequest;
+  const state = await getState();
+
+  state.pendingRequests[id] = signatureRequest;
+  await saveState(state);
+}
+
+/**
+ * Handle request to display a "hello" screen.
+ *
+ * @param origin - Caller origin.
+ * @returns The response from the SnapController.
+ */
+async function handleHello(origin: string) {
+  return snap.request({
+    method: 'snap_dialog',
+    params: {
+      type: 'Confirmation',
+      content: panel([
+        text(`Hello, **${origin}**!`),
+        text('This custom confirmation is just for display purposes.'),
+        text(
+          'But you can edit the snap source code to make it do something, if you want to!',
+        ),
+      ]),
+    },
+  });
+}
+
+/**
+ * Handle request to set snap state.
+ *
+ * @param request - Set state request.
+ */
+async function handleSetState(request: any) {
+  const { state } = request.params;
+  await saveState(state);
+  console.log('snap_keyring_state set', state);
+}
+
+/**
+ * Handle request to get snap state.
+ *
+ * @returns Promise of the snap state.
+ */
+async function handleGetState(): Promise<any> {
+  const state = await getState();
+  console.log('snap_keyring_state get', state);
+  return state;
+}
+
+/**
+ * Handle request to manage accounts.
+ *
+ * This function is a pass-through between the snap UI and the SnapController.
+ *
+ * @param params - Parameter to the manageAccounts method.
+ * @returns Pass-through response from the SnapController.
+ */
+async function handleManageAccounts(params: any) {
+  return await snap.request({
+    method: 'snap_manageAccounts',
+    params,
+  });
+}
+
+/**
+ * Handle request to approve a signature request.
+ *
+ * @param params - Parameter to forward to the SnapController.
+ */
+async function handleApproveRequest(params: any) {
+  const { id } = params;
+  const state = await getState();
+  const signatureRequest = state.pendingRequests[id];
+  if (!signatureRequest) {
+    throw new Error('No pending request found.');
+  }
+  // submit to the snap-keyring
+  await snap.request({
+    method: 'snap_manageAccounts',
+    params,
+  });
+  // delete the pending request
+  delete state.pendingRequests[id];
+  await saveState(state);
+}
+
+enum SnapKeyringMethod {
+  ListAccounts = 'snap.keyring.listAccounts',
+  CreateAccount = 'snap.keyring.createAccount',
+  GetAccount = 'snap.keyring.getAccount',
+  UpdateAccount = 'snap.keyring.updateAccount',
+  RemoveAccount = 'snap.keyring.removeAccount',
+  ImportAccount = 'snap.keyring.importAccount',
+  ExportAccount = 'snap.keyring.exportAccount',
+  ListRequests = 'snap.keyring.listRequests',
+  SubmitRequest = 'snap.keyring.submitRequest',
+  GetRequest = 'snap.keyring.getRequest',
+  ApproveRequest = 'snap.keyring.approveRequest',
+  RemoveRequest = 'snap.keyring.removeRequest',
+}
+
+enum InternalMethod {
+  Hello = 'snap.internal.hello',
+  GetState = 'snap.internal.getState',
+  SetState = 'snap.internal.setState',
+  ManageAccounts = 'snap.internal.manageAccounts',
+}
+
+const PERMISSIONS = new Map<string, string[]>([
+  [
+    'metamask',
+    [
+      SnapKeyringMethod.ListAccounts,
+      SnapKeyringMethod.ListRequests,
+      SnapKeyringMethod.SubmitRequest,
+      SnapKeyringMethod.RemoveRequest,
+    ],
+  ],
+  [
+    'http://localhost:8000',
+    [
+      SnapKeyringMethod.ListAccounts,
+      SnapKeyringMethod.CreateAccount,
+      SnapKeyringMethod.GetAccount,
+      SnapKeyringMethod.UpdateAccount,
+      SnapKeyringMethod.RemoveAccount,
+      SnapKeyringMethod.ImportAccount,
+      SnapKeyringMethod.ExportAccount,
+      SnapKeyringMethod.ListRequests,
+      SnapKeyringMethod.ApproveRequest,
+      InternalMethod.Hello,
+      InternalMethod.GetState,
+      InternalMethod.SetState,
+      InternalMethod.ManageAccounts,
+    ],
+  ],
+]);
+
+/**
+ * Verify if the caller can call the requested method.
+ *
+ * @param origin - Caller origin.
+ * @param method - Method being called.
+ * @returns True if the caller is allowed to call the method, false otherwise.
+ */
+function hasPermission(origin: string, method: string): boolean {
+  return Boolean(PERMISSIONS.get(origin)?.includes(method));
+}
+
 export const onRpcRequest: OnRpcRequestHandler = async ({
   origin,
   request,
 }) => {
-  console.log('snap saw request:', origin, request);
-  if (originIsWallet(origin)) {
-    return handleHostInteraction({ origin, request });
-  } else if (originIsSnapUi(origin)) {
-    return handleAdminUiInteraction({ origin, request });
+  console.log('[SNAP] new request:', origin, request);
+
+  if (!hasPermission(origin, request.method)) {
+    throw new Error(`origin ${origin} cannot call method ${request.method}`);
   }
-  throw new Error(`Unrecognized origin: "${origin}"`);
+
+  switch (request.method) {
+    case SnapKeyringMethod.SubmitRequest: {
+      return handleSubmitRequest(request);
+    }
+
+    case InternalMethod.Hello: {
+      return handleHello(origin);
+    }
+
+    case InternalMethod.ManageAccounts: {
+      return handleManageAccounts(request.params);
+    }
+
+    case InternalMethod.GetState: {
+      return handleGetState();
+    }
+
+    case InternalMethod.SetState: {
+      return handleSetState(request);
+    }
+
+    case SnapKeyringMethod.ApproveRequest: {
+      return handleApproveRequest(request.params);
+    }
+
+    default: {
+      throw new Error(`method not found: ${request.method}`);
+    }
+  }
 };
-
-/**
- * Handles RPC calls from the wallet.
- *
- * @param call - RPC call.
- * @param call.request - Request.
- */
-async function handleHostInteraction({ request }: RpcCall) {
-  switch (request.method) {
-    // incomming signature requests
-    case 'snap_keyring_sign_request': {
-      const { params: signatureRequest } = request;
-      const { id } = signatureRequest;
-      const state = await getState();
-
-      state.pendingRequests[id] = signatureRequest;
-      await saveState(state);
-      return;
-    }
-
-    // error on unknown methods
-    default: {
-      throw new Error('Method not found.');
-    }
-  }
-}
-
-/**
- * Handles a request from the snap UI.
- *
- * @param call - RPC call.
- * @param call.origin - Caller origin.
- * @param call.request - Request.
- */
-async function handleAdminUiInteraction({ origin, request }: RpcCall) {
-  switch (request.method) {
-    case 'hello': {
-      return snap.request({
-        method: 'snap_dialog',
-        params: {
-          type: 'Confirmation',
-          content: panel([
-            text(`Hello, **${origin}**!`),
-            text('This custom confirmation is just for display purposes.'),
-            text(
-              'But you can edit the snap source code to make it do something, if you want to!',
-            ),
-          ]),
-        },
-      });
-    }
-
-    // forward all management requests to metamask to be handled by the snap-keyring
-    case 'manageAccounts': {
-      // forwarding to snap-keyring
-      return await snap.request({
-        method: 'snap_manageAccounts',
-        params: request.params,
-      });
-    }
-
-    // state mgmt
-    case 'snap_keyring_state_get': {
-      const state = await getState();
-      console.log('snap_keyring_state get', state);
-      return state;
-    }
-
-    case 'snap_keyring_state_set': {
-      const { state } = request.params;
-      await saveState(state);
-      console.log('snap_keyring_state set', state);
-      return null;
-    }
-
-    // forward all management requests to metamask to be handled by the snap-keyring
-    case 'snap_keyring_sign_approve': {
-      const { id, signature } = request.params;
-      const state = await getState();
-      const signatureRequest = state.pendingRequests[id];
-      if (!signatureRequest) {
-        throw new Error('No pending request found.');
-      }
-      // submit to the snap-keyring
-      await snap.request({
-        method: 'snap_manageAccounts',
-        params: request.params,
-      });
-      // delete the pending request
-      delete state.pendingRequests[id];
-      await saveState(state);
-      return null;
-    }
-
-    // error on unknown methods
-    default: {
-      throw new Error('Method not found.');
-    }
-  }
-}
-
-/**
- * Checks if the origin is the wallet.
- *
- * @param origin - Caller origin.
- * @returns `true` if the caller is the wallet, `false` otherwise.
- */
-function originIsWallet(origin: string): boolean {
-  return origin === 'metamask';
-}
-
-/**
- * Checks if the origin a (trusted) snap UI.
- *
- * @param origin - Caller origin.
- * @returns `true` if the caller is a trusted snap UI, `false` otherwise.
- */
-function originIsSnapUi(origin: string): boolean {
-  const { host } = new URL(origin);
-  return allowedAdminOrigins.includes(host);
-}

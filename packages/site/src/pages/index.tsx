@@ -163,11 +163,11 @@ const WalletManagementCard = (props) => {
         params: {
           snapId,
           request: {
-            method: 'manageAccounts',
-            params: ["update", account]
+            method: 'snap.keyrin.updateAccount',
+            params: account,
           },
-        }
-      })
+        },
+      });
       console.log("Account updated", response);
     } catch (err) {
       console.error(err)
@@ -182,11 +182,11 @@ const WalletManagementCard = (props) => {
         params: {
           snapId,
           request: {
-            method: 'manageAccounts',
-            params: ["delete", publicKey]
+            method: 'snap.keyring.removeAccount',
+            params: publicKey,
           },
-        }
-      })
+        },
+      });
       console.log("Account delete", response);
     } catch (err) {
       console.error(err)
