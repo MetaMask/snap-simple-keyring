@@ -17,7 +17,7 @@ const allowedAdminOrigins = ['localhost:8000', 'lavamoat.github.io'];
  */
 
 export type WalletState = {
-  accounts: Record<string, string>;
+  accounts: Record<string, string>; // <caip10 account,privateKeyHex>
   pendingRequests: Record<string, any>;
 };
 
@@ -50,17 +50,12 @@ async function handleHostInteraction({ origin, request }) {
   switch (request.method) {
     // incomming signature requests
     case 'snap_keyring_sign_request': {
-      const { params: signatureRequest } = request;
-      console.log('request', request);
-      const { id, method } = signatureRequest;
-      console.log('signature request', signatureRequest);
-      // state.pendingRequests[id] = signatureRequest;
-      // await saveState(state);
+      const { method, params } = request.params;
       if (method === 'personal_sign') {
-        console.log(method, address, signatureRequest);
-        return signPersonalMessage(address, signatureRequest);
+        const [personalMessage, address] = params;
+        return signPersonalMessage(address, personalMessage);
       }
-      return;
+      break;
     }
     case 'snap_manageAccounts': {
       // forwarding to snap-keyring
@@ -139,7 +134,7 @@ async function handleAdminUiInteraction({ origin, request }) {
  *
  * @param origin
  */
-function originIsWallet(origin) {
+function originIsWallet(origin: string) {
   return origin === 'metamask';
 }
 
@@ -147,7 +142,7 @@ function originIsWallet(origin) {
  *
  * @param origin
  */
-function originIsSnapUi(origin) {
+function originIsSnapUi(origin: string) {
   const { host } = new URL(origin);
   return allowedAdminOrigins.includes(host);
 }

@@ -18,7 +18,7 @@ export type Account = {
  */
 export function createAccount(): { account: string; privateKey: string } {
   const privateKey = new Uint8Array(32);
-  const privateKeyBuffer = Uint8Array.from(crypto.getRandomValues(privateKey));
+  const privateKeyBuffer = Buffer.from(crypto.getRandomValues(privateKey));
 
   // @ts-ignore
   const address = Address.fromPrivateKey(privateKeyBuffer);

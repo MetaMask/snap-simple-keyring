@@ -55,6 +55,10 @@ const common: Configuration = {
           },
         ],
       },
+      {
+        test: /@chainsafe\/as-sha256/u,
+        use: 'null-loader',
+      },
     ],
   },
   resolve: {

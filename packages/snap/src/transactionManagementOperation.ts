@@ -3,7 +3,6 @@ import type { TxData } from '@ethereumjs/tx';
 import { personalSign, recoverPersonalSignature } from '@metamask/eth-sig-util';
 
 import { getPrivateKeyByAddress } from './accountManagement';
-import { hexToArrayBuffer } from './utils';
 
 export enum TransactionOperation {
   SignTransaction = 'signTransaction',
@@ -20,34 +19,41 @@ export async function signTransaction(
   ethTx: TypedTransaction,
 ): Promise<TxData> {
   const privateKey = await getPrivateKeyByAddress(from);
-  const privateKeyBuffer = hexToArrayBuffer(privateKey);
+  // eslint-disable-next-line no-restricted-globals
+  const privateKeyBuffer = Buffer.from(privateKey, 'hex');
 
-  const tx = TransactionFactory.fromTxData(ethTx);
-  // @ts-ignore
-  const signedTx = tx.sign(privateKeyBuffer);
+  throw new Error();
+  // const tx = TransactionFactory.fromTxData(ethTx);
+  // const signedTx = tx.sign(privateKeyBuffer);
 
-  return signedTx;
+  // return signedTx;
 }
 
 export async function signPersonalMessage(
   from: string,
-  hexMessage: string,
+  request: string,
 ): Promise<string> {
-  const privateKey = await getPrivateKeyByAddress(from);
+  // const privateKey = await getPrivateKeyByAddress(from);
+  const privateKey =
+    'b7d8cef9f7d0e5f8d29dd714c32b112fae6295b41d15165272ea86c966cb4cd3';
+  console.log('privateKEy', privateKey);
   // eslint-disable-next-line no-restricted-globals
-  const privateKeyBuffer = hexToArrayBuffer(privateKey); //Buffer.from(privateKey, 'hex');
+  const privateKeyBuffer = Buffer.from(privateKey, 'hex');
+
+  const hexMessage = request['params'][0];
 
   // eslint-disable-next-line no-restricted-globals
-  const messageBuffer = hexToArrayBuffer(hexMessage);
+  const messageBuffer = Buffer.from(hexMessage.slice(2), 'hex');
+
+  console.log('priavtekey buffer', privateKeyBuffer);
   const signedMessageHex = personalSign({
-    // @ts-ignore
     privateKey: privateKeyBuffer,
-    // @ts-ignore
     data: messageBuffer,
   });
 
+  console.log(222, signedMessageHex);
+
   const recoveredAddress = recoverPersonalSignature({
-    // @ts-ignore
     data: messageBuffer,
     signature: signedMessageHex,
   });
@@ -56,6 +62,8 @@ export async function signPersonalMessage(
       `Signature verification failed for account "${from}" (got "${recoveredAddress}")`,
     );
   }
+
+  console.log('done signing', signedMessageHex);
 
   return signedMessageHex;
 }
