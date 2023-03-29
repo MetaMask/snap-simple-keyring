@@ -1,55 +1,49 @@
-import { Address } from '@ethereumjs/util';
+import { ethers } from 'ethers';
 
-import { WalletState } from '.';
+import { KeyringState } from '.';
 import { getState, saveState } from './stateManagement';
 
-export enum AccountManagementTypes {
-  AddAccounts = 'addAccounts',
-  RemoveAccounts = 'removeAccounts',
-}
-
 export type Account = {
-  account: string;
+  caip10Account: string;
+  address: string;
   privateKey: string;
 };
 
 /**
  *
  */
-export function createAccount(): { account: string; privateKey: string } {
+export function createAccount(): Account {
   const privateKey = new Uint8Array(32);
+  // eslint-disable-next-line no-restricted-globals
   const privateKeyBuffer = Buffer.from(crypto.getRandomValues(privateKey));
+  const address = ethers.computeAddress(
+    `0x${privateKeyBuffer.toString('hex')}`,
+  );
+  const caip10Account = `eip155:1:${address}`;
 
-  // @ts-ignore
-  const address = Address.fromPrivateKey(privateKeyBuffer);
-  const caip10Account = `eip155:1:${address.toString()}`;
-
-  return {
-    account: caip10Account,
+  const account = {
+    caip10Account,
+    address: address.toLowerCase(),
     privateKey: privateKeyBuffer.toString('hex'),
   };
+  console.log(account);
+  return account;
 }
 
-/**
- *
- */
 export async function upsertAccount(account: Account): Promise<void> {
   const currentState = await getState();
 
-  const updatedState: WalletState = {
+  const updatedState: KeyringState = {
     ...currentState,
     accounts: {
       ...currentState.accounts,
-      [account.account]: account.privateKey,
+      [account.address]: account.privateKey,
     },
   };
 
   await saveState(updatedState);
 }
 
-/**
- *
- */
 export async function getPrivateKeyByAddress(address: string): Promise<string> {
   const currentState = await getState();
 
@@ -65,7 +59,7 @@ export async function getPrivateKeyByAddress(address: string): Promise<string> {
     throw new Error('Unknown address');
   }
 
-  return address;
+  return privateKey;
 }
 
 // remove when new snaps util is released

@@ -15,8 +15,7 @@
     "snap.manifest.json"
   ],
   "scripts": {
-    "build:webpack": "webpack && mm-snap manifest --fix",
-    "build": "mm-snap build",
+    "build": "webpack && mm-snap manifest --fix",
     "build:clean": "yarn clean && yarn build",
     "build:website": "node ./scripts/build-website.js",
     "clean": "rimraf dist",
@@ -42,6 +41,7 @@
     "@metamask/snaps-webpack-plugin": "^0.31.0",
     "@typescript-eslint/eslint-plugin": "^5.55.0",
     "@typescript-eslint/parser": "^5.55.0",
+    "babel-loader": "^9.1.2",
     "eslint": "^8.36.0",
     "eslint-config-prettier": "^8.7.0",
     "eslint-plugin-import": "^2.27.5",
@@ -71,6 +71,7 @@
     "@ethereumjs/tx": "^4.1.1",
     "@ethereumjs/util": "^8.0.5",
     "@metamask/eth-sig-util": "^5.0.2",
-    "buffer": "^6.0.3"
+    "buffer": "^6.0.3",
+    "ethers": "^6.2.3"
   }
 }

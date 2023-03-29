@@ -1,13 +1,12 @@
-import { SerializedWalletState, WalletState } from '.';
+import { KeyringState } from '.';
 
-/**
- *
- */
-export async function getState(): Promise<WalletState> {
+export async function getState(): Promise<KeyringState> {
   const persistedData = (await snap.request({
     method: 'snap_manageState',
     params: { operation: 'get' },
-  })) as WalletState;
+  })) as KeyringState;
+
+  console.log('get state', persistedData);
 
   if (!persistedData) {
     return {
@@ -20,24 +19,22 @@ export async function getState(): Promise<WalletState> {
 }
 
 /**
+ * Persists the given snap state.
  *
- * @param state
+ * @param state - New snap state.
  */
-export async function saveState(state: WalletState) {
+export async function saveState(state: KeyringState) {
   await snap.request({
     method: 'snap_manageState',
     params: { operation: 'update', newState: state },
   });
 }
 
-/**
- *
- */
-export async function getSerializedState(): Promise<SerializedWalletState> {
+export async function getSerializedState() {
   const persistedData = (await snap.request({
     method: 'snap_manageState',
     params: { operation: 'get' },
-  })) as WalletState;
+  })) as KeyringState;
 
   if (!persistedData) {
     return {
