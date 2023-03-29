@@ -22,7 +22,7 @@ export async function sendMessageToSnap(
 
 export async function getSnapState(snapId: string = defaultSnapOrigin) {
   return sendMessageToSnap(snapId, {
-    method: 'snap_keyring_state_get',
+    method: 'snap.internal.getState',
     params: [],
   });
 }
@@ -32,34 +32,20 @@ export async function setSnapState(
   snapState: any,
 ) {
   return sendMessageToSnap(snapId, {
-    method: 'snap_keyring_state_set',
+    method: 'snap.internal.setState',
     params: { state: snapState },
   });
 }
 
 export async function createNewAccount(snapId: string = defaultSnapOrigin) {
-  // create new account
-  const privateKey = new Uint8Array(32);
-  window.crypto.getRandomValues(privateKey);
-  const privateKeyBuffer = Buffer.from(privateKey);
-  const address = Address.fromPrivateKey(privateKeyBuffer);
-  const account = {
-    address: address.toString(),
-    privateKey: privateKeyBuffer.toString('hex'),
-  };
-
   // report address to snap-keyring
   const response = await sendMessageToSnap(snapId, {
-    method: 'manageAccounts',
-    params: ['create', account.address],
+    method: 'snap.internal.manageAccounts',
+    params: ['create'],
   });
 
   // add account to state
   const state = await getSnapState(snapId);
-
-  const { accounts = {} } = state;
-  accounts[account.address] = account.privateKey;
-  state.accounts = accounts;
   await setSnapState(snapId, state);
 
   console.log('Account created', response);
@@ -117,7 +103,7 @@ export async function approvePendingRequest(snapId, id, request) {
     // submit
     console.log('Approving request', id, request);
     const response = await sendMessageToSnap(snapId, {
-      method: 'manageAccounts',
+      method: 'snap.internal.manageAccounts',
       params: ['submit', { id, result }],
     });
     console.log('Request approved', response);
