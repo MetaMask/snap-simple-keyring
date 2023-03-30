@@ -1,7 +1,6 @@
-import { TransactionFactory, TypedTransaction } from '@ethereumjs/tx';
+import { TransactionFactory } from '@ethereumjs/tx';
 import type { TxData } from '@ethereumjs/tx';
 import { personalSign, recoverPersonalSignature } from '@metamask/eth-sig-util';
-import { ethers } from 'ethers';
 
 import { getPrivateKeyByAddress } from './accountManagement';
 
@@ -13,7 +12,9 @@ export async function signTransaction(from: string, ethTx: any) {
   const signedTx = TransactionFactory.fromTxData(ethTx).sign(privateKeyBuffer);
   console.log(signedTx);
 
-  return signedTx;
+  const serializableSignedTx = signedTx.toJSON() as TxData;
+
+  return serializableSignedTx;
 }
 
 export async function signPersonalMessage(
