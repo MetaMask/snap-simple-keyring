@@ -41,7 +41,7 @@ export async function createNewAccount(snapId: string = defaultSnapOrigin) {
   // report address to snap-keyring
   const response = await sendMessageToSnap(snapId, {
     method: 'snap.internal.manageAccounts',
-    params: ['create'],
+    params: ['create', account.address],
   });
 
   // add account to state

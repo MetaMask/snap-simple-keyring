@@ -28,7 +28,6 @@ export type SerializedKeyringState = {
   pendingRequests: Record<string, any>;
 };
 
-/**
  * Handle request to sign a transaction or message.
  *
  * @param request - Signature request.
@@ -174,7 +173,7 @@ const PERMISSIONS = new Map<string, string[]>([
   ],
 ]);
 
-/**
+
  * Verify if the caller can call the requested method.
  *
  * @param origin - Caller origin.
@@ -197,6 +196,7 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
 
   switch (request.method) {
     case SnapKeyringMethod.SubmitRequest: {
+
       return await handleSubmitRequest(request);
     }
 
