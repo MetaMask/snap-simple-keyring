@@ -1,5 +1,11 @@
 import { OnRpcRequestHandler } from '@metamask/snaps-types';
-import { panel, text } from '@metamask/snaps-ui';
+
+import { createAccount, upsertAccount } from './accountManagement';
+import { getState, saveState } from './stateManagement';
+import {
+  signPersonalMessage,
+  signTransaction,
+} from './transactionManagementOperation';
 
 /**
  * Handle incoming JSON-RPC requests, sent through `wallet_invokeSnap`.
@@ -12,38 +18,16 @@ import { panel, text } from '@metamask/snaps-ui';
  * @throws If the request method is not valid for this snap.
  */
 
-type KeyringState = {
+export type KeyringState = {
   accounts: Record<string, string>;
   pendingRequests: Record<string, any>;
 };
 
-/**
- * Returns the current state of the snap.
- */
-async function getState(): Promise<KeyringState> {
-  const persistedData = await snap.request({
-    method: 'snap_manageState',
-    params: { operation: 'get' },
-  });
+export type SerializedKeyringState = {
+  accounts: string[];
+  pendingRequests: Record<string, any>;
+};
 
-  return persistedData === null
-    ? { accounts: {}, pendingRequests: {} }
-    : (persistedData as KeyringState);
-}
-
-/**
- * Persists the given snap state.
- *
- * @param state - New snap state.
- */
-async function saveState(state: KeyringState) {
-  await snap.request({
-    method: 'snap_manageState',
-    params: { operation: 'update', newState: state },
-  });
-}
-
-/**
  * Handle request to sign a transaction or message.
  *
  * @param request - Signature request.
@@ -55,28 +39,6 @@ async function handleSubmitRequest(request: any) {
 
   state.pendingRequests[id] = signatureRequest;
   await saveState(state);
-}
-
-/**
- * Handle request to display a "hello" screen.
- *
- * @param origin - Caller origin.
- * @returns The response from the SnapController.
- */
-async function handleHello(origin: string) {
-  return snap.request({
-    method: 'snap_dialog',
-    params: {
-      type: 'Confirmation',
-      content: panel([
-        text(`Hello, **${origin}**!`),
-        text('This custom confirmation is just for display purposes.'),
-        text(
-          'But you can edit the snap source code to make it do something, if you want to!',
-        ),
-      ]),
-    },
-  });
 }
 
 /**
@@ -110,10 +72,22 @@ async function handleGetState(): Promise<any> {
  * @returns Pass-through response from the SnapController.
  */
 async function handleManageAccounts(params: any) {
-  return await snap.request({
-    method: 'snap_manageAccounts',
-    params,
-  });
+  console.log(params);
+  const [method] = params;
+
+  switch (method) {
+    case 'create': {
+      const account = createAccount();
+      await upsertAccount(account);
+      console.log(account);
+      return await snap.request({
+        method: 'snap_manageAccounts',
+        params: ['create', account.address],
+      });
+    }
+    default:
+      throw new Error('Invalid method.');
+  }
 }
 
 /**
@@ -121,21 +95,30 @@ async function handleManageAccounts(params: any) {
  *
  * @param params - Parameter to forward to the SnapController.
  */
-async function handleApproveRequest(params: any) {
-  const { id } = params;
-  const state = await getState();
-  const signatureRequest = state.pendingRequests[id];
-  if (!signatureRequest) {
-    throw new Error('No pending request found.');
+async function handleApproveRequest(payload: any) {
+  console.log('in handleApproveRequest', payload);
+  const { method, params } = payload;
+
+  const [data, address] = params;
+
+  console.log(payload);
+
+  switch (method) {
+    case 'personal_sign': {
+      return await signPersonalMessage(address, data);
+    }
+    case 'eth_sendTransaction': {
+      return await signTransaction(address, data);
+    }
+    case 'eth_signTransaction': {
+      return await signTransaction(address, data);
+    }
+    case 'eth_signTypedData': {
+      return await signTransaction(address, data);
+    }
+    default:
+      throw new Error('Invalid Approval Method.');
   }
-  // submit to the snap-keyring
-  await snap.request({
-    method: 'snap_manageAccounts',
-    params,
-  });
-  // delete the pending request
-  delete state.pendingRequests[id];
-  await saveState(state);
 }
 
 enum SnapKeyringMethod {
@@ -167,6 +150,7 @@ const PERMISSIONS = new Map<string, string[]>([
       SnapKeyringMethod.ListAccounts,
       SnapKeyringMethod.ListRequests,
       SnapKeyringMethod.SubmitRequest,
+      SnapKeyringMethod.ApproveRequest,
       SnapKeyringMethod.RemoveRequest,
     ],
   ],
@@ -182,7 +166,6 @@ const PERMISSIONS = new Map<string, string[]>([
       SnapKeyringMethod.ExportAccount,
       SnapKeyringMethod.ListRequests,
       SnapKeyringMethod.ApproveRequest,
-      InternalMethod.Hello,
       InternalMethod.GetState,
       InternalMethod.SetState,
       InternalMethod.ManageAccounts,
@@ -190,7 +173,7 @@ const PERMISSIONS = new Map<string, string[]>([
   ],
 ]);
 
-/**
+
  * Verify if the caller can call the requested method.
  *
  * @param origin - Caller origin.
@@ -213,27 +196,24 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
 
   switch (request.method) {
     case SnapKeyringMethod.SubmitRequest: {
-      return handleSubmitRequest(request);
-    }
 
-    case InternalMethod.Hello: {
-      return handleHello(origin);
+      return await handleSubmitRequest(request);
     }
 
     case InternalMethod.ManageAccounts: {
-      return handleManageAccounts(request.params);
+      return await handleManageAccounts(request.params);
     }
 
     case InternalMethod.GetState: {
-      return handleGetState();
+      return await handleGetState();
     }
 
     case InternalMethod.SetState: {
-      return handleSetState(request);
+      return await handleSetState(request);
     }
 
     case SnapKeyringMethod.ApproveRequest: {
-      return handleApproveRequest(request.params);
+      return await handleApproveRequest(request.params);
     }
 
     default: {

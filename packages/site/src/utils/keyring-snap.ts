@@ -38,16 +38,6 @@ export async function setSnapState(
 }
 
 export async function createNewAccount(snapId: string = defaultSnapOrigin) {
-  // create new account
-  const privateKey = new Uint8Array(32);
-  window.crypto.getRandomValues(privateKey);
-  const privateKeyBuffer = Buffer.from(privateKey);
-  const address = Address.fromPrivateKey(privateKeyBuffer);
-  const account = {
-    address: address.toString(),
-    privateKey: privateKeyBuffer.toString('hex'),
-  };
-
   // report address to snap-keyring
   const response = await sendMessageToSnap(snapId, {
     method: 'snap.internal.manageAccounts',
@@ -56,10 +46,6 @@ export async function createNewAccount(snapId: string = defaultSnapOrigin) {
 
   // add account to state
   const state = await getSnapState(snapId);
-
-  const { accounts = {} } = state;
-  accounts[account.address] = account.privateKey;
-  state.accounts = accounts;
   await setSnapState(snapId, state);
 
   console.log('Account created', response);
