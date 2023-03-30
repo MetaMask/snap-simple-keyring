@@ -5,6 +5,7 @@ import { resolve } from 'path';
 import webpack, { Configuration } from 'webpack';
 import { merge } from 'webpack-merge';
 import WebpackBarPlugin from 'webpackbar';
+import NodePolyfillPlugin from 'node-polyfill-webpack-plugin';
 
 const options: Options = {
   /**
@@ -69,6 +70,16 @@ const common: Configuration = {
   },
   plugins: [
     new WebpackBarPlugin(),
+    new NodePolyfillPlugin({
+      includeAliases: [
+        'stream',
+        '_stream_duplex',
+        '_stream_passthrough',
+        '_stream_readable',
+        '_stream_transform',
+        '_stream_writable',
+      ],
+    }),
     new webpack.ProvidePlugin({
       Buffer: ['buffer', 'Buffer'],
     }),
