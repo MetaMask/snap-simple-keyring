@@ -1,18 +1,32 @@
-import { TransactionFactory } from '@ethereumjs/tx';
-import type { TxData } from '@ethereumjs/tx';
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+// eslint-disable-next-line import/no-extraneous-dependencies
+import Common from '@ethereumjs/common';
+import { JsonTx, TransactionFactory, TxData } from '@ethereumjs/tx';
 import { personalSign, recoverPersonalSignature } from '@metamask/eth-sig-util';
 
 import { getPrivateKeyByAddress } from './accountManagement';
 
-export async function signTransaction(from: string, ethTx: any) {
+export async function signTransaction(
+  from: string,
+  ethTx: any,
+  chainOpts: any,
+): Promise<JsonTx> {
   const privateKey = await getPrivateKeyByAddress(from.toLowerCase());
+  console.log('privateKey', privateKey);
   // eslint-disable-next-line no-restricted-globals
   const privateKeyBuffer = Buffer.from(privateKey, 'hex');
 
-  const signedTx = TransactionFactory.fromTxData(ethTx).sign(privateKeyBuffer);
-  console.log(signedTx);
+  console.log('chainOpts', chainOpts);
 
-  const serializableSignedTx = signedTx.toJSON() as TxData;
+  const common = Common.custom({ ...chainOpts });
+
+  const signedTx = TransactionFactory.fromTxData(ethTx, {
+    common,
+  }).sign(privateKeyBuffer);
+
+  console.log('is signed?', signedTx.verifySignature());
+
+  const serializableSignedTx = signedTx.toJSON();
 
   return serializableSignedTx;
 }

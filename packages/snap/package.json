@@ -24,7 +24,7 @@
     "lint:fix": "yarn lint:eslint --fix && yarn lint:misc --write",
     "lint:misc": "prettier '**/*.json' '**/*.md' '!CHANGELOG.md' --ignore-path .gitignore",
     "serve": "mm-snap serve",
-    "start": "mm-snap watch"
+    "start": "nodemon -w src -w snap.manifest.json --exec 'yarn build && yarn serve'"
   },
   "devDependencies": {
     "@babel/core": "^7.21.3",
@@ -49,6 +49,7 @@
     "eslint-plugin-jsdoc": "^40.0.3",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^4.2.1",
+    "nodemon": "^2.0.22",
     "prettier": "^2.8.4",
     "prettier-plugin-packagejson": "^2.4.3",
     "rimraf": "^4.4.0",
@@ -68,9 +69,11 @@
     "registry": "https://registry.npmjs.org/"
   },
   "dependencies": {
+    "@ethereumjs/common": "^2.6.4",
     "@ethereumjs/tx": "^3.5.2",
     "@ethereumjs/util": "^8.0.5",
     "@metamask/eth-sig-util": "^5.0.2",
+    "bn.js": "^5.2.1",
     "buffer": "^6.0.3",
     "ethers": "^6.2.3",
     "node-polyfill-webpack-plugin": "^2.0.1",

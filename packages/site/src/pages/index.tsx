@@ -109,7 +109,7 @@ const snapId = defaultSnapOrigin;
 
 const initialState = {
   pendingRequests: {},
-}
+};
 
 const PendingConfirmationCard = (props) => {
   const { id, request } = props;
@@ -118,24 +118,29 @@ const PendingConfirmationCard = (props) => {
     <Card
       content={{
         title: 'Pending Signature Request...',
-        description: 'Display a custom message within a confirmation screen in MetaMask.',
+        description:
+          'Display a custom message within a confirmation screen in MetaMask.',
         button: (
-          <SendHelloButton onClick={() => approvePendingRequest(snapId, id, request)} />
-        )
-      }}>
-        <pre>{JSON.stringify(request, null, 2)}</pre>
-      </Card>
-  )
-}
+          <SendHelloButton
+            onClick={() => approvePendingRequest(snapId, id, request)}
+          />
+        ),
+      }}
+    >
+      <pre>{JSON.stringify(request, null, 2)}</pre>
+    </Card>
+  );
+};
 
 const WalletManagementCard = (props) => {
   const { updateSnapState, createAccount } = props;
 
-  const badPublicKey = "ff";
-  const publicAddress = "0x77ac616693b24c0c49cb148dbcb3fac8ccf0c96c";
-  const publicKey = "deadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef";
+  const badPublicKey = 'ff';
+  const publicAddress = '0x77ac616693b24c0c49cb148dbcb3fac8ccf0c96c';
+  const publicKey =
+    'deadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef';
 
-  async function readAccount () {
+  async function readAccount() {
     try {
       const response = await window.ethereum.request({
         method: 'wallet_invokeSnap',
@@ -143,20 +148,20 @@ const WalletManagementCard = (props) => {
           snapId,
           request: {
             method: 'manageAccounts',
-            params: ["read"]
+            params: ['read'],
           },
-        }
-      })
-      console.log("Account read", response);
+        },
+      });
+      console.log('Account read', response);
     } catch (err) {
-      console.error(err)
-      alert('Problem happened: ' + err.message || err)
+      console.error(err);
+      alert('Problem happened: ' + err.message || err);
     }
   }
 
-  async function updateAccount (privateData) {
+  async function updateAccount(privateData) {
     try {
-      const account = [ publicKey, privateData ];
+      const account = [publicKey, privateData];
 
       const response = await window.ethereum.request({
         method: 'wallet_invokeSnap',
@@ -168,14 +173,14 @@ const WalletManagementCard = (props) => {
           },
         },
       });
-      console.log("Account updated", response);
+      console.log('Account updated', response);
     } catch (err) {
-      console.error(err)
-      alert('Problem happened: ' + err.message || err)
+      console.error(err);
+      alert('Problem happened: ' + err.message || err);
     }
   }
 
-  async function deleteAccount (_address) {
+  async function deleteAccount(_address) {
     try {
       const response = await window.ethereum.request({
         method: 'wallet_invokeSnap',
@@ -187,10 +192,10 @@ const WalletManagementCard = (props) => {
           },
         },
       });
-      console.log("Account delete", response);
+      console.log('Account delete', response);
     } catch (err) {
-      console.error(err)
-      alert('Problem happened: ' + err.message || err)
+      console.error(err);
+      alert('Problem happened: ' + err.message || err);
     }
   }
 
@@ -198,61 +203,71 @@ const WalletManagementCard = (props) => {
     <Card
       content={{
         title: 'Wallet Mgmt',
-        description: 'Display a custom message within a confirmation screen in MetaMask.',
+        description:
+          'Display a custom message within a confirmation screen in MetaMask.',
       }}
     >
       <h2>Operations</h2>
       <div>
         <p id="publicAddress"></p>
         <button
-          onClick={()=>{createAccount()}}
+          onClick={() => {
+            createAccount();
+          }}
           className="createAccount"
         >
           Create account
         </button>
         <button
-          onClick={()=>{readAccount()}}
+          onClick={() => {
+            readAccount();
+          }}
           className="readAccount"
         >
           Read account
         </button>
         <button
-          onClick={()=>{updateAccount({value: "new updated value"})}}
+          onClick={() => {
+            updateAccount({ value: 'new updated value' });
+          }}
           className="updateAccount"
         >
           Update account
         </button>
         <button
-          onClick={()=>{deleteAccount(badPublicKey)}}
+          onClick={() => {
+            deleteAccount(badPublicKey);
+          }}
           className="deleteAccount"
         >
           Delete account
         </button>
       </div>
 
-        <button
-          onClick={()=>{updateSnapState()}}
-          className="updateSnapState"
-        >
-          Get state
-        </button>
-
+      <button
+        onClick={() => {
+          updateSnapState();
+        }}
+        className="updateSnapState"
+      >
+        Get state
+      </button>
     </Card>
-  )
-}
+  );
+};
 
 const Index = () => {
   const [state, dispatch] = useContext(MetaMaskContext);
   const [snapState, setSnapState] = useState(initialState);
 
-  async function updateSnapState (publicKey) {
+  async function updateSnapState(publicKey) {
     try {
       const response = await getSnapState(snapId);
-      console.log("Got state", response);
+      console.log('Got state', response);
       setSnapState(response);
     } catch (err) {
-      console.error(err)
-      alert('Problem happened: ' + err.message || err)
+      console.error(err);
+      alert('Problem happened: ' + err.message || err);
     }
   }
 
@@ -298,6 +313,7 @@ const Index = () => {
         Get started by editing <code>src/index.ts</code>
       </Subtitle>
       <CardContainer>
+        <button onClick={() => handleSendHelloClick()}>test hello</button>
         {state.error && (
           <ErrorMessage>
             <b>An error happened:</b> {state.error.message}
@@ -331,39 +347,41 @@ const Index = () => {
           />
         )}
         <Card
-        content={{
-          title: 'Update Snap State',
-          description: 'get latest snap state',
-          button: (
-            <SendHelloButton
-              onClick={updateSnapState}
-              disabled={!state.installedSnap}
-            />
-          ),
-        }}
+          content={{
+            title: 'Update Snap State',
+            description: 'get latest snap state',
+            button: (
+              <SendHelloButton
+                onClick={updateSnapState}
+                disabled={!state.installedSnap}
+              />
+            ),
+          }}
         />
         <Card
-        content={{
-          title: 'Reset Pending',
-          description: 'clear pending requests',
-          button: (
-            <SendHelloButton
-              onClick={()=>clearPendingRequests(snapId)}
-              disabled={!state.installedSnap}
-            />
-          ),
-        }}
+          content={{
+            title: 'Reset Pending',
+            description: 'clear pending requests',
+            button: (
+              <SendHelloButton
+                onClick={() => clearPendingRequests(snapId)}
+                disabled={!state.installedSnap}
+              />
+            ),
+          }}
         />
         {state.installedSnap && (
-          <WalletManagementCard updateSnapState={updateSnapState} createAccount={createAccount}/>
+          <WalletManagementCard
+            updateSnapState={updateSnapState}
+            createAccount={createAccount}
+          />
         )}
-        {state.installedSnap && (
+        {state.installedSnap &&
           Object.entries(snapState.pendingRequests).map(([id, request]) => {
             return (
               <PendingConfirmationCard key={id} id={id} request={request} />
-            )
-          })
-        )}
+            );
+          })}
         <Notice>
           <p>
             Please note that the <b>snap.manifest.json</b> and{' '}
