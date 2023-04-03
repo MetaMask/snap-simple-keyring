@@ -1,5 +1,4 @@
-import { ethers } from 'ethers';
-
+import { Address } from '@ethereumjs/util';
 import { KeyringState } from '.';
 import { getState, saveState } from './stateManagement';
 
@@ -16,9 +15,7 @@ export function createAccount(): Account {
   const privateKey = new Uint8Array(32);
   // eslint-disable-next-line no-restricted-globals
   const privateKeyBuffer = Buffer.from(crypto.getRandomValues(privateKey));
-  const address = ethers.computeAddress(
-    `0x${privateKeyBuffer.toString('hex')}`,
-  );
+  const address = Address.fromPrivateKey(privateKeyBuffer).toString();
   const caip10Account = `eip155:1:${address}`;
 
   const account = {
