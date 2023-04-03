@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 // eslint-disable-next-line import/no-extraneous-dependencies
 import Common from '@ethereumjs/common';
-import { JsonTx, TransactionFactory, TxData } from '@ethereumjs/tx';
+import { JsonTx, TransactionFactory } from '@ethereumjs/tx';
 import { personalSign, recoverPersonalSignature } from '@metamask/eth-sig-util';
 
 import { getPrivateKeyByAddress } from './accountManagement';
@@ -19,7 +19,7 @@ export async function signTransaction(
   console.log('chainOpts', chainOpts);
 
   const common = Common.custom(
-    { chainId: chainOpts.chain },
+    { chainId: chainOpts.chainId },
     { hardfork: chainOpts.hardfork },
   );
 
@@ -30,19 +30,11 @@ export async function signTransaction(
     },
   ).sign(privateKeyBuffer);
 
-  const serializableSignedTx = signedTx.toJSON();
+  const serializableSignedTx = serializeTransaction(
+    signedTx.toJSON(),
+    chainOpts,
+  );
 
-  // Make tx serializable
-  // toJSON does not remove undefined or convert undefined to null
-  Object.entries(serializableSignedTx).forEach(([key, _]) => {
-    if (serializableSignedTx[key] === undefined) {
-      delete serializableSignedTx[key];
-    }
-  });
-
-  if (!serializableSignedTx.to) {
-    delete serializableSignedTx.to;
-  }
   return serializableSignedTx;
 }
 
@@ -73,4 +65,23 @@ export async function signPersonalMessage(
   }
 
   return signedMessageHex;
+}
+
+function serializeTransaction(
+  tx: JsonTx,
+  chainOpts: { type: number; chain: number; hardfork: string },
+): Record<string, any> {
+  const serializableSignedTx: Record<string, any> = {
+    ...tx,
+    type: chainOpts.type,
+  };
+  // Make tx serializable
+  // toJSON does not remove undefined or convert undefined to null
+  Object.entries(serializableSignedTx).forEach(([key, _]) => {
+    if (serializableSignedTx[key] === undefined) {
+      delete serializableSignedTx[key];
+    }
+  });
+
+  return serializableSignedTx;
 }
