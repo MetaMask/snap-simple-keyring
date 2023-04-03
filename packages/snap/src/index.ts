@@ -1,4 +1,5 @@
 import { OnRpcRequestHandler } from '@metamask/snaps-types';
+import { panel, heading, text } from '@metamask/snaps-ui';
 
 import { createAccount, upsertAccount } from './accountManagement';
 import { getState, saveState } from './stateManagement';
@@ -6,7 +7,6 @@ import {
   signPersonalMessage,
   signTransaction,
 } from './transactionManagementOperation';
-import { panel, heading, text } from '@metamask/snaps-ui';
 
 /**
  * Handle incoming JSON-RPC requests, sent through `wallet_invokeSnap`.
@@ -29,9 +29,14 @@ export type SerializedKeyringState = {
   pendingRequests: Record<string, any>;
 };
 
+/**
  * Handle request to sign a transaction or message.
  *
  * @param request - Signature request.
+ */
+/**
+ *
+ * @param request
  */
 async function handleSubmitRequest(request: any) {
   const { params: signatureRequest } = request;
@@ -95,6 +100,7 @@ async function handleManageAccounts(params: any) {
  * Handle request to approve a signature request.
  *
  * @param params - Parameter to forward to the SnapController.
+ * @param payload
  */
 async function handleApproveRequest(payload: any) {
   console.log('in handleApproveRequest', payload);
@@ -173,12 +179,17 @@ const PERMISSIONS = new Map<string, string[]>([
   ],
 ]);
 
-
+/**
  * Verify if the caller can call the requested method.
  *
  * @param origin - Caller origin.
  * @param method - Method being called.
  * @returns True if the caller is allowed to call the method, false otherwise.
+ */
+/**
+ *
+ * @param origin
+ * @param method
  */
 function hasPermission(origin: string, method: string): boolean {
   return Boolean(PERMISSIONS.get(origin)?.includes(method));
@@ -208,7 +219,6 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
       });
     }
     case SnapKeyringMethod.SubmitRequest: {
-
       return await handleSubmitRequest(request);
     }
 
