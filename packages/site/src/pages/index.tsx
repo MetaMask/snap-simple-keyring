@@ -109,6 +109,7 @@ const snapId = defaultSnapOrigin;
 
 const initialState = {
   pendingRequests: {},
+  accounts: [],
 };
 
 const PendingConfirmationCard = (props) => {
@@ -132,10 +133,10 @@ const PendingConfirmationCard = (props) => {
   );
 };
 
-const AccountCard = ({ address }: { address: string }) => {
+const AccountCard = ({ account }) => {
   return (
     <Card content={{ title: 'Account', description: 'Snap account' }}>
-      {address}
+      <pre>{account}</pre>
     </Card>
   );
 };
@@ -163,7 +164,7 @@ const WalletManagementCard = (props) => {
     }
   }
 
-  async function updateAccount(privateData: { value: string; }) {
+  async function updateAccount(privateData: { value: string }) {
     try {
       const account = [publicKey, privateData];
 
@@ -319,7 +320,13 @@ const Index = () => {
         Get started by editing <code>src/index.ts</code>
       </Subtitle>
       <CardContainer>
-        <button onClick={() => handleSendHelloClick()}>test hello</button>
+        <button onClick={() => handleSendHelloClick()}>Show dialog</button>
+
+        {state.installedSnap &&
+          Object.entries(snapState.accounts).map((account) => {
+            return <AccountCard account={account[0]} key={account[0]} />;
+          })}
+
         {state.error && (
           <ErrorMessage>
             <b>An error happened:</b> {state.error.message}
