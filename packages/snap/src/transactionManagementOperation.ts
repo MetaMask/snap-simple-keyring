@@ -1,19 +1,48 @@
-import { TransactionFactory } from '@ethereumjs/tx';
-import type { TxData } from '@ethereumjs/tx';
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+// eslint-disable-next-line import/no-extraneous-dependencies
+import Common from '@ethereumjs/common';
+import { JsonTx, TransactionFactory, TxData } from '@ethereumjs/tx';
 import { personalSign, recoverPersonalSignature } from '@metamask/eth-sig-util';
 
 import { getPrivateKeyByAddress } from './accountManagement';
 
-export async function signTransaction(from: string, ethTx: any) {
+export async function signTransaction(
+  from: string,
+  ethTx: any,
+  chainOpts: any,
+): Promise<JsonTx> {
   const privateKey = await getPrivateKeyByAddress(from.toLowerCase());
+  console.log('privateKey', privateKey);
   // eslint-disable-next-line no-restricted-globals
   const privateKeyBuffer = Buffer.from(privateKey, 'hex');
 
-  const signedTx = TransactionFactory.fromTxData(ethTx).sign(privateKeyBuffer);
-  console.log(signedTx);
+  console.log('chainOpts', chainOpts);
 
-  const serializableSignedTx = signedTx.toJSON() as TxData;
+  const common = Common.custom(
+    { chainId: chainOpts.chain },
+    { hardfork: chainOpts.hardfork },
+  );
 
+  const signedTx = TransactionFactory.fromTxData(
+    { ...ethTx, type: chainOpts.type },
+    {
+      common,
+    },
+  ).sign(privateKeyBuffer);
+
+  const serializableSignedTx = signedTx.toJSON();
+
+  // Make tx serializable
+  // toJSON does not remove undefined or convert undefined to null
+  Object.entries(serializableSignedTx).forEach(([key, _]) => {
+    if (serializableSignedTx[key] === undefined) {
+      delete serializableSignedTx[key];
+    }
+  });
+
+  if (!serializableSignedTx.to) {
+    delete serializableSignedTx.to;
+  }
   return serializableSignedTx;
 }
 
@@ -32,8 +61,6 @@ export async function signPersonalMessage(
     privateKey: privateKeyBuffer,
     data: messageBuffer,
   });
-
-  console.log(222, signedMessageHex);
 
   const recoveredAddress = recoverPersonalSignature({
     data: messageBuffer,

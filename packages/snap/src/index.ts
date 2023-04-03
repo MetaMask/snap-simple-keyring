@@ -1,4 +1,5 @@
 import { OnRpcRequestHandler } from '@metamask/snaps-types';
+import { panel, heading, text } from '@metamask/snaps-ui';
 
 import { createAccount, upsertAccount } from './accountManagement';
 import { getState, saveState } from './stateManagement';
@@ -28,9 +29,14 @@ export type SerializedKeyringState = {
   pendingRequests: Record<string, any>;
 };
 
+/**
  * Handle request to sign a transaction or message.
  *
  * @param request - Signature request.
+ */
+/**
+ *
+ * @param request
  */
 async function handleSubmitRequest(request: any) {
   const { params: signatureRequest } = request;
@@ -94,27 +100,26 @@ async function handleManageAccounts(params: any) {
  * Handle request to approve a signature request.
  *
  * @param params - Parameter to forward to the SnapController.
+ * @param payload
  */
 async function handleApproveRequest(payload: any) {
   console.log('in handleApproveRequest', payload);
   const { method, params } = payload;
 
-  const [data, address] = params;
-
-  console.log(payload);
+  const [data, address, chainOpts] = params;
 
   switch (method) {
     case 'personal_sign': {
       return await signPersonalMessage(address, data);
     }
     case 'eth_sendTransaction': {
-      return await signTransaction(address, data);
+      return await signTransaction(address, data, chainOpts);
     }
     case 'eth_signTransaction': {
-      return await signTransaction(address, data);
+      return await signTransaction(address, data, chainOpts);
     }
     case 'eth_signTypedData': {
-      return await signTransaction(address, data);
+      return await signTransaction(address, data, chainOpts);
     }
     default:
       throw new Error('Invalid Approval Method.');
@@ -166,6 +171,7 @@ const PERMISSIONS = new Map<string, string[]>([
       SnapKeyringMethod.ExportAccount,
       SnapKeyringMethod.ListRequests,
       SnapKeyringMethod.ApproveRequest,
+      InternalMethod.Hello,
       InternalMethod.GetState,
       InternalMethod.SetState,
       InternalMethod.ManageAccounts,
@@ -173,12 +179,17 @@ const PERMISSIONS = new Map<string, string[]>([
   ],
 ]);
 
-
+/**
  * Verify if the caller can call the requested method.
  *
  * @param origin - Caller origin.
  * @param method - Method being called.
  * @returns True if the caller is allowed to call the method, false otherwise.
+ */
+/**
+ *
+ * @param origin
+ * @param method
  */
 function hasPermission(origin: string, method: string): boolean {
   return Boolean(PERMISSIONS.get(origin)?.includes(method));
@@ -195,8 +206,19 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
   }
 
   switch (request.method) {
+    case InternalMethod.Hello: {
+      return snap.request({
+        method: 'snap_dialog',
+        params: {
+          type: 'alert',
+          content: panel([
+            heading('Something happened in the system'),
+            text('The thing that happened is...'),
+          ]),
+        },
+      });
+    }
     case SnapKeyringMethod.SubmitRequest: {
-
       return await handleSubmitRequest(request);
     }
 
