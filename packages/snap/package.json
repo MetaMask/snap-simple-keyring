@@ -73,9 +73,7 @@
     "@ethereumjs/tx": "^3.5.2",
     "@ethereumjs/util": "^8.0.5",
     "@metamask/eth-sig-util": "^5.0.2",
-    "bn.js": "^5.2.1",
     "buffer": "^6.0.3",
-    "ethers": "^6.2.3",
     "node-polyfill-webpack-plugin": "^2.0.1",
     "stream-browserify": "^3.0.0"
   }
