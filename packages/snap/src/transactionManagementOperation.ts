@@ -18,16 +18,31 @@ export async function signTransaction(
 
   console.log('chainOpts', chainOpts);
 
-  const common = Common.custom({ ...chainOpts });
+  const common = Common.custom(
+    { chainId: chainOpts.chain },
+    { hardfork: chainOpts.hardfork },
+  );
 
-  const signedTx = TransactionFactory.fromTxData(ethTx, {
-    common,
-  }).sign(privateKeyBuffer);
-
-  console.log('is signed?', signedTx.verifySignature());
+  const signedTx = TransactionFactory.fromTxData(
+    { ...ethTx, type: chainOpts.type },
+    {
+      common,
+    },
+  ).sign(privateKeyBuffer);
 
   const serializableSignedTx = signedTx.toJSON();
 
+  // Make tx serializable
+  // toJSON does not remove undefined or convert undefined to null
+  Object.entries(serializableSignedTx).forEach(([key, _]) => {
+    if (serializableSignedTx[key] === undefined) {
+      delete serializableSignedTx[key];
+    }
+  });
+
+  if (!serializableSignedTx.to) {
+    delete serializableSignedTx.to;
+  }
   return serializableSignedTx;
 }
 
@@ -46,8 +61,6 @@ export async function signPersonalMessage(
     privateKey: privateKeyBuffer,
     data: messageBuffer,
   });
-
-  console.log(222, signedMessageHex);
 
   const recoveredAddress = recoverPersonalSignature({
     data: messageBuffer,
