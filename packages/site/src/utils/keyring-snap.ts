@@ -1,4 +1,3 @@
-import { Address } from '@ethereumjs/util';
 import { personalSign, recoverPersonalSignature } from '@metamask/eth-sig-util';
 import { Buffer } from 'buffer';
 
@@ -7,10 +6,7 @@ import { defaultSnapOrigin } from '../config';
 // this is required by ethereumjs-util
 globalThis.Buffer = Buffer;
 
-export async function sendMessageToSnap(
-  snapId: string = defaultSnapOrigin,
-  message: any,
-) {
+export async function sendMessageToSnap(snapId: string, message: any) {
   return window.ethereum.request({
     method: 'wallet_invokeSnap',
     params: {
@@ -18,6 +14,18 @@ export async function sendMessageToSnap(
       request: message,
     },
   });
+}
+
+export async function awaitEvent(
+  snapId: string,
+  callback: (e: any) => boolean,
+): Promise<any> {
+  let snapEvent: any;
+  do {
+    snapEvent = await sendMessageToSnap(snapId, {
+      method: 'snap.internal.awaitEvent',
+    });
+  } while (!callback(snapEvent));
 }
 
 export async function getSnapState(snapId: string = defaultSnapOrigin) {
@@ -103,8 +111,8 @@ export async function approvePendingRequest(snapId, id, request) {
     // submit
     console.log('Approving request', id, request);
     const response = await sendMessageToSnap(snapId, {
-      method: 'snap.internal.manageAccounts',
-      params: ['submit', { id, result }],
+      method: 'keyring_approveRequest',
+      params: { id },
     });
     console.log('Request approved', response);
 

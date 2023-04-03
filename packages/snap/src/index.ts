@@ -78,7 +78,7 @@ async function handleGetState(): Promise<any> {
  * @returns Pass-through response from the SnapController.
  */
 async function handleManageAccounts(params: any) {
-  console.log(params);
+  console.log('[SNAP] handleManageAccounts', params);
   const [method] = params;
 
   switch (method) {
@@ -99,16 +99,19 @@ async function handleManageAccounts(params: any) {
 /**
  * Handle request to approve a signature request.
  *
- * @param params - Parameter to forward to the SnapController.
- * @param payload
+ * @param payload - Parameter to forward to the SnapController.
  */
 async function handleApproveRequest(payload: any) {
-  console.log('in handleApproveRequest', payload);
-  const { method, params } = payload;
+  console.log('in handleApproveRequest', JSON.stringify(payload));
+  const { id: requestId } = payload;
 
-  const [data, address, chainOpts] = params;
+  const state = await getState();
+  const request = state.pendingRequests[requestId];
+  const [data, address] = request.params;
 
-  switch (method) {
+  console.log(payload);
+
+  switch (request.method) {
     case 'personal_sign': {
       return await signPersonalMessage(address, data);
     }
@@ -127,22 +130,23 @@ async function handleApproveRequest(payload: any) {
 }
 
 enum SnapKeyringMethod {
-  ListAccounts = 'snap.keyring.listAccounts',
-  CreateAccount = 'snap.keyring.createAccount',
-  GetAccount = 'snap.keyring.getAccount',
-  UpdateAccount = 'snap.keyring.updateAccount',
-  RemoveAccount = 'snap.keyring.removeAccount',
-  ImportAccount = 'snap.keyring.importAccount',
-  ExportAccount = 'snap.keyring.exportAccount',
-  ListRequests = 'snap.keyring.listRequests',
-  SubmitRequest = 'snap.keyring.submitRequest',
-  GetRequest = 'snap.keyring.getRequest',
-  ApproveRequest = 'snap.keyring.approveRequest',
-  RemoveRequest = 'snap.keyring.removeRequest',
+  ListAccounts = 'keyring_listAccounts',
+  CreateAccount = 'keyring_createAccount',
+  GetAccount = 'keyring_getAccount',
+  UpdateAccount = 'keyring_updateAccount',
+  RemoveAccount = 'keyring_removeAccount',
+  ImportAccount = 'keyring_importAccount',
+  ExportAccount = 'keyring_exportAccount',
+  ListRequests = 'keyring_listRequests',
+  SubmitRequest = 'keyring_submitRequest',
+  GetRequest = 'keyring_getRequest',
+  ApproveRequest = 'keyring_approveRequest',
+  RemoveRequest = 'keyring_removeRequest',
 }
 
 enum InternalMethod {
   Hello = 'snap.internal.hello',
+  AwaitEvent = 'snap.internal.awaitEvent',
   GetState = 'snap.internal.getState',
   SetState = 'snap.internal.setState',
   ManageAccounts = 'snap.internal.manageAccounts',
@@ -171,6 +175,7 @@ const PERMISSIONS = new Map<string, string[]>([
       SnapKeyringMethod.ExportAccount,
       SnapKeyringMethod.ListRequests,
       SnapKeyringMethod.ApproveRequest,
+      InternalMethod.AwaitEvent,
       InternalMethod.Hello,
       InternalMethod.GetState,
       InternalMethod.SetState,

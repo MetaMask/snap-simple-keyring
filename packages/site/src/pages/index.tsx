@@ -132,11 +132,20 @@ const PendingConfirmationCard = (props) => {
   );
 };
 
+const AccountCard = ({ address }: { address: string }) => {
+  return (
+    <Card content={{ title: 'Account', description: 'Snap account' }}>
+      {address}
+    </Card>
+  );
+};
+
 const WalletManagementCard = (props) => {
   const { updateSnapState, createAccount } = props;
 
   async function readAccount() {
     try {
+      // eslint-disable-next-line no-restricted-globals
       const response = await window.ethereum.request({
         method: 'wallet_invokeSnap',
         params: {
@@ -154,10 +163,11 @@ const WalletManagementCard = (props) => {
     }
   }
 
-  async function updateAccount(privateData) {
+  async function updateAccount(privateData: { value: string; }) {
     try {
       const account = [publicKey, privateData];
 
+      // eslint-disable-next-line no-restricted-globals
       const response = await window.ethereum.request({
         method: 'wallet_invokeSnap',
         params: {
@@ -171,18 +181,19 @@ const WalletManagementCard = (props) => {
       console.log('Account updated', response);
     } catch (err) {
       console.error(err);
-      alert('Problem happened: ' + err.message || err);
+      alert(`Problem happened: ${err.message}` || err);
     }
   }
 
   async function deleteAccount(_address) {
     try {
+      // eslint-disable-next-line no-restricted-globals
       const response = await window.ethereum.request({
         method: 'wallet_invokeSnap',
         params: {
           snapId,
           request: {
-            method: 'snap.keyring.removeAccount',
+            method: 'keyring_removeAccount',
             params: publicKey,
           },
         },
@@ -197,7 +208,7 @@ const WalletManagementCard = (props) => {
   return (
     <Card
       content={{
-        title: 'Wallet Mgmt',
+        title: 'Wallet Management',
         description:
           'Display a custom message within a confirmation screen in MetaMask.',
       }}
