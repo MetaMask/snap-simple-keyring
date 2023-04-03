@@ -135,11 +135,6 @@ const PendingConfirmationCard = (props) => {
 const WalletManagementCard = (props) => {
   const { updateSnapState, createAccount } = props;
 
-  const badPublicKey = 'ff';
-  const publicAddress = '0x77ac616693b24c0c49cb148dbcb3fac8ccf0c96c';
-  const publicKey =
-    'deadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef';
-
   async function readAccount() {
     try {
       const response = await window.ethereum.request({
