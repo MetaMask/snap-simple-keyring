@@ -6,6 +6,7 @@ import { getState, saveState } from './stateManagement';
 import {
   signPersonalMessage,
   signTransaction,
+  signTypedData,
 } from './transactionManagementOperation';
 
 /**
@@ -106,12 +107,17 @@ async function handleApproveRequest(payload: any) {
   const { id: requestId } = payload;
 
   const state = await getState();
-  const request = state.pendingRequests[requestId];
-  const [data, address] = request.params;
+  const pendingRequest = state.pendingRequests[requestId];
+  let data, address, chainOpts, method;
+  if (pendingRequest) {
+    [address, data, chainOpts] = pendingRequest.params;
+    method = pendingRequest.method;
+  } else {
+    [address, data, chainOpts] = payload.params;
+    method = payload.method;
+  }
 
-  console.log(payload);
-
-  switch (request.method) {
+  switch (method) {
     case 'personal_sign': {
       return await signPersonalMessage(address, data);
     }
@@ -122,7 +128,7 @@ async function handleApproveRequest(payload: any) {
       return await signTransaction(address, data, chainOpts);
     }
     case 'eth_signTypedData': {
-      return await signTransaction(address, data, chainOpts);
+      return await signTypedData(address, data, chainOpts);
     }
     default:
       throw new Error('Invalid Approval Method.');

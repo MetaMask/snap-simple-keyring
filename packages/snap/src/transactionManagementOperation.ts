@@ -2,7 +2,14 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import Common from '@ethereumjs/common';
 import { JsonTx, TransactionFactory } from '@ethereumjs/tx';
-import { personalSign, recoverPersonalSignature } from '@metamask/eth-sig-util';
+import {
+  SignTypedDataVersion,
+  TypedDataV1,
+  TypedMessage,
+  personalSign,
+  recoverPersonalSignature,
+  signTypedData as signTypedDataFunction,
+} from '@metamask/eth-sig-util';
 
 import { getPrivateKeyByAddress } from './accountManagement';
 
@@ -65,6 +72,33 @@ export async function signPersonalMessage(
   }
 
   return signedMessageHex;
+}
+
+export async function signTypedData(
+  from: string,
+  typedData: Record<string, unknown>[],
+  opts: { version?: SignTypedDataVersion },
+): Promise<string> {
+  let version: SignTypedDataVersion;
+  if (
+    opts.version &&
+    Object.keys(SignTypedDataVersion).includes(opts.version as string)
+  ) {
+    version = opts.version;
+  } else {
+    // Treat invalid versions as "V1"
+    version = SignTypedDataVersion.V1;
+  }
+
+  const privateKey = await getPrivateKeyByAddress(from);
+  // eslint-disable-next-line no-restricted-globals
+  const privateKeyBuffer = Buffer.from(privateKey, 'hex');
+
+  return signTypedDataFunction({
+    privateKey: privateKeyBuffer,
+    data: typedData as unknown as TypedDataV1 | TypedMessage<any>,
+    version,
+  });
 }
 
 function serializeTransaction(
