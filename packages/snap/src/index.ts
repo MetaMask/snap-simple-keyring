@@ -30,7 +30,10 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
   origin,
   request,
 }) => {
-  console.log('[SNAP] new request:', origin, request);
+  console.log(
+    `[SNAP] new request (id=${request.id ?? 'null'}, origin=${origin}):`,
+    request,
+  );
 
   if (!hasPermission(origin, request.method)) {
     throw new Error(`origin ${origin} cannot call method ${request.method}`);
@@ -78,6 +81,10 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
 
     case SnapKeyringMethod.ApproveRequest: {
       return await simpleKeyringSnap.handleApproveRequest(request.params);
+    }
+
+    case 'keyring_listAccounts': {
+      return [];
     }
 
     default: {

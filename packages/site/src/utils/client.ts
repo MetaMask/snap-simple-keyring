@@ -37,7 +37,7 @@ type ListAccountsResponse = KeyringAccount[];
 export type Keyring = {
   // Account methods
 
-  listAccounts(): KeyringAccount[];
+  listAccounts(): Promise<KeyringAccount[]>;
   getAccount(id: string): KeyringAccount;
   createAccount(options: Record<string, Json>): KeyringAccount;
   updateAccount(account: KeyringAccount): void;
@@ -61,21 +61,31 @@ export class KeyringClient implements Keyring {
     this.snapId = id;
   }
 
-  async #sendRequest<S extends JsonRpcRequest, R extends Json>(
-    request: S,
-  ): Promise<R> {
+  async sendRequest<R extends Json>({
+    method,
+    params,
+  }: {
+    method: string;
+    params?: Record<string, Json>;
+  }): Promise<R> {
+    const requestId = uuid();
     // eslint-disable-next-line no-restricted-globals
     const response = (await window.ethereum.request({
       method: 'wallet_invokeSnap',
       params: {
         snapId: this.snapId,
-        request,
+        request: {
+          jsonrpc: '2.0',
+          id: requestId,
+          method,
+          params,
+        },
       },
     })) as JsonRpcResponse<R>;
 
-    if (response.id !== request.id) {
+    if (response.id !== requestId) {
       throw new Error(
-        `Request (${request.id ?? 'null'}) and response (${
+        `Request (${requestId}) and response (${
           response.id ?? 'null'
         }) IDs do not match`,
       );
@@ -90,16 +100,14 @@ export class KeyringClient implements Keyring {
     return response.result;
   }
 
-  listAccounts(): KeyringAccount[] {
-    const res = this.#sendRequest<ListAccountsRequest, ListAccountsResponse>({
-      jsonrpc: '2.0',
-      id: uuid(),
+  async listAccounts(): Promise<KeyringAccount[]> {
+    const res = await this.sendRequest<ListAccountsResponse>({
       method: 'keyring_listAccounts',
     });
 
     console.log(res);
 
-    throw new Error('Method not implemented.');
+    return res;
   }
 
   getAccount(id: string): KeyringAccount {

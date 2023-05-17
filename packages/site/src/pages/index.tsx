@@ -20,6 +20,7 @@ import {
   Card,
 } from '../components';
 import { defaultSnapOrigin } from '../config';
+import { KeyringClient } from '../utils/client';
 
 const Container = styled.div`
   display: flex;
@@ -311,6 +312,11 @@ const Index = () => {
     }
   };
 
+  const listAccounts = async () => {
+    const client = new KeyringClient(snapId);
+    client.listAccounts();
+  };
+
   return (
     <Container>
       <Heading>
@@ -321,6 +327,7 @@ const Index = () => {
       </Subtitle>
       <CardContainer>
         <button onClick={() => handleSendHelloClick()}>Show dialog</button>
+        <button onClick={() => listAccounts()}>List accounts</button>
 
         {state.installedSnap &&
           Object.entries(snapState.accounts).map((account) => {
