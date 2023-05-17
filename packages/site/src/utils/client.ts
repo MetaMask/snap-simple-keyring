@@ -1,9 +1,4 @@
-import {
-  Json,
-  JsonRpcRequest,
-  JsonRpcResponse,
-  isJsonRpcFailure,
-} from '@metamask/utils';
+import { Json } from '@metamask/utils';
 import { v4 as uuid } from 'uuid';
 
 type AccountCapability = 'sign';
@@ -14,7 +9,7 @@ type KeyringAccount = {
   id: string; // Random ID (UUIDv4)
   name: string; // User-chosen account name (must be unique)
   address: string; // Account address or next receive address (UTXO)
-  scopes: string[]; // Supported chains (CAIP-2 IDs)
+  chains: string[]; // Supported chains (CAIP-2 IDs)
   options?: Json; // Other account information, keyring-dependent
   capabilities: AccountCapability[]; // Account capabilities
   type: AccountType; // Account type
@@ -26,32 +21,27 @@ type KeyringRequest = {
   request: Json; // Submitted JSON-RPC request
 };
 
-type ListAccountsRequest = {
-  jsonrpc: '2.0';
-  id: string | number | null;
-  method: 'keyring_listAccounts';
-};
-
-type ListAccountsResponse = KeyringAccount[];
-
 export type Keyring = {
   // Account methods
 
   listAccounts(): Promise<KeyringAccount[]>;
-  getAccount(id: string): KeyringAccount;
-  createAccount(options: Record<string, Json>): KeyringAccount;
-  updateAccount(account: KeyringAccount): void;
-  deleteAccount(id: string): void;
-  exportAccount(id: string): Record<string, Json>;
+  getAccount(id: string): Promise<KeyringAccount>;
+  createAccount(
+    name: string,
+    chains: string[],
+    options?: Record<string, Json>,
+  ): Promise<KeyringAccount>;
+  updateAccount(account: KeyringAccount): Promise<void>;
+  deleteAccount(id: string): Promise<void>;
+  exportAccount(id: string): Promise<Record<string, Json>>;
 
   // Request methods
 
-  listRequests(): KeyringRequest[];
-  getRequest(id: string): KeyringRequest;
-  submitRequest(request: KeyringRequest): void;
-  deleteRequest(id: string): void;
-  approveRequest(id: string): void;
-  rejectRequest(id: string): void;
+  listRequests(): Promise<KeyringRequest[]>;
+  getRequest(id: string): Promise<KeyringRequest>;
+  submitRequest(request: KeyringRequest): Promise<void>;
+  approveRequest(id: string): Promise<void>;
+  rejectRequest(id: string): Promise<void>;
 };
 
 export class KeyringClient implements Keyring {
@@ -61,96 +51,85 @@ export class KeyringClient implements Keyring {
     this.snapId = id;
   }
 
-  async sendRequest<R extends Json>({
+  // eslint-disable-next-line no-restricted-syntax
+  private async sendRequest<Response extends Json>({
     method,
     params,
   }: {
     method: string;
-    params?: Record<string, Json>;
-  }): Promise<R> {
-    const requestId = uuid();
+    params?: Record<string, Json | undefined>;
+  }): Promise<Response> {
     // eslint-disable-next-line no-restricted-globals
-    const response = (await window.ethereum.request({
+    return (await window.ethereum.request({
       method: 'wallet_invokeSnap',
       params: {
         snapId: this.snapId,
         request: {
           jsonrpc: '2.0',
-          id: requestId,
+          id: uuid(),
           method,
           params,
         },
       },
-    })) as JsonRpcResponse<R>;
-
-    if (response.id !== requestId) {
-      throw new Error(
-        `Request (${requestId}) and response (${
-          response.id ?? 'null'
-        }) IDs do not match`,
-      );
-    }
-
-    if (isJsonRpcFailure(response)) {
-      throw new Error(
-        `Keyring error (${response.error.code}): ${response.error.message}`,
-      );
-    }
-
-    return response.result;
+    })) as Response;
   }
 
   async listAccounts(): Promise<KeyringAccount[]> {
-    const res = await this.sendRequest<ListAccountsResponse>({
+    return await this.sendRequest<KeyringAccount[]>({
       method: 'keyring_listAccounts',
     });
-
-    console.log(res);
-
-    return res;
   }
 
-  getAccount(id: string): KeyringAccount {
+  async getAccount(id: string): Promise<KeyringAccount> {
+    return await this.sendRequest<KeyringAccount>({
+      method: 'keyring_getAccount',
+      params: { id },
+    });
+  }
+
+  async createAccount(
+    name: string,
+    chains: string[],
+    options?: Record<string, Json>,
+  ): Promise<KeyringAccount> {
+    return await this.sendRequest<KeyringAccount>({
+      method: 'keyring_createAccount',
+      params: { name, chains, options },
+    });
+  }
+
+  async updateAccount(account: KeyringAccount): Promise<void> {
     throw new Error('Method not implemented.');
   }
 
-  createAccount(options: Record<string, Json>): KeyringAccount {
+  async deleteAccount(id: string): Promise<void> {
+    await this.sendRequest<null>({
+      method: 'keyring_deleteAccount',
+      params: { id },
+    });
+  }
+
+  async exportAccount(id: string): Promise<Record<string, Json>> {
     throw new Error('Method not implemented.');
   }
 
-  updateAccount(account: KeyringAccount): void {
+  async listRequests(): Promise<KeyringRequest[]> {
     throw new Error('Method not implemented.');
   }
 
-  deleteAccount(id: string): void {
+  async getRequest(id: string): Promise<KeyringRequest> {
     throw new Error('Method not implemented.');
   }
 
-  exportAccount(id: string): Record<string, Json> {
+  async submitRequest(request: KeyringRequest): Promise<void> {
     throw new Error('Method not implemented.');
   }
 
-  listRequests(): KeyringRequest[] {
+  async approveRequest(id: string): Promise<void> {
     throw new Error('Method not implemented.');
   }
 
-  getRequest(id: string): KeyringRequest {
-    throw new Error('Method not implemented.');
-  }
-
-  submitRequest(request: KeyringRequest): void {
-    throw new Error('Method not implemented.');
-  }
-
-  deleteRequest(id: string): void {
-    throw new Error('Method not implemented.');
-  }
-
-  approveRequest(id: string): void {
-    throw new Error('Method not implemented.');
-  }
-
-  rejectRequest(id: string): void {
+  async rejectRequest(id: string): Promise<void> {
     throw new Error('Method not implemented.');
   }
 }

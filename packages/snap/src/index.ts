@@ -1,12 +1,13 @@
-import { OnRpcRequestHandler } from '@metamask/snaps-types';
+import { OnRpcRequestHandler, Json } from '@metamask/snaps-types';
 import { panel, heading, text } from '@metamask/snaps-ui';
 
-import { SimpleKeyringSnap } from './keyring';
+import { SimpleKeyringSnap, Account } from './keyring';
+import { SimpleKeyringSnap2 } from './keyring2';
 import { InternalMethod, PERMISSIONS, SnapKeyringMethod } from './permissions';
 import { getState, saveState } from './stateManagement';
 
 export type KeyringState = {
-  accounts: Record<string, string>;
+  accounts: Record<string, Account>;
   pendingRequests: Record<string, any>;
 };
 
@@ -49,6 +50,7 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
   }
 
   const simpleKeyringSnap = new SimpleKeyringSnap(persistedState);
+  const simpleKeyringSnap2 = new SimpleKeyringSnap2();
 
   switch (request.method) {
     case InternalMethod.Hello: {
@@ -84,7 +86,25 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
     }
 
     case 'keyring_listAccounts': {
-      return [];
+      const accounts = simpleKeyringSnap2.listAccounts();
+      console.log('[SNAP] listAccounts:', accounts);
+      return accounts;
+    }
+
+    case 'keyring_createAccount': {
+      console.log(request.params);
+      const req = request.params as {
+        name: string;
+        chains: string[];
+        options?: Record<string, Json>;
+      };
+      const account = await simpleKeyringSnap2.createAccount(
+        req.name,
+        req.chains,
+        req.options,
+      );
+      console.log('[SNAP] createAccount:', JSON.stringify(account));
+      return JSON.stringify(account);
     }
 
     default: {

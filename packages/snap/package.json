@@ -75,6 +75,7 @@
     "@metamask/eth-sig-util": "^5.0.2",
     "buffer": "^6.0.3",
     "node-polyfill-webpack-plugin": "^2.0.1",
-    "stream-browserify": "^3.0.0"
+    "stream-browserify": "^3.0.0",
+    "uuid": "^9.0.0"
   }
 }

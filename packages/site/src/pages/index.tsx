@@ -1,6 +1,14 @@
 import { useContext, useState } from 'react';
 import styled from 'styled-components';
 
+import {
+  ConnectButton,
+  InstallFlaskButton,
+  ReconnectButton,
+  SendHelloButton,
+  Card,
+} from '../components';
+import { defaultSnapOrigin } from '../config';
 import { MetamaskActions, MetaMaskContext } from '../hooks';
 import {
   connectSnap,
@@ -12,14 +20,6 @@ import {
   approvePendingRequest,
   clearPendingRequests,
 } from '../utils';
-import {
-  ConnectButton,
-  InstallFlaskButton,
-  ReconnectButton,
-  SendHelloButton,
-  Card,
-} from '../components';
-import { defaultSnapOrigin } from '../config';
 import { KeyringClient } from '../utils/client';
 
 const Container = styled.div`
@@ -124,7 +124,7 @@ const PendingConfirmationCard = (props) => {
           'Display a custom message within a confirmation screen in MetaMask.',
         button: (
           <SendHelloButton
-            onClick={() => approvePendingRequest(snapId, id, request)}
+            onClick={async () => approvePendingRequest(snapId, id, request)}
           />
         ),
       }}
@@ -161,7 +161,7 @@ const WalletManagementCard = (props) => {
       console.log('Account read', response);
     } catch (err) {
       console.error(err);
-      alert('Problem happened: ' + err.message || err);
+      alert(`Problem happened: ${err.message}` || err);
     }
   }
 
@@ -203,7 +203,7 @@ const WalletManagementCard = (props) => {
       console.log('Account delete', response);
     } catch (err) {
       console.error(err);
-      alert('Problem happened: ' + err.message || err);
+      alert(`Problem happened: ${err.message}` || err);
     }
   }
 
@@ -275,7 +275,7 @@ const Index = () => {
       setSnapState(response);
     } catch (err) {
       console.error(err);
-      alert('Problem happened: ' + err.message || err);
+      alert(`Problem happened: ${err.message}` || err);
     }
   }
 
@@ -314,7 +314,12 @@ const Index = () => {
 
   const listAccounts = async () => {
     const client = new KeyringClient(snapId);
-    client.listAccounts();
+    await client.listAccounts();
+  };
+
+  const createAccount2 = async () => {
+    const client = new KeyringClient(snapId);
+    await client.createAccount('Account X', []);
   };
 
   return (
@@ -326,8 +331,11 @@ const Index = () => {
         Get started by editing <code>src/index.ts</code>
       </Subtitle>
       <CardContainer>
-        <button onClick={() => handleSendHelloClick()}>Show dialog</button>
-        <button onClick={() => listAccounts()}>List accounts</button>
+        <button onClick={async () => handleSendHelloClick()}>
+          Show dialog
+        </button>
+        <button onClick={async () => listAccounts()}>List accounts</button>
+        <button onClick={async () => createAccount2()}>Create account</button>
 
         {state.installedSnap &&
           Object.entries(snapState.accounts).map((account) => {
@@ -384,7 +392,7 @@ const Index = () => {
             description: 'clear pending requests',
             button: (
               <SendHelloButton
-                onClick={() => clearPendingRequests(snapId)}
+                onClick={async () => clearPendingRequests(snapId)}
                 disabled={!state.installedSnap}
               />
             ),
