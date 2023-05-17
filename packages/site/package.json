@@ -28,11 +28,14 @@
     "@ethereumjs/util": "^8.0.5",
     "@metamask/eth-sig-util": "^5.0.2",
     "@metamask/providers": "^10.2.1",
+    "@metamask/utils": "^5.0.2",
+    "@types/uuid": "^9.0.1",
     "buffer": "^6.0.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-is": "^18.2.0",
-    "styled-components": "5.3.9"
+    "styled-components": "5.3.9",
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "@metamask/eslint-config": "^11.1.0",
