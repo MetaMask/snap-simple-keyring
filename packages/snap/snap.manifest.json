@@ -1,13 +1,13 @@
 {
   "version": "0.1.0",
-  "description": "Simple Keyring Snap",
-  "proposedName": "Simple Keyring Snap",
+  "description": "An example Snap written in TypeScript.",
+  "proposedName": "TypeScript Example Snap",
   "repository": {
     "type": "git",
     "url": "https://github.com/MetaMask/template-snap-monorepo.git"
   },
   "source": {
-    "shasum": "4D1IVzdcRQMmKa54AlrZAkAeWR2igOhsTrjIQpAgJeA=",
+    "shasum": "usoZPr0F4J12BaVbuDQRCCIW2cj/N5gZD7ccOJfDZV8=",
     "location": {
       "npm": {
         "filePath": "dist/bundle.js",
@@ -22,9 +22,7 @@
     "endowment:rpc": {
       "dapps": true,
       "snaps": false
-    },
-    "snap_manageAccounts": {},
-    "snap_manageState": {}
+    }
   },
   "manifestVersion": "0.1"
 }
