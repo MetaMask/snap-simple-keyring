@@ -1,3 +1,4 @@
+import { KeyringSnapClient } from 'keyring-api';
 import { useContext, useState } from 'react';
 import styled from 'styled-components';
 
@@ -20,7 +21,6 @@ import {
   approvePendingRequest,
   clearPendingRequests,
 } from '../utils';
-import { KeyringClient } from '../utils/client';
 
 const Container = styled.div`
   display: flex;
@@ -313,12 +313,19 @@ const Index = () => {
   };
 
   const listAccounts = async () => {
-    const client = new KeyringClient(snapId);
-    await client.listAccounts();
+    const client = new KeyringSnapClient(snapId);
+    const accounts = await client.listAccounts();
+    console.log('[UI] list of accounts:', accounts);
+    const addresses = accounts.map((a) => a.address);
+    console.log(addresses);
+    setSnapState({
+      accounts: [],
+      pendingRequests: {},
+    });
   };
 
   const createAccount2 = async () => {
-    const client = new KeyringClient(snapId);
+    const client = new KeyringSnapClient(snapId);
     await client.createAccount('Account X', []);
   };
 

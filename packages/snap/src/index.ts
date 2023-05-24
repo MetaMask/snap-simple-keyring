@@ -1,4 +1,8 @@
-import { OnRpcRequestHandler, Json } from '@metamask/snaps-types';
+import {
+  OnRpcRequestHandler,
+  Json,
+  JsonRpcRequest,
+} from '@metamask/snaps-types';
 import { panel, heading, text } from '@metamask/snaps-ui';
 
 import { SimpleKeyringSnap, Account } from './keyring';
@@ -27,12 +31,21 @@ function hasPermission(origin: string, method: string): boolean {
   return Boolean(PERMISSIONS.get(origin)?.includes(method));
 }
 
-export const onRpcRequest: OnRpcRequestHandler = async ({
-  origin,
-  request,
-}) => {
+const keyring = new SimpleKeyringSnap2();
+
+/**
+ * Execute a JSON-RPC request.
+ *
+ * @param origin - Request origin.
+ * @param request - Request to execute.
+ * @returns The execution result.
+ */
+async function dispatcher(
+  origin: string,
+  request: JsonRpcRequest,
+): Promise<any> {
   console.log(
-    `[SNAP] new request (id=${request.id ?? 'null'}, origin=${origin}):`,
+    `[SNAP] request (id=${request.id ?? 'null'}, origin=${origin}):`,
     request,
   );
 
@@ -50,7 +63,6 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
   }
 
   const simpleKeyringSnap = new SimpleKeyringSnap(persistedState);
-  const simpleKeyringSnap2 = new SimpleKeyringSnap2();
 
   switch (request.method) {
     case InternalMethod.Hello: {
@@ -65,8 +77,11 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
         },
       });
     }
+
     case SnapKeyringMethod.SubmitRequest: {
+      console.log(JSON.stringify(request));
       return await simpleKeyringSnap.handleSubmitRequest(request);
+      // return keyring.submitRequest({});
     }
 
     case InternalMethod.ManageAccounts: {
@@ -82,13 +97,15 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
     }
 
     case SnapKeyringMethod.ApproveRequest: {
+      console.log(
+        '[SNAP] (dispatcher) ApproveRequest',
+        JSON.stringify(request),
+      );
       return await simpleKeyringSnap.handleApproveRequest(request.params);
     }
 
     case 'keyring_listAccounts': {
-      const accounts = simpleKeyringSnap2.listAccounts();
-      console.log('[SNAP] listAccounts:', accounts);
-      return accounts;
+      return await keyring.listAccounts();
     }
 
     case 'keyring_createAccount': {
@@ -98,17 +115,14 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
         chains: string[];
         options?: Record<string, Json>;
       };
-      const account = await simpleKeyringSnap2.createAccount(
-        req.name,
-        req.chains,
-        req.options,
-      );
-      console.log('[SNAP] createAccount:', JSON.stringify(account));
-      return JSON.stringify(account);
+      return await keyring.createAccount(req.name, req.chains, req.options);
     }
 
     default: {
       throw new Error(`method not found: ${request.method}`);
     }
   }
-};
+}
+
+export const onRpcRequest: OnRpcRequestHandler = async ({ origin, request }) =>
+  await dispatcher(origin, request);
