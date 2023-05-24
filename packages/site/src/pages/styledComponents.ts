@@ -1,5 +1,23 @@
 import styled from 'styled-components';
 
+export const InformationBox = styled.div<{ error: boolean }>`
+  background-color: ${({ error }) => (error ? '#B22222' : '#50c878')};
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 5px;
+`;
+
+export const Divider = styled.div`
+  border-bottom: 1px solid #ccc;
+  margin: 10px 0;
+  padding: 10px 0;
+`;
+
+export const DividerTitle = styled.p`
+  margin: 0;
+  font-size: 25px;
+`;
+
 export const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -16,8 +34,8 @@ export const CardContainer = styled.div`
   flex-direction: row;
   flex-wrap: wrap;
   align-items: center;
-  padding-left: 5rem;
-  padding-right: 5rem;
+  padding-left: 14rem;
+  padding-right: 14rem;
   flex: 1;
 `;
 
