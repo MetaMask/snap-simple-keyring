@@ -31,8 +31,6 @@
     "@metamask/eth-sig-util": "^5.0.2",
     "@metamask/providers": "^10.2.1",
     "@metamask/utils": "^5.0.2",
-    "@mui/lab": "^5.0.0-alpha.130",
-    "@mui/material": "^5.13.1",
     "@types/uuid": "^9.0.1",
     "buffer": "^6.0.3",
     "react": "^18.2.0",
