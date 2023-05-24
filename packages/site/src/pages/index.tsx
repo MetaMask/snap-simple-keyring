@@ -131,7 +131,7 @@ const Index = () => {
     },
   ];
 
-  const requestManagementMethod = [
+  const requestMethods = [
     {
       name: 'Get Requests',
       description: '',
@@ -177,7 +177,7 @@ const Index = () => {
       <Divider />
       <DividerTitle>Requests</DividerTitle>
       <CardContainer>
-        {requestManagementMethod.map((method: any) => (
+        {requestMethods.map((method: any) => (
           <Card
             content={{
               title: method.name,
