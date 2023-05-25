@@ -24,6 +24,7 @@ type Account = {
   address: string;
   type: string;
   chains: Chain[];
+  capabilities: string[];
 };
 
 const List = styled.ul`
@@ -88,6 +89,16 @@ export const AccountList = ({ accounts }: { accounts: Account[] }) => (
             <ChainLi key={chain.id}>{chain.name}</ChainLi>
           ))}
         </ul>
+        {account.capabilities && (
+          <>
+            <AccountText>Account Capabilities</AccountText>
+            <ul>
+              {account.capabilities.map((cap, index) => (
+                <ChainLi key={index}>{cap}</ChainLi>
+              ))}
+            </ul>
+          </>
+        )}
       </Li>
     ))}
   </List>

@@ -16,7 +16,7 @@ import {
 import { Card, ConnectButton, AccountList, Accordion } from '../components';
 import { defaultSnapOrigin } from '../config';
 import { MetamaskActions, MetaMaskContext } from '../hooks';
-import { connectSnap, getSnap } from '../utils';
+import { connectSnap, getSnap, getSnapState, sendHello } from '../utils';
 
 const snapId = defaultSnapOrigin;
 
@@ -26,6 +26,7 @@ const initialState = {
 };
 
 const Action = ({ callback }: { callback: () => Promise<any> }) => {
+  const [state, dispatch] = useContext(MetaMaskContext);
   const [input, setInput] = useState<string | null>();
   const [response, setResponse] = useState<string | null>();
   const [error, setError] = useState<string | null>();
@@ -38,6 +39,7 @@ const Action = ({ callback }: { callback: () => Promise<any> }) => {
       const newResponse = await callback();
       setResponse(newResponse);
     } catch (newError: any) {
+      dispatch({ type: MetamaskActions.SetError, payload: newError });
       setError(newError);
     }
   }, []);
@@ -65,6 +67,18 @@ const Index = () => {
   const [state, dispatch] = useContext(MetaMaskContext);
   const [snapState, setSnapState] = useState(initialState);
 
+  async function updateSnapState() {
+    try {
+      const response = await getSnapState(snapId);
+      console.log('Got state', response);
+      setSnapState(response);
+    } catch (error) {
+      console.error(error);
+      // eslint-disable-next-line no-alert
+      alert(`Problem happened: ${error.message}` || error);
+    }
+  }
+
   const handleConnectClick = async () => {
     try {
       await connectSnap();
@@ -79,6 +93,19 @@ const Index = () => {
       dispatch({ type: MetamaskActions.SetError, payload: error });
     }
   };
+
+  const utilityMethods = [
+    {
+      name: 'Update snap state',
+      description: 'No description',
+      actionUI: <Action callback={async () => await updateSnapState()} />,
+    },
+    {
+      name: 'Send hello',
+      description: 'Send a simple hello, not a goodbye',
+      actionUI: <Action callback={async () => await sendHello()} />,
+    },
+  ];
 
   const accountManagementMethods = [
     {
@@ -175,35 +202,20 @@ const Index = () => {
         <Grid container spacing={4} columns={[1, 2, 3]}>
           <Grid item xs={8} sm={4} md={2}>
             <Divider />
-            <DividerTitle>Account Management</DividerTitle>
+            <DividerTitle>Account Management Methods</DividerTitle>
             <Accordion items={accountManagementMethods} />
             <Divider />
-            <DividerTitle>Requests</DividerTitle>
+            <DividerTitle>Request Methods</DividerTitle>
             <Accordion items={requestMethods} />
+            <Divider />
+            <DividerTitle>Utility Methods</DividerTitle>
+            <Accordion items={utilityMethods} />
           </Grid>
           <Grid item xs={4} sm={2} md={1}>
             <Divider />
             <DividerTitle>Current Accounts</DividerTitle>
-            <AccountList
-              accounts={[
-                {
-                  id: 'id-01',
-                  name: 'Account 1',
-                  address: '0xmock-address-1234-abc',
-                  type: 'eip155:eoa',
-                  chains: [
-                    {
-                      id: 'chain-id-01',
-                      name: 'chain-name-01',
-                    },
-                    {
-                      id: 'chain-id-02',
-                      name: 'chain-name-02',
-                    },
-                  ],
-                },
-              ]}
-            />
+            {/* TO DO: Connect to correct data source */}
+            <AccountList accounts={[]} />
           </Grid>
         </Grid>
       </StyledBox>
