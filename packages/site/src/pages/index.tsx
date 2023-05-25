@@ -1,4 +1,6 @@
+/* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable @typescript-eslint/no-misused-promises */
+import Grid from '@mui/material/Grid';
 import { useContext, useState, useCallback } from 'react';
 import { FiInfo, FiAlertTriangle } from 'react-icons/fi';
 
@@ -8,8 +10,9 @@ import {
   Divider,
   DividerTitle,
   InformationBox,
+  StyledBox,
 } from './styledComponents';
-import { Card, ConnectButton, AccountList } from '../components';
+import { Card, ConnectButton, AccountList, Accordion } from '../components';
 import { defaultSnapOrigin } from '../config';
 import { MetamaskActions, MetaMaskContext } from '../hooks';
 import { connectSnap, getSnap } from '../utils';
@@ -160,33 +163,42 @@ const Index = () => {
         )}
       </CardContainer>
 
-      <AccountList accounts={[]} />
-      <Divider />
-      <DividerTitle>Account Management</DividerTitle>
-      <CardContainer>
-        {accountManagementMethods.map((method: any) => (
-          <Card
-            content={{
-              title: method.name,
-              description: method.description,
-              button: method.actionUI,
-            }}
-          />
-        ))}
-      </CardContainer>
-      <Divider />
-      <DividerTitle>Requests</DividerTitle>
-      <CardContainer>
-        {requestMethods.map((method: any) => (
-          <Card
-            content={{
-              title: method.name,
-              description: method.description,
-              button: method.actionUI,
-            }}
-          />
-        ))}
-      </CardContainer>
+      <StyledBox sx={{ flexGrow: 1 }}>
+        <Grid container spacing={4} columns={[1, 2, 3]}>
+          <Grid item xs={8} sm={4} md={2}>
+            <Divider />
+            <DividerTitle>Account Management</DividerTitle>
+            <Accordion items={accountManagementMethods} />
+            <Divider />
+            <DividerTitle>Requests</DividerTitle>
+            <Accordion items={requestMethods} />
+          </Grid>
+          <Grid item xs={4} sm={2} md={1}>
+            <Divider />
+            <DividerTitle>Current Accounts</DividerTitle>
+            <AccountList
+              accounts={[
+                {
+                  id: 'id-01',
+                  name: 'Account 1',
+                  address: '0xmock-address-1234-abc',
+                  type: 'eip155:eoa',
+                  chains: [
+                    {
+                      id: 'chain-id-01',
+                      name: 'chain-name-01',
+                    },
+                    {
+                      id: 'chain-id-02',
+                      name: 'chain-name-02',
+                    },
+                  ],
+                },
+              ]}
+            />
+          </Grid>
+        </Grid>
+      </StyledBox>
     </Container>
   );
 };
