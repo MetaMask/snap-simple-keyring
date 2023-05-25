@@ -1,4 +1,19 @@
 import styled from 'styled-components';
+import Box from '@mui/material/Box';
+
+export const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-left: 5%;
+  padding-right: 5%;
+  flex: 1;
+  margin-bottom: 7.6rem;
+`;
+
+export const StyledBox = styled(Box)`
+  width: 100%;
+`;
 
 export const InformationBox = styled.div<{ error: boolean }>`
   background-color: ${({ error }) => (error ? '#B22222' : '#50c878')};
@@ -16,17 +31,7 @@ export const Divider = styled.div`
 export const DividerTitle = styled.p`
   margin: 0;
   font-size: 25px;
-`;
-
-export const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding-left: 10rem;
-  padding-right: 10rem;
-  flex: 1;
-  margin-top: 7.6rem;
-  margin-bottom: 7.6rem;
+  margin-bottom: 3rem;
 `;
 
 export const CardContainer = styled.div`
