@@ -3,6 +3,7 @@
 import Grid from '@mui/material/Grid';
 import { useContext, useState, useCallback } from 'react';
 import { FiInfo, FiAlertTriangle } from 'react-icons/fi';
+import { KeyringSnapClient } from 'keyring-api';
 
 import {
   Container,
@@ -16,7 +17,6 @@ import { Card, ConnectButton, AccountList, Accordion } from '../components';
 import { defaultSnapOrigin } from '../config';
 import { MetamaskActions, MetaMaskContext } from '../hooks';
 import { connectSnap, getSnap } from '../utils';
-import { KeyringClient } from '../utils/client';
 
 const snapId = defaultSnapOrigin;
 
@@ -87,7 +87,7 @@ const Index = () => {
       actionUI: (
         <Action
           callback={async () => {
-            const client = new KeyringClient(snapId);
+            const client = new KeyringSnapClient(snapId);
             return await client.createAccount('Account X', []);
           }}
         />
@@ -116,8 +116,15 @@ const Index = () => {
       actionUI: (
         <Action
           callback={async () => {
-            const client = new KeyringClient(snapId);
-            return await client.listAccounts();
+            const client = new KeyringSnapClient(snapId);
+            const accounts = await client.listAccounts();
+            console.log('[UI] list of accounts:', accounts);
+            const addresses = accounts.map((a: { address: string }) => a.address);
+            console.log(addresses);
+            setSnapState({
+              accounts: [],
+              pendingRequests: {},
+            });
           }}
         />
       ),

@@ -25,6 +25,10 @@
     "start": "yarn workspaces foreach --parallel --interlaced --verbose run start",
     "test": "echo \"TODO\""
   },
+  "dependencies": {
+    "@ethereumjs/tx": "^4.1.1",
+    "@ethereumjs/util": "^8.0.5"
+  },
   "devDependencies": {
     "@metamask/eslint-config": "^11.1.0",
     "@metamask/eslint-config-jest": "^11.1.0",
@@ -46,10 +50,5 @@
   "packageManager": "yarn@3.2.1",
   "engines": {
     "node": ">=16.0.0"
-  },
-  "dependencies": {
-    "@ethereumjs/tx": "^4.1.1",
-    "@ethereumjs/util": "^8.0.5",
-    "react-icons": "^4.8.0"
   }
 }

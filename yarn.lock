@@ -3566,6 +3566,25 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@metamask/providers@npm:^11.0.0":
+  version: 11.0.0
+  resolution: "@metamask/providers@npm:11.0.0"
+  dependencies:
+    "@metamask/object-multiplex": ^1.1.0
+    "@metamask/safe-event-emitter": ^3.0.0
+    detect-browser: ^5.2.0
+    eth-rpc-errors: ^4.0.2
+    extension-port-stream: ^2.0.1
+    fast-deep-equal: ^2.0.1
+    is-stream: ^2.0.0
+    json-rpc-engine: ^6.1.0
+    json-rpc-middleware-stream: ^4.2.1
+    pump: ^3.0.0
+    webextension-polyfill: ^0.10.0
+  checksum: 49667d9d9d2ad64adf480f8a6a04199f388f7a89f38978b6f9e8b18d5fbc7a82900326956b29af68c88d54cd45e0185d2198c687bb48470669b756742159bf95
+  languageName: node
+  linkType: hard
+
 "@metamask/rpc-methods@npm:^0.30.0":
   version: 0.30.0
   resolution: "@metamask/rpc-methods@npm:0.30.0"
@@ -3589,6 +3608,13 @@ __metadata:
   version: 2.0.0
   resolution: "@metamask/safe-event-emitter@npm:2.0.0"
   checksum: 8b717ac5d53df0027c05509f03d0534700b5898dd1c3a53fb2dc4c0499ca5971b14aae67f522d09eb9f509e77f50afa95fdb3eda1afbff8b071c18a3d2905e93
+  languageName: node
+  linkType: hard
+
+"@metamask/safe-event-emitter@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "@metamask/safe-event-emitter@npm:3.0.0"
+  checksum: 8dc58a76f9f75bf2405931465fc311c68043d851e6b8ebe9f82ae339073a08a83430dba9338f8e3adc4bfc8067607125074bcafa32baee3a5157f42343dc89e5
   languageName: node
   linkType: hard
 
@@ -13503,6 +13529,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"keyring-api@ssh://git@github.com/MetaMask/keyring-api#main":
+  version: 0.0.0
+  resolution: "keyring-api@ssh://git@github.com/MetaMask/keyring-api#commit=e42eb9b256ad46a01ecb0e8b501a3a01e7ad546a"
+  dependencies:
+    "@metamask/providers": ^11.0.0
+    "@metamask/utils": ^5.0.2
+    "@types/uuid": ^9.0.1
+  checksum: df5d1879b8fd20a5eb478dc2917902123ce6d201c8360f69c79d10c9e383688b17fe8fd2aa3128db2beaa39fa87e173b420c450ec5c4d74fe8a7953559b33b5e
+  languageName: node
+  linkType: hard
+
 "keyv@npm:^4.0.0":
   version: 4.5.0
   resolution: "keyv@npm:4.5.0"
@@ -17577,6 +17614,7 @@ __metadata:
     gatsby-plugin-manifest: ^5.7.0
     gatsby-plugin-styled-components: ^6.7.0
     gatsby-plugin-svgr: ^3.0.0-beta.0
+    keyring-api: "ssh://git@github.com/MetaMask/keyring-api#main"
     prettier: ^2.8.4
     prettier-plugin-packagejson: ^2.4.3
     react: ^18.2.0
@@ -17658,6 +17696,7 @@ __metadata:
     "@metamask/snaps-types": ^0.30.0
     "@metamask/snaps-ui": ^0.30.0
     "@metamask/snaps-webpack-plugin": ^0.31.0
+    "@metamask/utils": ^5.0.2
     "@typescript-eslint/eslint-plugin": ^5.55.0
     "@typescript-eslint/parser": ^5.55.0
     babel-loader: ^9.1.2
@@ -17669,6 +17708,7 @@ __metadata:
     eslint-plugin-jsdoc: ^40.0.3
     eslint-plugin-node: ^11.1.0
     eslint-plugin-prettier: ^4.2.1
+    keyring-api: "ssh://git@github.com/MetaMask/keyring-api#main"
     node-polyfill-webpack-plugin: ^2.0.1
     nodemon: ^2.0.22
     prettier: ^2.8.4
@@ -19325,6 +19365,13 @@ __metadata:
   dependencies:
     webextension-polyfill: ^0.7.0
   checksum: c4dc82c86e34cea717a26af549f2822d63e92af52632f5e909ea13b5e7bd9d6110781f10313e36ada2b54c770ebca018bc3784756d12ba3b0b623d285f1a14a7
+  languageName: node
+  linkType: hard
+
+"webextension-polyfill@npm:^0.10.0":
+  version: 0.10.0
+  resolution: "webextension-polyfill@npm:0.10.0"
+  checksum: 4a59036bda571360c2c0b2fb03fe1dc244f233946bcf9a6766f677956c40fd14d270aaa69cdba95e4ac521014afbe4008bfa5959d0ac39f91c990eb206587f91
   languageName: node
   linkType: hard
 

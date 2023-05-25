@@ -34,8 +34,10 @@
     "@mui/material": "^5.13.2",
     "@types/uuid": "^9.0.1",
     "buffer": "^6.0.3",
+    "keyring-api": "ssh://git@github.com/MetaMask/keyring-api#main",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-icons": "^4.8.0",
     "react-is": "^18.2.0",
     "styled-components": "5.3.9",
     "uuid": "^9.0.0"
