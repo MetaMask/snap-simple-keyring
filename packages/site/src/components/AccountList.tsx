@@ -1,4 +1,17 @@
+/* eslint-disable import/no-extraneous-dependencies */
+import Grid from '@mui/material/Grid';
+import {
+  GiAbstract019,
+  GiAbstract095,
+  GiAnubis,
+  GiAstronautHelmet,
+  GiBaobab,
+  GiBatMask,
+  GiFox,
+} from 'react-icons/gi';
 import styled from 'styled-components';
+
+import { StyledBox } from '../pages/styledComponents';
 
 type Chain = {
   id: string;
@@ -17,42 +30,62 @@ const List = styled.ul`
   list-style-type: none;
   margin: 0;
   padding: 0;
+  width: 100%;
 `;
 
 const Li = styled.li`
-  border: 1px solid black;
+  border: 1px solid;
   margin-bottom: 10px;
-  background-color: #fff;
   padding: 10px;
   border-radius: 5px;
-  width: 75rem;
-
-  strong {
-    font-weight: bold;
-    color: #333;
-  }
-
-  p {
-    margin: 0;
-    font-size: 14px;
-    color: #666;
-  }
-
-  &:hover {
-    background-color: #f0f0f0;
-  }
+  width: 100%;
 `;
+
+const Title = styled.p`
+  font-weight: bold;
+`;
+
+const AccountText = styled.p`
+  margin-top: 10px;
+  margin-bottom: 5px;
+  font-style: cursive;
+`;
+
+const ChainLi = styled.li`
+  margin-top: 10px;
+  margin-bottom: 5px;
+`;
+
+const icons = [
+  <GiAbstract019 />,
+  <GiAbstract095 />,
+  <GiAnubis />,
+  <GiBaobab />,
+  <GiBatMask />,
+  <GiFox />,
+  <GiAstronautHelmet />,
+];
 
 export const AccountList = ({ accounts }: { accounts: Account[] }) => (
   <List>
     {accounts.map((account) => (
       <Li key={account.id}>
-        <strong>{account.name}</strong>
-        <p>Address: {account.address}</p>
-        <p>Type: {account.type}</p>
+        <StyledBox sx={{ flexGrow: 1 }}>
+          <Grid container spacing={2}>
+            <Grid item xs={11}>
+              <Title>{account.name}</Title>
+            </Grid>
+            <Grid item xs={1}>
+              {icons[Math.floor(Math.random() * icons.length)]}{' '}
+            </Grid>
+          </Grid>
+        </StyledBox>
+        <AccountText>
+          {account.address} | {account.type}
+        </AccountText>
         <ul>
           {account.chains.map((chain) => (
-            <li key={chain.id}>{chain.name}</li>
+            <ChainLi key={chain.id}>{chain.name}</ChainLi>
           ))}
         </ul>
       </Li>
