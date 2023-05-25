@@ -1,6 +1,7 @@
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import Grid from '@mui/material/Grid';
+import { KeyringSnapClient } from 'keyring-api';
 import { useContext, useState, useCallback } from 'react';
 import { FiInfo, FiAlertTriangle } from 'react-icons/fi';
 
@@ -80,6 +81,18 @@ const Index = () => {
     }
   };
 
+  const listAccounts = async () => {
+    const client = new KeyringSnapClient(snapId);
+    const accounts = await client.listAccounts();
+    console.log('[UI] list of accounts:', accounts);
+    const addresses = accounts.map((a: { address: string }) => a.address);
+    console.log(addresses);
+    setSnapState({
+      accounts: [],
+      pendingRequests: {},
+    });
+  };
+
   const accountManagementMethods = [
     {
       name: 'Create Account',
@@ -87,7 +100,7 @@ const Index = () => {
       actionUI: (
         <Action
           callback={async () => {
-            const client = new KeyringClient(snapId);
+            const client = new KeyringSnapClient(snapId);
             return await client.createAccount('Account X', []);
           }}
         />
@@ -113,14 +126,7 @@ const Index = () => {
     {
       name: 'List Accounts',
       description: 'Method to list all account that the SSK manages',
-      actionUI: (
-        <Action
-          callback={async () => {
-            const client = new KeyringClient(snapId);
-            return await client.listAccounts();
-          }}
-        />
-      ),
+      actionUI: <Action callback={async () => await listAccounts()} />,
     },
     {
       name: 'Update Account',

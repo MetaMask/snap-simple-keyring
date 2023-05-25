@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 // eslint-disable-next-line import/no-extraneous-dependencies
-import Common from '@ethereumjs/common';
+import Common, { Hardfork } from '@ethereumjs/common';
 import { JsonTx, TransactionFactory } from '@ethereumjs/tx';
 import { Address } from '@ethereumjs/util';
 import {
@@ -152,6 +152,7 @@ export class SimpleKeyringSnap {
       method = payload.method;
     }
     console.log('payload', address, data, chainOpts);
+    console.log(JSON.stringify(payload));
 
     switch (method) {
       case 'personal_sign': {
@@ -242,23 +243,23 @@ export class SimpleKeyringSnap {
     // eslint-disable-next-line no-restricted-globals
     const privateKeyBuffer = Buffer.from(privateKey, 'hex');
 
-    console.log('chainOpts', chainOpts);
-
     const common = Common.custom(
-      { chainId: chainOpts.chainId },
-      { hardfork: chainOpts.hardfork },
+      { chainId: ethTx.chainId },
+      {
+        hardfork:
+          ethTx.maxPriorityFeePerGas || ethTx.maxFeePerGas
+            ? Hardfork.London
+            : Hardfork.Istanbul,
+      },
     );
 
-    const signedTx = TransactionFactory.fromTxData(
-      { ...ethTx, type: chainOpts.type },
-      {
-        common,
-      },
-    ).sign(privateKeyBuffer);
+    const signedTx = TransactionFactory.fromTxData({
+      common,
+    }).sign(privateKeyBuffer);
 
     const serializableSignedTx = this.#serializeTransaction(
       signedTx.toJSON(),
-      chainOpts,
+      signedTx.type,
     );
 
     return serializableSignedTx;
@@ -317,13 +318,10 @@ export class SimpleKeyringSnap {
     });
   }
 
-  #serializeTransaction(
-    tx: JsonTx,
-    chainOpts: { type: number; chain: number; hardfork: string },
-  ): Record<string, any> {
+  #serializeTransaction(tx: JsonTx, type: number): Record<string, any> {
     const serializableSignedTx: Record<string, any> = {
       ...tx,
-      type: chainOpts.type,
+      type,
     };
     // Make tx serializable
     // toJSON does not remove undefined or convert undefined to null
