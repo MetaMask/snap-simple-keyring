@@ -1,9 +1,9 @@
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import Grid from '@mui/material/Grid';
+import { KeyringSnapClient } from 'keyring-api';
 import { useContext, useState, useCallback } from 'react';
 import { FiInfo, FiAlertTriangle } from 'react-icons/fi';
-import { KeyringSnapClient } from 'keyring-api';
 
 import {
   Container,
@@ -95,19 +95,18 @@ const Index = () => {
     },
     {
       name: 'Get Account',
-      description: '',
+      description: 'Get the data about a select account',
       actionUI: (
         <Action
           callback={async () => {
-            // const client = new KeyringClient(snapId);
-            // return await client.createAccount('Account X', []);
+            return { response: 'mock response' };
           }}
         />
       ),
     },
     {
       name: 'Edit Account',
-      descriptions: '',
+      descriptions: 'Edit an account (provide a object with the attributes to update)', // TO DO: Add input field
       actionUI: <Action callback={async () => console.log('Edit Account')} />,
     },
     {
@@ -119,7 +118,9 @@ const Index = () => {
             const client = new KeyringSnapClient(snapId);
             const accounts = await client.listAccounts();
             console.log('[UI] list of accounts:', accounts);
-            const addresses = accounts.map((a: { address: string }) => a.address);
+            const addresses = accounts.map(
+              (a: { address: string }) => a.address,
+            );
             console.log(addresses);
             setSnapState({
               accounts: [],
@@ -131,12 +132,12 @@ const Index = () => {
     },
     {
       name: 'Update Account',
-      description: '',
+      description: 'Update a select account', // TO DO: Add input field
       actionUI: <Action callback={async () => console.log('Update Account')} />,
     },
     {
       name: 'Remove Account',
-      description: '',
+      description: 'Remove a select account', // TO DO: Add input field
       actionUI: <Action callback={async () => console.log('Remove Account')} />,
     },
   ];
@@ -144,7 +145,7 @@ const Index = () => {
   const requestMethods = [
     {
       name: 'Get Requests',
-      description: '',
+      description: 'Get all the request made by an account', // TO DO: Add input field
       actionUI: <Action callback={async () => console.log('Get Requests')} />,
     },
   ];
