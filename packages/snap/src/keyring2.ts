@@ -1,6 +1,6 @@
 import { Address } from '@ethereumjs/util';
+import { Keyring, KeyringAccount, KeyringRequest } from '@metamask/keyring-api';
 import { Json } from '@metamask/snaps-types';
-import { Keyring, KeyringAccount, KeyringRequest } from 'keyring-api';
 import { v4 as uuid } from 'uuid';
 
 export type Wallet = {

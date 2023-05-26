@@ -1,7 +1,7 @@
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable @typescript-eslint/no-misused-promises */
+import { KeyringSnapRpcClient } from '@metamask/keyring-api';
 import Grid from '@mui/material/Grid';
-import { KeyringSnapClient } from 'keyring-api';
 import { useContext, useState, useCallback } from 'react';
 import { FiInfo, FiAlertTriangle } from 'react-icons/fi';
 
@@ -114,7 +114,7 @@ const Index = () => {
       actionUI: (
         <Action
           callback={async () => {
-            const client = new KeyringSnapClient(snapId);
+            const client = new KeyringSnapRpcClient(snapId);
             return await client.createAccount('Account X', []);
           }}
         />
@@ -143,7 +143,7 @@ const Index = () => {
       actionUI: (
         <Action
           callback={async () => {
-            const client = new KeyringSnapClient(snapId);
+            const client = new KeyringSnapRpcClient(snapId);
             const accounts = await client.listAccounts();
             console.log('[UI] list of accounts:', accounts);
             const addresses = accounts.map(
