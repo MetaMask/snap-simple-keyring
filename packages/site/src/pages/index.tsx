@@ -134,7 +134,7 @@ const Index = () => {
     {
       name: 'Edit Account',
       descriptions:
-        'Edit an account (provide a object with the attributes to update)', // TO DO: Add input field
+        'Edit an account (provide a object with the attributes to update)', // TODO: Add input field
       actionUI: <Action callback={async () => console.log('Edit Account')} />,
     },
     {
@@ -160,12 +160,12 @@ const Index = () => {
     },
     {
       name: 'Update Account',
-      description: 'Update a select account', // TO DO: Add input field
+      description: 'Update a select account', // TODO: Add input field
       actionUI: <Action callback={async () => console.log('Update Account')} />,
     },
     {
       name: 'Remove Account',
-      description: 'Remove a select account', // TO DO: Add input field
+      description: 'Remove a select account', // TODO: Add input field
       actionUI: <Action callback={async () => console.log('Remove Account')} />,
     },
   ];
@@ -173,7 +173,7 @@ const Index = () => {
   const requestMethods = [
     {
       name: 'Get Requests',
-      description: 'Get all the request made by an account', // TO DO: Add input field
+      description: 'Get all the request made by an account', // TODO: Add input field
       actionUI: <Action callback={async () => console.log('Get Requests')} />,
     },
   ];
@@ -215,7 +215,7 @@ const Index = () => {
           <Grid item xs={4} sm={2} md={1}>
             <Divider />
             <DividerTitle>Current Accounts</DividerTitle>
-            {/* TO DO: Connect to correct data source */}
+            {/* TODO: Connect to correct data source */}
             <AccountList accounts={[]} />
           </Grid>
         </Grid>
