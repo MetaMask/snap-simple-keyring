@@ -26,6 +26,18 @@
     "serve": "mm-snap serve",
     "start": "nodemon"
   },
+  "dependencies": {
+    "@ethereumjs/common": "^2.6.4",
+    "@ethereumjs/tx": "^3.5.2",
+    "@ethereumjs/util": "^8.0.5",
+    "@metamask/eth-sig-util": "^5.0.2",
+    "@metamask/keyring-api": "ssh://git@github.com/MetaMask/keyring-api#main",
+    "@metamask/utils": "^5.0.2",
+    "buffer": "^6.0.3",
+    "node-polyfill-webpack-plugin": "^2.0.1",
+    "stream-browserify": "^3.0.0",
+    "uuid": "^9.0.0"
+  },
   "devDependencies": {
     "@babel/core": "^7.21.3",
     "@babel/preset-typescript": "^7.21.0",
@@ -67,17 +79,5 @@
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"
-  },
-  "dependencies": {
-    "@ethereumjs/common": "^2.6.4",
-    "@ethereumjs/tx": "^3.5.2",
-    "@ethereumjs/util": "^8.0.5",
-    "@metamask/eth-sig-util": "^5.0.2",
-    "@metamask/keyring-api": "ssh://git@github.com/MetaMask/keyring-api#main",
-    "@metamask/utils": "^5.0.2",
-    "buffer": "^6.0.3",
-    "node-polyfill-webpack-plugin": "^2.0.1",
-    "stream-browserify": "^3.0.0",
-    "uuid": "^9.0.0"
   }
 }
