@@ -35,7 +35,6 @@ export const Accordion = ({ items }: any) => {
   const [activeIndexes, setActiveIndexes] = useState<number[]>([]);
 
   const toggleAccordion = (index: number) => {
-    console.log(activeIndexes);
     let newIndexes;
     if (activeIndexes.includes(index)) {
       newIndexes = activeIndexes.filter((element) => element !== index);

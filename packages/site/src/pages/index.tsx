@@ -37,10 +37,10 @@ const Action = ({ callback }: { callback: () => Promise<any> }) => {
 
     try {
       const newResponse = await callback();
-      setResponse(newResponse);
+      setResponse(JSON.stringify(newResponse));
     } catch (newError: any) {
       dispatch({ type: MetamaskActions.SetError, payload: newError });
-      setError(newError);
+      setError(JSON.stringify(newError));
     }
   }, []);
 
@@ -133,7 +133,8 @@ const Index = () => {
     },
     {
       name: 'Edit Account',
-      descriptions: 'Edit an account (provide a object with the attributes to update)', // TO DO: Add input field
+      descriptions:
+        'Edit an account (provide a object with the attributes to update)', // TO DO: Add input field
       actionUI: <Action callback={async () => console.log('Edit Account')} />,
     },
     {
