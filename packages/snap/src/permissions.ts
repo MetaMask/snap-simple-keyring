@@ -2,15 +2,18 @@ export enum SnapKeyringMethod {
   ListAccounts = 'keyring_listAccounts',
   CreateAccount = 'keyring_createAccount',
   GetAccount = 'keyring_getAccount',
-  UpdateAccount = 'keyring_updateAccount',
-  RemoveAccount = 'keyring_removeAccount',
-  ImportAccount = 'keyring_importAccount',
+  EditAccount = 'keyring_editAccount',
+  DeleteAccount = 'keyring_deleteAccount',
   ExportAccount = 'keyring_exportAccount',
-  ListRequests = 'keyring_listRequests',
-  SubmitRequest = 'keyring_submitRequest',
+}
+
+export enum RequestMethods {
   GetRequest = 'keyring_getRequest',
+  SubmitRequest = 'keyring_submitRequest',
+  ListRequests = 'keyring_listRequests',
+  DeleteRequest = 'keyring_deleteRequest',
   ApproveRequest = 'keyring_approveRequest',
-  RemoveRequest = 'keyring_removeRequest',
+  RejectRequest = 'keyring_rejectRequest',
 }
 
 export enum InternalMethod {
@@ -21,15 +24,25 @@ export enum InternalMethod {
   ManageAccounts = 'snap.internal.manageAccounts',
 }
 
+export enum SigningMethods {
+  SignTransaction = 'sign_transaction',
+  SignTypedData = 'eth_signTypedData',
+  SignPersonalMessage = 'personal_sign',
+  EthSign = 'eth_sign',
+}
+
 export const PERMISSIONS = new Map<string, string[]>([
   [
     'metamask',
     [
       SnapKeyringMethod.ListAccounts,
-      SnapKeyringMethod.ListRequests,
-      SnapKeyringMethod.SubmitRequest,
-      SnapKeyringMethod.ApproveRequest,
-      SnapKeyringMethod.RemoveRequest,
+      SnapKeyringMethod.CreateAccount,
+      SnapKeyringMethod.DeleteAccount,
+      SnapKeyringMethod.EditAccount,
+      RequestMethods.ListRequests,
+      RequestMethods.SubmitRequest,
+      RequestMethods.ApproveRequest,
+      RequestMethods.RejectRequest,
     ],
   ],
   [
@@ -38,12 +51,13 @@ export const PERMISSIONS = new Map<string, string[]>([
       SnapKeyringMethod.ListAccounts,
       SnapKeyringMethod.CreateAccount,
       SnapKeyringMethod.GetAccount,
-      SnapKeyringMethod.UpdateAccount,
-      SnapKeyringMethod.RemoveAccount,
-      SnapKeyringMethod.ImportAccount,
+      SnapKeyringMethod.EditAccount,
+      SnapKeyringMethod.DeleteAccount,
       SnapKeyringMethod.ExportAccount,
-      SnapKeyringMethod.ListRequests,
-      SnapKeyringMethod.ApproveRequest,
+      RequestMethods.ListRequests,
+      RequestMethods.ApproveRequest,
+      RequestMethods.DeleteRequest,
+      RequestMethods.RejectRequest,
       InternalMethod.AwaitEvent,
       InternalMethod.Hello,
       InternalMethod.GetState,
