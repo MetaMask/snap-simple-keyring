@@ -23,8 +23,8 @@ import { saveState } from './stateManagement';
 import { serializeTransaction, validateNoDuplicateNames } from './util';
 
 export type KeyringState = {
-  accounts: Record<string, Wallet>;
-  pendingRequests: Record<string, any>;
+  wallets: Record<string, Wallet>;
+  requests: Record<string, KeyringRequest>;
 };
 
 export type Wallet = {
@@ -38,8 +38,8 @@ export class SimpleKeyringSnap2 implements Keyring {
   #requests: Record<string, KeyringRequest>;
 
   constructor(state: KeyringState) {
-    this.#wallets = state.accounts;
-    this.#requests = state.pendingRequests;
+    this.#wallets = state.wallets;
+    this.#requests = state.requests;
   }
 
   async listAccounts(): Promise<KeyringAccount[]> {

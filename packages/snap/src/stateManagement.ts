@@ -1,4 +1,4 @@
-import { KeyringState } from '.';
+import { KeyringState } from './keyring2';
 
 /**
  * Retrieves the current state of the keyring.
@@ -15,8 +15,8 @@ export async function getState(): Promise<KeyringState> {
 
   if (!persistedData) {
     return {
-      accounts: {},
-      pendingRequests: {},
+      wallets: {},
+      requests: {},
     };
   }
 
@@ -48,14 +48,14 @@ export async function getSerializedState() {
 
   if (!persistedData) {
     return {
-      accounts: [],
-      pendingRequests: {},
+      wallets: {},
+      requests: {},
     };
   }
 
   const cleanedData = {
     ...persistedData,
-    accounts: Object.keys(persistedData.accounts),
+    accounts: Object.keys(persistedData.weallets),
   };
 
   return cleanedData;

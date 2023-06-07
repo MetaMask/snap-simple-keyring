@@ -57,8 +57,8 @@ async function dispatcher(
   let persistedState: KeyringState = await getState();
   if (!persistedState) {
     persistedState = {
-      accounts: {},
-      pendingRequests: {},
+      wallets: {},
+      requests: {},
     };
     await saveState(persistedState);
   }
