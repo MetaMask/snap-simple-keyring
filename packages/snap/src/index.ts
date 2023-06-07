@@ -1,3 +1,8 @@
+import { KeyringRequest } from '@metamask/keyring-api';
+import {
+  ApproveRequestRequest,
+  RejectRequestRequest,
+} from '@metamask/keyring-api/dist/keyring-internal-api';
 import {
   OnRpcRequestHandler,
   Json,
@@ -5,20 +10,15 @@ import {
 } from '@metamask/snaps-types';
 import { panel, heading, text } from '@metamask/snaps-ui';
 
-import { SimpleKeyringSnap, Account } from './keyring';
-import { SimpleKeyringSnap2 } from './keyring2';
-import { InternalMethod, PERMISSIONS, SnapKeyringMethod } from './permissions';
+import { KeyringState, SimpleKeyringSnap2 } from './keyring2';
+import {
+  InternalMethod,
+  PERMISSIONS,
+  RequestMethods,
+  SnapKeyringMethod,
+} from './permissions';
 import { getState, saveState } from './stateManagement';
-
-export type KeyringState = {
-  accounts: Record<string, Account>;
-  pendingRequests: Record<string, any>;
-};
-
-export type SerializedKeyringState = {
-  accounts: string[];
-  pendingRequests: Record<string, any>;
-};
+import { logRequest } from './util';
 
 /**
  * Verify if the caller can call the requested method.
@@ -31,7 +31,8 @@ function hasPermission(origin: string, method: string): boolean {
   return Boolean(PERMISSIONS.get(origin)?.includes(method));
 }
 
-const keyring = new SimpleKeyringSnap2();
+// eslint-disable-next-line no-var
+var simpleKeyringSnap: SimpleKeyringSnap2;
 
 /**
  * Execute a JSON-RPC request.
@@ -53,7 +54,7 @@ async function dispatcher(
     throw new Error(`origin ${origin} cannot call method ${request.method}`);
   }
 
-  let persistedState = await getState();
+  let persistedState: KeyringState = await getState();
   if (!persistedState) {
     persistedState = {
       accounts: {},
@@ -62,9 +63,12 @@ async function dispatcher(
     await saveState(persistedState);
   }
 
-  const simpleKeyringSnap = new SimpleKeyringSnap(persistedState);
+  if (!simpleKeyringSnap) {
+    simpleKeyringSnap = new SimpleKeyringSnap2(persistedState);
+  }
 
   switch (request.method) {
+    // internal methods
     case InternalMethod.Hello: {
       return snap.request({
         method: 'snap_dialog',

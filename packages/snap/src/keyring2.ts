@@ -1,7 +1,31 @@
+import Common, { Hardfork } from '@ethereumjs/common';
+import { JsonTx, TransactionFactory } from '@ethereumjs/tx';
 import { Address } from '@ethereumjs/util';
-import { Keyring, KeyringAccount, KeyringRequest } from '@metamask/keyring-api';
-import { Json } from '@metamask/snaps-types';
+import {
+  SignTypedDataVersion,
+  TypedDataV1,
+  TypedMessage,
+  personalSign,
+  recoverPersonalSignature,
+  signTypedData,
+} from '@metamask/eth-sig-util';
+import {
+  Keyring,
+  KeyringAccount,
+  KeyringRequest,
+  SubmitRequestResponse,
+} from '@metamask/keyring-api';
+import { Json, JsonRpcRequest } from '@metamask/snaps-types';
 import { v4 as uuid } from 'uuid';
+
+import { SigningMethods } from './permissions';
+import { saveState } from './stateManagement';
+import { serializeTransaction, validateNoDuplicateNames } from './util';
+
+export type KeyringState = {
+  accounts: Record<string, Wallet>;
+  pendingRequests: Record<string, any>;
+};
 
 export type Wallet = {
   account: KeyringAccount;
@@ -13,9 +37,9 @@ export class SimpleKeyringSnap2 implements Keyring {
 
   #requests: Record<string, KeyringRequest>;
 
-  constructor() {
-    this.#wallets = {};
-    this.#requests = {};
+  constructor(state: KeyringState) {
+    this.#wallets = state.accounts;
+    this.#requests = state.pendingRequests;
   }
 
   async listAccounts(): Promise<KeyringAccount[]> {
