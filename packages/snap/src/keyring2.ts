@@ -89,20 +89,34 @@ export class SimpleKeyringSnap2 implements Keyring {
       options: currentAccount.options,
     };
 
-    // TODO: check if account name is valid (unique)
+    if (!validateNoDuplicateNames(account.name, Object.values(this.#wallets))) {
+      throw new Error(`[Snap] Duplication name for wallet: ${account.name}`);
+    }
     // TODO: update the KeyringController
     this.#wallets[account.id].account = newAccount;
+    await this.#saveSnapKeyringState();
   }
 
   async deleteAccount(id: string): Promise<void> {
     // TODO: update the KeyringController
     delete this.#wallets[id];
+    await this.#saveSnapKeyringState();
   }
 
   async exportAccount(id: string): Promise<Record<string, Json>> {
     return {
       privateKey: this.#wallets[id].privateKey,
     };
+  }
+
+  async #saveSnapKeyringState(): Promise<void> {
+    console.log('saving keyring');
+    console.log(this.#wallets);
+    console.log(this.#requests);
+    await saveState({
+      wallets: this.#wallets,
+      requests: this.#requests,
+    });
   }
 
   async listRequests(): Promise<KeyringRequest[]> {
