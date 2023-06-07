@@ -81,15 +81,17 @@ async function dispatcher(
         },
       });
     }
-
-    case SnapKeyringMethod.SubmitRequest: {
-      console.log(JSON.stringify(request));
-      return await simpleKeyringSnap.handleSubmitRequest(request);
-      // return keyring.submitRequest({});
+    case InternalMethod.GetState: {
+      logRequest(InternalMethod.GetState, request);
+      return await getState();
     }
 
-    case InternalMethod.ManageAccounts: {
-      return await simpleKeyringSnap.handleManageAccounts(request.params);
+    // Request Methods
+    case RequestMethods.SubmitRequest: {
+      logRequest(RequestMethods.SubmitRequest, request);
+      return await simpleKeyringSnap.submitRequest(
+        request.params as KeyringRequest,
+      );
     }
 
     case InternalMethod.GetState: {
@@ -112,14 +114,18 @@ async function dispatcher(
       return await keyring.listAccounts();
     }
 
-    case 'keyring_createAccount': {
-      console.log(request.params);
+    case SnapKeyringMethod.CreateAccount: {
+      logRequest(SnapKeyringMethod.CreateAccount, request.params);
       const req = request.params as {
         name: string;
         chains: string[];
         options?: Record<string, Json>;
       };
-      return await keyring.createAccount(req.name, req.chains, req.options);
+      return await simpleKeyringSnap.createAccount(
+        req.name,
+        req.chains,
+        req.options,
+      );
     }
 
     default: {
