@@ -93,25 +93,24 @@ async function dispatcher(
         request.params as KeyringRequest,
       );
     }
-
-    case InternalMethod.GetState: {
-      return await simpleKeyringSnap.handleGetState();
-    }
-
-    case InternalMethod.SetState: {
-      return await simpleKeyringSnap.handleSetState(request);
-    }
-
-    case SnapKeyringMethod.ApproveRequest: {
-      console.log(
-        '[SNAP] (dispatcher) ApproveRequest',
-        JSON.stringify(request),
+    case RequestMethods.ApproveRequest: {
+      logRequest(RequestMethods.ApproveRequest, request);
+      return await simpleKeyringSnap.approveRequest(
+        (request.params as ApproveRequestRequest).params.id,
       );
-      return await simpleKeyringSnap.handleApproveRequest(request.params);
     }
 
-    case 'keyring_listAccounts': {
-      return await keyring.listAccounts();
+    case RequestMethods.RejectRequest: {
+      logRequest(RequestMethods.RejectRequest, request.params);
+      return await simpleKeyringSnap.rejectRequest(
+        (request.params as RejectRequestRequest).params.id,
+      );
+    }
+
+    // Keyring Methods
+    case SnapKeyringMethod.ListAccounts: {
+      logRequest(SnapKeyringMethod.ListAccounts, request.params);
+      return await simpleKeyringSnap.listAccounts();
     }
 
     case SnapKeyringMethod.CreateAccount: {
