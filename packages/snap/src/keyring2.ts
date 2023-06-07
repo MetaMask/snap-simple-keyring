@@ -131,11 +131,17 @@ export class SimpleKeyringSnap2 implements Keyring {
     // TODO: notify extension
   }
 
-  #getWalletByAddress(address: string): Wallet | undefined {
-    return Object.values(this.#wallets).find(
-      (wallet) =>
-        wallet.account.address.toLowerCase() === address.toLowerCase(),
+  #getWalletByAddress(address: string): Wallet {
+    const wallet = Object.values(this.#wallets).find(
+      (keyringAccount) =>
+        keyringAccount.account.address.toLowerCase() === address.toLowerCase(),
     );
+
+    if (!wallet) {
+      throw new Error(`[Snap] Cannot find wallet with address ${address}`);
+    }
+
+    return wallet;
   }
 
   #generatePrivateKey(): {
