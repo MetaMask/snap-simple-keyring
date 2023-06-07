@@ -72,6 +72,8 @@ export class SimpleKeyringSnap2 implements Keyring {
       params: ['create', account.address],
     });
 
+    await this.#saveSnapKeyringState();
+
     return account;
   }
 
