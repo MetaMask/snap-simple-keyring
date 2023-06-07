@@ -127,8 +127,28 @@ export class SimpleKeyringSnap2 implements Keyring {
     return this.#requests[id];
   }
 
-  async submitRequest(request: KeyringRequest): Promise<void> {
+  async submitRequest<Result extends Json = null>(
+    request: KeyringRequest,
+  ): Promise<SubmitRequestResponse<Result>> {
     this.#requests[request.request.id] = request;
+    const { method, params = '' } = request.request as JsonRpcRequest;
+
+    // if signing request
+    if (Object.values(SigningMethods).includes(method as SigningMethods)) {
+      const signedPayload = this.#handleSigningRequest(
+        method as SigningMethods,
+        params,
+      );
+      return {
+        pending: false,
+        result: signedPayload as Result,
+      };
+    }
+
+
+    return {
+      pending: true,
+    };
   }
 
   async approveRequest(id: string): Promise<void> {
@@ -166,5 +186,120 @@ export class SimpleKeyringSnap2 implements Keyring {
     const pk = Buffer.from(crypto.getRandomValues(new Uint8Array(32)));
     const address = Address.fromPrivateKey(pk).toString();
     return { privateKey: pk.toString('hex'), address };
+  }
+
+  #handleSigningRequest(method: SigningMethods, params: Json): Json {
+    switch (method) {
+      case SigningMethods.EthSign: {
+        throw new Error(`[Snap] Eth sign not implemented`);
+      }
+      case SigningMethods.SignPersonalMessage: {
+        console.log(333, method, params);
+        const [from, message] = params as string[];
+        console.log(from, message);
+        const signedMessage = this.#signPersonalMessage(from, message);
+        console.log(signedMessage);
+        return signedMessage;
+      }
+      case SigningMethods.SignTransaction: {
+        const [from, ethTx, opts] = params as [string, JsonTx, Json];
+        return this.#signTransaction(from, ethTx, opts);
+      }
+      case SigningMethods.SignTypedData: {
+        const [from, typedData, opts] = params as [
+          string,
+          Json,
+          { version: SignTypedDataVersion },
+        ];
+        return this.#signTypedData(from, typedData, opts);
+      }
+      default: {
+        throw new Error(`[Snap] Unknwon method ${method as string}`);
+      }
+    }
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  #signTransaction(from: string, ethTx: any, opts: any): Json {
+    const wallet = this.#getWalletByAddress(from);
+
+    // eslint-disable-next-line no-restricted-globals
+    const privateKey = Buffer.from(wallet.privateKey, 'hex');
+
+    const common = Common.custom(
+      { chainId: ethTx.chainId },
+      {
+        hardfork:
+          ethTx.maxPriorityFeePerGas || ethTx.maxFeePerGas
+            ? Hardfork.London
+            : Hardfork.Istanbul,
+      },
+    );
+
+    const signedTx = TransactionFactory.fromTxData(ethTx, {
+      common,
+    }).sign(privateKey);
+
+    const serializableSignedTx = serializeTransaction(
+      signedTx.toJSON(),
+      signedTx.type,
+    );
+
+    return serializableSignedTx;
+  }
+
+  #signTypedData(
+    from: string,
+    typedData: Json,
+    opts: { version?: SignTypedDataVersion },
+  ): string {
+    let version: SignTypedDataVersion;
+    if (
+      opts.version &&
+      Object.keys(SignTypedDataVersion).includes(opts.version as string)
+    ) {
+      version = opts.version;
+    } else {
+      // Treat invalid versions as "V1"
+      version = SignTypedDataVersion.V1;
+    }
+
+    const { privateKey } = this.#getWalletByAddress(from);
+
+    // eslint-disable-next-line no-restricted-globals
+    const privateKeyBuffer = Buffer.from(privateKey, 'hex');
+
+    return signTypedData({
+      privateKey: privateKeyBuffer,
+      data: typedData as unknown as TypedDataV1 | TypedMessage<any>,
+      version,
+    });
+  }
+
+  #signPersonalMessage(from: string, request: string): string {
+    const { privateKey } = this.#getWalletByAddress(from);
+    // eslint-disable-next-line no-restricted-globals
+    const privateKeyBuffer = Buffer.from(privateKey, 'hex');
+
+    // eslint-disable-next-line no-restricted-globals
+    const messageBuffer = Buffer.from(request.slice(2), 'hex');
+
+    const signedMessageHex = personalSign({
+      privateKey: privateKeyBuffer,
+      data: messageBuffer,
+    });
+
+    const recoveredAddress = recoverPersonalSignature({
+      data: messageBuffer,
+      signature: signedMessageHex,
+    });
+    if (recoveredAddress !== from) {
+      console.log('incorrect address');
+      throw new Error(
+        `Signature verification failed for account "${from}" (got "${recoveredAddress}")`,
+      );
+    }
+
+    return signedMessageHex;
   }
 }
