@@ -20,7 +20,11 @@ import { v4 as uuid } from 'uuid';
 
 import { SigningMethods } from './permissions';
 import { saveState } from './stateManagement';
-import { serializeTransaction, validateNoDuplicateNames } from './util';
+import {
+  isEVMChain,
+  serializeTransaction,
+  validateNoDuplicateNames,
+} from './util';
 
 export type KeyringState = {
   wallets: Record<string, Wallet>;
@@ -62,7 +66,17 @@ export class SimpleKeyringSnap2 implements Keyring {
       chains,
       options,
       address,
-      capabilities: ['sign'],
+      supportedMethods: [
+        'personal_sign',
+        'eth_sign',
+        'eth_sendTransaction',
+        'eth_signTransaction',
+        'eth_signTypedData',
+        'eth_signTypedData_v1',
+        'eth_signTypedData_v2',
+        'eth_signTypedData_v3',
+        'eth_signTypedData_v4',
+      ],
       type: 'eip155:eoa',
     };
 
@@ -84,7 +98,7 @@ export class SimpleKeyringSnap2 implements Keyring {
       ...account,
       // Restore read-only properties.
       address: currentAccount.address,
-      capabilities: currentAccount.capabilities,
+      supportedMethods: currentAccount.supportedMethods,
       type: currentAccount.type,
       options: currentAccount.options,
     };
@@ -163,6 +177,15 @@ export class SimpleKeyringSnap2 implements Keyring {
   async rejectRequest(id: string): Promise<void> {
     delete this.#requests[id];
     // TODO: notify extension
+  }
+
+  async filterSupportedChains(
+    _id: string,
+    chains: string[],
+  ): Promise<string[]> {
+    // id is not used because all the accounts created by snap are EOA for evm chains
+    // EOA can sign for any evm chain
+    return chains.filter((chain) => isEVMChain(chain));
   }
 
   #getWalletByAddress(address: string): Wallet {
