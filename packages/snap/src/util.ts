@@ -57,3 +57,13 @@ export function validateNoDuplicateNames(
 ): boolean {
   return !wallets.find((wallet) => wallet.account.name === name);
 }
+
+/**
+ * Determines whether the given CAIP-2 chain ID represents an EVM-based chain.
+ *
+ * @param caip2ChainId - The CAIP-2 chain ID to check.
+ * @returns Returns true if the chain is EVM-based, otherwise false.
+ */
+export function isEVMChain(caip2ChainId: string): boolean {
+  return caip2ChainId.startsWith('eip155');
+}
