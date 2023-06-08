@@ -56,14 +56,12 @@ export class SimpleKeyringSnap2 implements Keyring {
 
   async createAccount(
     name: string,
-    chains: string[],
     options: Record<string, Json> | null = null,
   ): Promise<KeyringAccount> {
     const { privateKey, address } = this.#generatePrivateKey();
     const account: KeyringAccount = {
       id: uuid(),
       name,
-      chains,
       options,
       address,
       supportedMethods: [
@@ -144,39 +142,75 @@ export class SimpleKeyringSnap2 implements Keyring {
   async submitRequest<Result extends Json = null>(
     request: KeyringRequest,
   ): Promise<SubmitRequestResponse<Result>> {
-    this.#requests[request.request.id] = request;
+    // Example of a async pending request
+    // For this example, we do not use an asyncing request.
+    // this.#requests[request.request.id] = request;
+
     const { method, params = '' } = request.request as JsonRpcRequest;
 
-    // if signing request
-    if (Object.values(SigningMethods).includes(method as SigningMethods)) {
-      const signedPayload = this.#handleSigningRequest(
-        method as SigningMethods,
-        params,
-      );
-      return {
-        pending: false,
-        result: signedPayload as Result,
-      };
-    }
-
-
+    const signedPayload = this.#handleSigningRequest(
+      method as SigningMethods,
+      params,
+    );
     return {
-      pending: true,
+      pending: false,
+      result: signedPayload as Result,
     };
   }
 
-  async approveRequest(id: string): Promise<void> {
-    const request = this.#requests[id];
-    const wallet = this.#wallets[request.account];
+  async approveRequest(_id: string): Promise<void> {
+    // Example of approve an async pending request.
+    //
+    // const request = this.#requests[id];
+    // const confirmation = await snap.request({
+    //   method: 'snap_dialog',
+    //   params: {
+    //     type: 'confirmation',
+    //     content: panel([
+    //       heading(`Signing Request: ${request.request.method}`),
+    //       text(`Would you like to sign this request?`),
+    //       ...Object.entries((request.request as JsonRpcRequest).params).map(
+    //         ([key, value]) => {
+    //           return text(`${key}: ${JSON.stringify(value)}`);
+    //         },
+    //       ),
+    //     ]),
+    //   },
+    // });
 
-    // TODO: sign request
-    // TODO: notify extension
-    throw new Error('Method not implemented.');
+    // if (!confirmation) {
+    //   throw new Error(
+    //     `[Snap] User rejected signing request: ${request.request.method}`,
+    //   );
+    // }
+
+    // // sign request
+    // const result = this.#handleSigningRequest(
+    //   request.request.method as SigningMethods,
+    //   (request.request as JsonRpcRequest).params,
+    // );
+
+    // // notify extension
+    // const payload = {
+    //   id: request.request.id,
+    //   result,
+    // };
+    // await snap.request({
+    //   method: 'snap_manageAccounts',
+    //   params: ['submit', payload],
+    // });
+
+    throw new Error('[Snap] Signing already done in submit request.');
   }
 
-  async rejectRequest(id: string): Promise<void> {
-    delete this.#requests[id];
-    // TODO: notify extension
+  async rejectRequest(_id: string): Promise<void> {
+    // await snap.request({
+    //   method: 'snap_manageAccounts',
+    //   params: ['submit', payload],
+    // });
+    // delete this.#requests[id];
+
+    throw new Error('[Snap] No reject request for this snap.');
   }
 
   async filterSupportedChains(
@@ -217,11 +251,8 @@ export class SimpleKeyringSnap2 implements Keyring {
         throw new Error(`[Snap] Eth sign not implemented`);
       }
       case SigningMethods.SignPersonalMessage: {
-        console.log(333, method, params);
         const [from, message] = params as string[];
-        console.log(from, message);
         const signedMessage = this.#signPersonalMessage(from, message);
-        console.log(signedMessage);
         return signedMessage;
       }
       case SigningMethods.SignTransaction: {
