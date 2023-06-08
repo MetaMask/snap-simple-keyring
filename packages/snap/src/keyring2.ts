@@ -1,5 +1,10 @@
 import { Address } from '@ethereumjs/util';
-import { Keyring, KeyringAccount, KeyringRequest } from '@metamask/keyring-api';
+import {
+  Keyring,
+  KeyringAccount,
+  KeyringRequest,
+  SubmitRequestResponse,
+} from '@metamask/keyring-api';
 import { Json } from '@metamask/snaps-types';
 import { v4 as uuid } from 'uuid';
 
@@ -28,21 +33,32 @@ export class SimpleKeyringSnap2 implements Keyring {
 
   async createAccount(
     name: string,
-    chains: string[],
     options: Record<string, Json> | null = null,
   ): Promise<KeyringAccount> {
-    const { privateKey, address } = this.#generatePrivateKey();
+    const { privateKey, address } = this.#generateKeyPair();
     const account: KeyringAccount = {
       id: uuid(),
       name,
-      chains,
       options,
       address,
-      capabilities: ['sign'],
+      supportedMethods: [
+        'eth_sendTransaction',
+        'eth_sign',
+        'eth_signTransaction',
+        'eth_signTypedData_v1',
+        'eth_signTypedData_v2',
+        'eth_signTypedData_v3',
+        'eth_signTypedData_v4',
+        'eth_signTypedData',
+        'personal_sign',
+      ],
       type: 'eip155:eoa',
     };
 
     this.#wallets[account.id] = { account, privateKey };
+    console.log(
+      `[SNAP] Sending createAccount request to the SnapController...`,
+    );
     await snap.request({
       method: 'snap_manageAccounts',
       params: ['create', account.address],
@@ -51,19 +67,23 @@ export class SimpleKeyringSnap2 implements Keyring {
     return account;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  async filterSupportedChains(id: string, chains: string[]): Promise<string[]> {
+    return chains;
+  }
+
   async updateAccount(account: KeyringAccount): Promise<void> {
     const currentAccount = this.#wallets[account.id].account;
-    const newAccount = {
+    const newAccount: KeyringAccount = {
       ...currentAccount,
       ...account,
       // Restore read-only properties.
       address: currentAccount.address,
-      capabilities: currentAccount.capabilities,
+      supportedMethods: currentAccount.supportedMethods,
       type: currentAccount.type,
       options: currentAccount.options,
     };
 
-    // TODO: check if account name is valid (unique)
     // TODO: update the KeyringController
     this.#wallets[account.id].account = newAccount;
   }
@@ -87,8 +107,11 @@ export class SimpleKeyringSnap2 implements Keyring {
     return this.#requests[id];
   }
 
-  async submitRequest(request: KeyringRequest): Promise<void> {
+  async submitRequest<Result extends Json = null>(
+    request: KeyringRequest,
+  ): Promise<SubmitRequestResponse<Result>> {
     this.#requests[request.request.id] = request;
+    return { pending: true };
   }
 
   async approveRequest(id: string): Promise<void> {
@@ -112,7 +135,7 @@ export class SimpleKeyringSnap2 implements Keyring {
     );
   }
 
-  #generatePrivateKey(): {
+  #generateKeyPair(): {
     privateKey: string;
     address: string;
   } {

@@ -80,7 +80,8 @@ async function dispatcher(
 
     case SnapKeyringMethod.SubmitRequest: {
       console.log(JSON.stringify(request));
-      return await simpleKeyringSnap.handleSubmitRequest(request);
+      return await simpleKeyringSnap.handleApproveRequest(request);
+      // return await simpleKeyringSnap.handleSubmitRequest(request);
       // return keyring.submitRequest({});
     }
 
