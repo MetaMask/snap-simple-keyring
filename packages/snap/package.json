@@ -26,15 +26,6 @@
     "start": "mm-snap watch"
   },
   "dependencies": {
-    "@ethereumjs/common": "^3.1.2",
-    "@ethereumjs/tx": "^4.1.2",
-    "@ethereumjs/util": "^8.0.6",
-    "@metamask/eth-sig-util": "5.0.2",
-    "@metamask/snaps-types": "^0.32.2",
-    "@metamask/snaps-ui": "^0.32.2",
-    "buffer": "^6.0.3"
-  },
-  "dependencies": {
     "@ethereumjs/common": "^2.6.4",
     "@ethereumjs/tx": "^3.5.2",
     "@ethereumjs/util": "^8.0.5",
