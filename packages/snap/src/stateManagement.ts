@@ -1,17 +1,22 @@
-import { KeyringState } from '.';
+import { KeyringState } from './keyring2';
 
+/**
+ * Retrieves the current state of the keyring.
+ *
+ * @returns The current state of the keyring.
+ */
 export async function getState(): Promise<KeyringState> {
   const persistedData = (await snap.request({
     method: 'snap_manageState',
     params: { operation: 'get' },
   })) as KeyringState;
 
-  console.log('get state', persistedData);
+  console.log('[Snap] get state', persistedData);
 
   if (!persistedData) {
     return {
-      accounts: {},
-      pendingRequests: {},
+      wallets: {},
+      requests: {},
     };
   }
 
@@ -30,6 +35,11 @@ export async function saveState(state: KeyringState) {
   });
 }
 
+/**
+ * Retrieves the serialized state of the keyring.
+ *
+ * @returns The serialized state of the keyring.
+ */
 export async function getSerializedState() {
   const persistedData = (await snap.request({
     method: 'snap_manageState',
@@ -38,14 +48,14 @@ export async function getSerializedState() {
 
   if (!persistedData) {
     return {
-      accounts: [],
-      pendingRequests: {},
+      wallets: {},
+      requests: {},
     };
   }
 
   const cleanedData = {
     ...persistedData,
-    accounts: Object.keys(persistedData.accounts),
+    accounts: Object.keys(persistedData.weallets),
   };
 
   return cleanedData;

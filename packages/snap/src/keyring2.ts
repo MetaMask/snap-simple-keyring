@@ -1,12 +1,35 @@
+import Common, { Hardfork } from '@ethereumjs/common';
+import { JsonTx, TransactionFactory } from '@ethereumjs/tx';
 import { Address } from '@ethereumjs/util';
+import {
+  SignTypedDataVersion,
+  TypedDataV1,
+  TypedMessage,
+  personalSign,
+  recoverPersonalSignature,
+  signTypedData,
+} from '@metamask/eth-sig-util';
 import {
   Keyring,
   KeyringAccount,
   KeyringRequest,
   SubmitRequestResponse,
 } from '@metamask/keyring-api';
-import { Json } from '@metamask/snaps-types';
+import { Json, JsonRpcRequest } from '@metamask/snaps-types';
 import { v4 as uuid } from 'uuid';
+
+import { SigningMethods } from './permissions';
+import { saveState } from './stateManagement';
+import {
+  isEVMChain,
+  serializeTransaction,
+  validateNoDuplicateNames,
+} from './util';
+
+export type KeyringState = {
+  wallets: Record<string, Wallet>;
+  requests: Record<string, KeyringRequest>;
+};
 
 export type Wallet = {
   account: KeyringAccount;
@@ -18,9 +41,9 @@ export class SimpleKeyringSnap2 implements Keyring {
 
   #requests: Record<string, KeyringRequest>;
 
-  constructor() {
-    this.#wallets = {};
-    this.#requests = {};
+  constructor(state: KeyringState) {
+    this.#wallets = state.wallets;
+    this.#requests = state.requests;
   }
 
   async listAccounts(): Promise<KeyringAccount[]> {
@@ -64,12 +87,9 @@ export class SimpleKeyringSnap2 implements Keyring {
       params: ['create', account.address],
     });
 
-    return account;
-  }
+    await this.#saveSnapKeyringState();
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async filterSupportedChains(id: string, chains: string[]): Promise<string[]> {
-    return chains;
+    return account;
   }
 
   async updateAccount(account: KeyringAccount): Promise<void> {
@@ -84,19 +104,34 @@ export class SimpleKeyringSnap2 implements Keyring {
       options: currentAccount.options,
     };
 
+    if (!validateNoDuplicateNames(account.name, Object.values(this.#wallets))) {
+      throw new Error(`[Snap] Duplication name for wallet: ${account.name}`);
+    }
     // TODO: update the KeyringController
     this.#wallets[account.id].account = newAccount;
+    await this.#saveSnapKeyringState();
   }
 
   async deleteAccount(id: string): Promise<void> {
     // TODO: update the KeyringController
     delete this.#wallets[id];
+    await this.#saveSnapKeyringState();
   }
 
   async exportAccount(id: string): Promise<Record<string, Json>> {
     return {
       privateKey: this.#wallets[id].privateKey,
     };
+  }
+
+  async #saveSnapKeyringState(): Promise<void> {
+    console.log('saving keyring');
+    console.log(this.#wallets);
+    console.log(this.#requests);
+    await saveState({
+      wallets: this.#wallets,
+      requests: this.#requests,
+    });
   }
 
   async listRequests(): Promise<KeyringRequest[]> {
@@ -110,29 +145,97 @@ export class SimpleKeyringSnap2 implements Keyring {
   async submitRequest<Result extends Json = null>(
     request: KeyringRequest,
   ): Promise<SubmitRequestResponse<Result>> {
-    this.#requests[request.request.id] = request;
-    return { pending: true };
-  }
+    // Example of a async pending request
+    // For this example, we do not use an asyncing request.
+    // this.#requests[request.request.id] = request;
 
-  async approveRequest(id: string): Promise<void> {
-    const request = this.#requests[id];
-    const wallet = this.#wallets[request.account];
+    const { method, params = '' } = request.request as JsonRpcRequest;
 
-    // TODO: sign request
-    // TODO: notify extension
-    throw new Error('Method not implemented.');
-  }
-
-  async rejectRequest(id: string): Promise<void> {
-    delete this.#requests[id];
-    // TODO: notify extension
-  }
-
-  #getWalletByAddress(address: string): Wallet | undefined {
-    return Object.values(this.#wallets).find(
-      (wallet) =>
-        wallet.account.address.toLowerCase() === address.toLowerCase(),
+    const signedPayload = this.#handleSigningRequest(
+      method as SigningMethods,
+      params,
     );
+    return {
+      pending: false,
+      result: signedPayload as Result,
+    };
+  }
+
+  async approveRequest(_id: string): Promise<void> {
+    // Example of approve an async pending request.
+    //
+    // const request = this.#requests[id];
+    // const confirmation = await snap.request({
+    //   method: 'snap_dialog',
+    //   params: {
+    //     type: 'confirmation',
+    //     content: panel([
+    //       heading(`Signing Request: ${request.request.method}`),
+    //       text(`Would you like to sign this request?`),
+    //       ...Object.entries((request.request as JsonRpcRequest).params).map(
+    //         ([key, value]) => {
+    //           return text(`${key}: ${JSON.stringify(value)}`);
+    //         },
+    //       ),
+    //     ]),
+    //   },
+    // });
+
+    // if (!confirmation) {
+    //   throw new Error(
+    //     `[Snap] User rejected signing request: ${request.request.method}`,
+    //   );
+    // }
+
+    // // sign request
+    // const result = this.#handleSigningRequest(
+    //   request.request.method as SigningMethods,
+    //   (request.request as JsonRpcRequest).params,
+    // );
+
+    // // notify extension
+    // const payload = {
+    //   id: request.request.id,
+    //   result,
+    // };
+    // await snap.request({
+    //   method: 'snap_manageAccounts',
+    //   params: ['submit', payload],
+    // });
+
+    throw new Error('[Snap] Signing already done in submit request.');
+  }
+
+  async rejectRequest(_id: string): Promise<void> {
+    // await snap.request({
+    //   method: 'snap_manageAccounts',
+    //   params: ['submit', payload],
+    // });
+    // delete this.#requests[id];
+
+    throw new Error('[Snap] No reject request for this snap.');
+  }
+
+  async filterSupportedChains(
+    _id: string,
+    chains: string[],
+  ): Promise<string[]> {
+    // id is not used because all the accounts created by snap are EOA for evm chains
+    // EOA can sign for any evm chain
+    return chains.filter((chain) => isEVMChain(chain));
+  }
+
+  #getWalletByAddress(address: string): Wallet {
+    const wallet = Object.values(this.#wallets).find(
+      (keyringAccount) =>
+        keyringAccount.account.address.toLowerCase() === address.toLowerCase(),
+    );
+
+    if (!wallet) {
+      throw new Error(`[Snap] Cannot find wallet with address ${address}`);
+    }
+
+    return wallet;
   }
 
   #generateKeyPair(): {
@@ -143,5 +246,117 @@ export class SimpleKeyringSnap2 implements Keyring {
     const pk = Buffer.from(crypto.getRandomValues(new Uint8Array(32)));
     const address = Address.fromPrivateKey(pk).toString();
     return { privateKey: pk.toString('hex'), address };
+  }
+
+  #handleSigningRequest(method: SigningMethods, params: Json): Json {
+    switch (method) {
+      case SigningMethods.EthSign: {
+        throw new Error(`[Snap] Eth sign not implemented`);
+      }
+      case SigningMethods.SignPersonalMessage: {
+        const [from, message] = params as string[];
+        const signedMessage = this.#signPersonalMessage(from, message);
+        return signedMessage;
+      }
+      case SigningMethods.SignTransaction: {
+        const [from, ethTx, opts] = params as [string, JsonTx, Json];
+        return this.#signTransaction(from, ethTx, opts);
+      }
+      case SigningMethods.SignTypedData: {
+        const [from, typedData, opts] = params as [
+          string,
+          Json,
+          { version: SignTypedDataVersion },
+        ];
+        return this.#signTypedData(from, typedData, opts);
+      }
+      default: {
+        throw new Error(`[Snap] Unknwon method ${method as string}`);
+      }
+    }
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  #signTransaction(from: string, ethTx: any, opts: any): Json {
+    const wallet = this.#getWalletByAddress(from);
+
+    // eslint-disable-next-line no-restricted-globals
+    const privateKey = Buffer.from(wallet.privateKey, 'hex');
+
+    const common = Common.custom(
+      { chainId: ethTx.chainId },
+      {
+        hardfork:
+          ethTx.maxPriorityFeePerGas || ethTx.maxFeePerGas
+            ? Hardfork.London
+            : Hardfork.Istanbul,
+      },
+    );
+
+    const signedTx = TransactionFactory.fromTxData(ethTx, {
+      common,
+    }).sign(privateKey);
+
+    const serializableSignedTx = serializeTransaction(
+      signedTx.toJSON(),
+      signedTx.type,
+    );
+
+    return serializableSignedTx;
+  }
+
+  #signTypedData(
+    from: string,
+    typedData: Json,
+    opts: { version?: SignTypedDataVersion },
+  ): string {
+    let version: SignTypedDataVersion;
+    if (
+      opts.version &&
+      Object.keys(SignTypedDataVersion).includes(opts.version as string)
+    ) {
+      version = opts.version;
+    } else {
+      // Treat invalid versions as "V1"
+      version = SignTypedDataVersion.V1;
+    }
+
+    const { privateKey } = this.#getWalletByAddress(from);
+
+    // eslint-disable-next-line no-restricted-globals
+    const privateKeyBuffer = Buffer.from(privateKey, 'hex');
+
+    return signTypedData({
+      privateKey: privateKeyBuffer,
+      data: typedData as unknown as TypedDataV1 | TypedMessage<any>,
+      version,
+    });
+  }
+
+  #signPersonalMessage(from: string, request: string): string {
+    const { privateKey } = this.#getWalletByAddress(from);
+    // eslint-disable-next-line no-restricted-globals
+    const privateKeyBuffer = Buffer.from(privateKey, 'hex');
+
+    // eslint-disable-next-line no-restricted-globals
+    const messageBuffer = Buffer.from(request.slice(2), 'hex');
+
+    const signedMessageHex = personalSign({
+      privateKey: privateKeyBuffer,
+      data: messageBuffer,
+    });
+
+    const recoveredAddress = recoverPersonalSignature({
+      data: messageBuffer,
+      signature: signedMessageHex,
+    });
+    if (recoveredAddress !== from) {
+      console.log('incorrect address');
+      throw new Error(
+        `Signature verification failed for account "${from}" (got "${recoveredAddress}")`,
+      );
+    }
+
+    return signedMessageHex;
   }
 }

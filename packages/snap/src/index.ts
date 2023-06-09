@@ -1,3 +1,8 @@
+import { KeyringRequest } from '@metamask/keyring-api';
+import {
+  ApproveRequestRequest,
+  RejectRequestRequest,
+} from '@metamask/keyring-api/dist/keyring-internal-api';
 import {
   OnRpcRequestHandler,
   Json,
@@ -5,20 +10,15 @@ import {
 } from '@metamask/snaps-types';
 import { panel, heading, text } from '@metamask/snaps-ui';
 
-import { SimpleKeyringSnap, Account } from './keyring';
-import { SimpleKeyringSnap2 } from './keyring2';
-import { InternalMethod, PERMISSIONS, SnapKeyringMethod } from './permissions';
+import { KeyringState, SimpleKeyringSnap2 } from './keyring2';
+import {
+  InternalMethod,
+  PERMISSIONS,
+  RequestMethods,
+  SnapKeyringMethod,
+} from './permissions';
 import { getState, saveState } from './stateManagement';
-
-export type KeyringState = {
-  accounts: Record<string, Account>;
-  pendingRequests: Record<string, any>;
-};
-
-export type SerializedKeyringState = {
-  accounts: string[];
-  pendingRequests: Record<string, any>;
-};
+import { logRequest } from './util';
 
 /**
  * Verify if the caller can call the requested method.
@@ -31,7 +31,8 @@ function hasPermission(origin: string, method: string): boolean {
   return Boolean(PERMISSIONS.get(origin)?.includes(method));
 }
 
-const keyring = new SimpleKeyringSnap2();
+// eslint-disable-next-line no-var
+var simpleKeyringSnap: SimpleKeyringSnap2;
 
 /**
  * Execute a JSON-RPC request.
@@ -53,18 +54,21 @@ async function dispatcher(
     throw new Error(`origin ${origin} cannot call method ${request.method}`);
   }
 
-  let persistedState = await getState();
+  let persistedState: KeyringState = await getState();
   if (!persistedState) {
     persistedState = {
-      accounts: {},
-      pendingRequests: {},
+      wallets: {},
+      requests: {},
     };
     await saveState(persistedState);
   }
 
-  const simpleKeyringSnap = new SimpleKeyringSnap(persistedState);
+  if (!simpleKeyringSnap) {
+    simpleKeyringSnap = new SimpleKeyringSnap2(persistedState);
+  }
 
   switch (request.method) {
+    // internal methods
     case InternalMethod.Hello: {
       return snap.request({
         method: 'snap_dialog',
@@ -77,46 +81,50 @@ async function dispatcher(
         },
       });
     }
-
-    case SnapKeyringMethod.SubmitRequest: {
-      console.log(JSON.stringify(request));
-      return await simpleKeyringSnap.handleApproveRequest(request);
-      // return await simpleKeyringSnap.handleSubmitRequest(request);
-      // return keyring.submitRequest({});
-    }
-
-    case InternalMethod.ManageAccounts: {
-      return await simpleKeyringSnap.handleManageAccounts(request.params);
-    }
-
     case InternalMethod.GetState: {
-      return await simpleKeyringSnap.handleGetState();
+      logRequest(InternalMethod.GetState, request);
+      return await getState();
     }
 
-    case InternalMethod.SetState: {
-      return await simpleKeyringSnap.handleSetState(request);
-    }
-
-    case SnapKeyringMethod.ApproveRequest: {
-      console.log(
-        '[SNAP] (dispatcher) ApproveRequest',
-        JSON.stringify(request),
+    // Request Methods
+    case RequestMethods.SubmitRequest: {
+      logRequest(RequestMethods.SubmitRequest, request);
+      return await simpleKeyringSnap.submitRequest(
+        request.params as KeyringRequest,
       );
-      return await simpleKeyringSnap.handleApproveRequest(request.params);
+    }
+    case RequestMethods.ApproveRequest: {
+      logRequest(RequestMethods.ApproveRequest, request);
+      return await simpleKeyringSnap.approveRequest(
+        (request.params as ApproveRequestRequest).params.id,
+      );
     }
 
-    case 'keyring_listAccounts': {
-      return await keyring.listAccounts();
+    case RequestMethods.RejectRequest: {
+      logRequest(RequestMethods.RejectRequest, request.params);
+      return await simpleKeyringSnap.rejectRequest(
+        (request.params as RejectRequestRequest).params.id,
+      );
     }
 
-    case 'keyring_createAccount': {
-      console.log(request.params);
+    // Keyring Methods
+    case SnapKeyringMethod.ListAccounts: {
+      logRequest(SnapKeyringMethod.ListAccounts, request.params);
+      return await simpleKeyringSnap.listAccounts();
+    }
+
+    case SnapKeyringMethod.CreateAccount: {
+      logRequest(SnapKeyringMethod.CreateAccount, request.params);
       const req = request.params as {
         name: string;
         chains: string[];
         options?: Record<string, Json>;
       };
-      return await keyring.createAccount(req.name, req.chains, req.options);
+      return await simpleKeyringSnap.createAccount(
+        req.name,
+        req.chains,
+        req.options,
+      );
     }
 
     default: {
