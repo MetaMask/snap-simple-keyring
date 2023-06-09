@@ -3539,7 +3539,7 @@ __metadata:
 
 "@metamask/keyring-api@ssh://git@github.com/MetaMask/keyring-api#main":
   version: 0.1.0
-  resolution: "@metamask/keyring-api@ssh://git@github.com/MetaMask/keyring-api#commit=d86795b5be9862b696ef0132f18bc447b50a9934"
+  resolution: "@metamask/keyring-api@ssh://git@github.com/MetaMask/keyring-api#commit=557123f6fece2fb656d41ed12d91999ba9f57018"
   dependencies:
     "@metamask/providers": ^11.0.0
     "@metamask/snaps-controllers": ^0.32.2
@@ -3547,7 +3547,7 @@ __metadata:
     "@metamask/utils": ^5.0.2
     "@types/uuid": ^9.0.1
     uuid: ^9.0.0
-  checksum: 996220696a304dc02252c8c98b28ccb0d06c70928499319847e0216d3c510bbb0542613ce9e7fabffd54358addad4687be0d9d00662c014b239402da61e0bf47
+  checksum: 81969bc5ca920551de8edb0274e6145525c829f3d9d8821d79dd09b8cd70853f51206b243e9305bdaab6c3936950f437ace642523c86fe242eadfb056d8e1d28
   languageName: node
   linkType: hard
 
@@ -13823,17 +13823,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"keyring-api@ssh://git@github.com/MetaMask/keyring-api#main":
-  version: 0.0.0
-  resolution: "keyring-api@ssh://git@github.com/MetaMask/keyring-api#commit=1de979338c7f35e48db0ecf9811f2a1208d5f927"
-  dependencies:
-    "@metamask/providers": ^11.0.0
-    "@metamask/utils": ^5.0.2
-    "@types/uuid": ^9.0.1
-  checksum: 2c8c20a17f4c8aea3cf92826b2c43a85646e81345ab5bee7b26a1e0b2bec82fd52def665a21919cb34e2456ebe0fc53b69a5994e725156a278edb9e5ac1e3c6e
-  languageName: node
-  linkType: hard
-
 "keyv@npm:^4.0.0":
   version: 4.5.0
   resolution: "keyv@npm:4.5.0"
@@ -17996,7 +17985,6 @@ __metadata:
     gatsby-plugin-manifest: ^5.7.0
     gatsby-plugin-styled-components: ^6.7.0
     gatsby-plugin-svgr: ^3.0.0-beta.0
-    keyring-api: "ssh://git@github.com/MetaMask/keyring-api#main"
     prettier: ^2.8.4
     prettier-plugin-packagejson: ^2.4.3
     react: ^18.2.0
@@ -18092,7 +18080,6 @@ __metadata:
     eslint-plugin-jsdoc: ^40.0.3
     eslint-plugin-node: ^11.1.0
     eslint-plugin-prettier: ^4.2.1
-    keyring-api: "ssh://git@github.com/MetaMask/keyring-api#main"
     node-polyfill-webpack-plugin: ^2.0.1
     nodemon: ^2.0.22
     prettier: ^2.8.4

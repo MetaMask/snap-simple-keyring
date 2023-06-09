@@ -58,27 +58,30 @@ export class SimpleKeyringSnap2 implements Keyring {
     name: string,
     options: Record<string, Json> | null = null,
   ): Promise<KeyringAccount> {
-    const { privateKey, address } = this.#generatePrivateKey();
+    const { privateKey, address } = this.#generateKeyPair();
     const account: KeyringAccount = {
       id: uuid(),
       name,
       options,
       address,
       supportedMethods: [
-        'personal_sign',
-        'eth_sign',
         'eth_sendTransaction',
+        'eth_sign',
         'eth_signTransaction',
-        'eth_signTypedData',
         'eth_signTypedData_v1',
         'eth_signTypedData_v2',
         'eth_signTypedData_v3',
         'eth_signTypedData_v4',
+        'eth_signTypedData',
+        'personal_sign',
       ],
       type: 'eip155:eoa',
     };
 
     this.#wallets[account.id] = { account, privateKey };
+    console.log(
+      `[SNAP] Sending createAccount request to the SnapController...`,
+    );
     await snap.request({
       method: 'snap_manageAccounts',
       params: ['create', account.address],
@@ -89,9 +92,14 @@ export class SimpleKeyringSnap2 implements Keyring {
     return account;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  async filterSupportedChains(id: string, chains: string[]): Promise<string[]> {
+    return chains;
+  }
+
   async updateAccount(account: KeyringAccount): Promise<void> {
     const currentAccount = this.#wallets[account.id].account;
-    const newAccount = {
+    const newAccount: KeyringAccount = {
       ...currentAccount,
       ...account,
       // Restore read-only properties.
@@ -235,7 +243,7 @@ export class SimpleKeyringSnap2 implements Keyring {
     return wallet;
   }
 
-  #generatePrivateKey(): {
+  #generateKeyPair(): {
     privateKey: string;
     address: string;
   } {
