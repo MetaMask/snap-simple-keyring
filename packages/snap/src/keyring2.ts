@@ -92,11 +92,6 @@ export class SimpleKeyringSnap2 implements Keyring {
     return account;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async filterSupportedChains(id: string, chains: string[]): Promise<string[]> {
-    return chains;
-  }
-
   async updateAccount(account: KeyringAccount): Promise<void> {
     const currentAccount = this.#wallets[account.id].account;
     const newAccount: KeyringAccount = {
