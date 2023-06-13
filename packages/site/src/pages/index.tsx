@@ -115,7 +115,7 @@ const Index = () => {
         <Action
           callback={async () => {
             const client = new KeyringSnapRpcClient(snapId);
-            return await client.createAccount('Account X', []);
+            return await client.createAccount('Account X');
           }}
         />
       ),

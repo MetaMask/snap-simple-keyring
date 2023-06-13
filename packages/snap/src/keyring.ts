@@ -116,7 +116,7 @@ export class SimpleKeyringSnap {
    * @returns Pass-through response from the SnapController.
    */
   async handleManageAccounts(params: any) {
-    console.log('[SNAP] handleManageAccounts', params);
+    console.log('[Snap] handleManageAccounts', params);
     const [method] = params;
 
     switch (method) {

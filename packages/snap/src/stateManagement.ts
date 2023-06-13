@@ -6,21 +6,18 @@ import { KeyringState } from './keyring2';
  * @returns The current state of the keyring.
  */
 export async function getState(): Promise<KeyringState> {
-  const persistedData = (await snap.request({
+  const state = await snap.request({
     method: 'snap_manageState',
     params: { operation: 'get' },
-  })) as KeyringState;
+  });
 
-  console.log('[Snap] get state', persistedData);
+  console.log('[Snap] get state', state);
 
-  if (!persistedData) {
-    return {
-      wallets: {},
-      requests: {},
-    };
-  }
-
-  return persistedData;
+  return {
+    wallets: {},
+    requests: {},
+    ...state,
+  } as KeyringState;
 }
 
 /**

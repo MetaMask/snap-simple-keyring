@@ -36,7 +36,7 @@ export type Wallet = {
   privateKey: string;
 };
 
-export class SimpleKeyringSnap2 implements Keyring {
+export class SimpleKeyring implements Keyring {
   #wallets: Record<string, Wallet>;
 
   #requests: Record<string, KeyringRequest>;
@@ -47,6 +47,7 @@ export class SimpleKeyringSnap2 implements Keyring {
   }
 
   async listAccounts(): Promise<KeyringAccount[]> {
+    console.log('[Snap] listAccounts', this.#wallets);
     return Object.values(this.#wallets).map((wallet) => wallet.account);
   }
 
@@ -80,14 +81,14 @@ export class SimpleKeyringSnap2 implements Keyring {
 
     this.#wallets[account.id] = { account, privateKey };
     console.log(
-      `[SNAP] Sending createAccount request to the SnapController...`,
+      `[Snap] Sending createAccount request to the SnapController...`,
     );
     await snap.request({
       method: 'snap_manageAccounts',
       params: ['create', account.address],
     });
 
-    await this.#saveSnapKeyringState();
+    await this.#saveState();
 
     return account;
   }
@@ -109,13 +110,13 @@ export class SimpleKeyringSnap2 implements Keyring {
     }
     // TODO: update the KeyringController
     this.#wallets[account.id].account = newAccount;
-    await this.#saveSnapKeyringState();
+    await this.#saveState();
   }
 
   async deleteAccount(id: string): Promise<void> {
     // TODO: update the KeyringController
     delete this.#wallets[id];
-    await this.#saveSnapKeyringState();
+    await this.#saveState();
   }
 
   async exportAccount(id: string): Promise<Record<string, Json>> {
@@ -124,7 +125,7 @@ export class SimpleKeyringSnap2 implements Keyring {
     };
   }
 
-  async #saveSnapKeyringState(): Promise<void> {
+  async #saveState(): Promise<void> {
     console.log('saving keyring');
     console.log(this.#wallets);
     console.log(this.#requests);
@@ -142,19 +143,28 @@ export class SimpleKeyringSnap2 implements Keyring {
     return this.#requests[id];
   }
 
+  /**
+   * Submit a request to be processed by the keyring.
+   *
+   * This implementation is synchronous, which means that the request doesn't
+   * need to be approved and the execution result will be returned to the
+   * caller.
+   *
+   * In an asynchronous implementation, the request should be stored in queue
+   * of pending requests to be approved or rejected by the user.
+   *
+   * @param request - The submitted request.
+   * @returns A promise that resolves to the execution result.
+   */
   async submitRequest<Result extends Json = null>(
     request: KeyringRequest,
   ): Promise<SubmitRequestResponse<Result>> {
-    // Example of a async pending request
-    // For this example, we do not use an asyncing request.
-    // this.#requests[request.request.id] = request;
-
     const { method, params = '' } = request.request as JsonRpcRequest;
-
     const signedPayload = this.#handleSigningRequest(
       method as SigningMethods,
       params,
     );
+
     return {
       pending: false,
       result: signedPayload as Result,
