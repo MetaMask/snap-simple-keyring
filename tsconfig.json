@@ -6,7 +6,6 @@
     "module": "CommonJS",
     "moduleResolution": "node",
     "useUnknownInCatchVariables": false,
-    "strictNullChecks": false,
     "sourceMap": true,
     "strict": true,
     "target": "ES2017"
