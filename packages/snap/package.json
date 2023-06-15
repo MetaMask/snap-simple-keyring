@@ -26,8 +26,8 @@
     "start": "mm-snap watch"
   },
   "dependencies": {
-    "@ethereumjs/common": "^2.6.4",
-    "@ethereumjs/tx": "^3.5.2",
+    "@ethereumjs/common": "^3.1.2",
+    "@ethereumjs/tx": "^4.1.2",
     "@ethereumjs/util": "^8.0.5",
     "@metamask/eth-sig-util": "^5.0.2",
     "@metamask/keyring-api": "ssh://git@github.com/MetaMask/keyring-api#main",
