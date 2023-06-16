@@ -28,7 +28,7 @@
   "dependencies": {
     "@ethereumjs/tx": "^4.1.1",
     "@ethereumjs/util": "^8.0.5",
-    "superstruct": "^1.0.3"
+    "@metamask/keyring-api": "ssh://git@github.com/MetaMask/keyring-api.git#main"
   },
   "devDependencies": {
     "@metamask/eslint-config": "^11.1.0",

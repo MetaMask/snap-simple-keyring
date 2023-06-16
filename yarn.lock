@@ -76,7 +76,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/core@npm:^7.14.0, @babel/core@npm:^7.16.7, @babel/core@npm:^7.18.6, @babel/core@npm:^7.19.6, @babel/core@npm:^7.20.12":
+"@babel/core@npm:^7.14.0, @babel/core@npm:^7.19.6, @babel/core@npm:^7.20.12":
   version: 7.22.5
   resolution: "@babel/core@npm:7.22.5"
   dependencies:
@@ -158,7 +158,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/helper-create-class-features-plugin@npm:^7.18.6, @babel/helper-create-class-features-plugin@npm:^7.22.5":
+"@babel/helper-create-class-features-plugin@npm:^7.18.6, @babel/helper-create-class-features-plugin@npm:^7.21.0, @babel/helper-create-class-features-plugin@npm:^7.22.5":
   version: 7.22.5
   resolution: "@babel/helper-create-class-features-plugin@npm:7.22.5"
   dependencies:
@@ -437,7 +437,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/plugin-proposal-nullish-coalescing-operator@npm:^7.16.7, @babel/plugin-proposal-nullish-coalescing-operator@npm:^7.18.6":
+"@babel/plugin-proposal-class-static-block@npm:^7.21.0":
+  version: 7.21.0
+  resolution: "@babel/plugin-proposal-class-static-block@npm:7.21.0"
+  dependencies:
+    "@babel/helper-create-class-features-plugin": ^7.21.0
+    "@babel/helper-plugin-utils": ^7.20.2
+    "@babel/plugin-syntax-class-static-block": ^7.14.5
+  peerDependencies:
+    "@babel/core": ^7.12.0
+  checksum: 236c0ad089e7a7acab776cc1d355330193314bfcd62e94e78f2df35817c6144d7e0e0368976778afd6b7c13e70b5068fa84d7abbf967d4f182e60d03f9ef802b
+  languageName: node
+  linkType: hard
+
+"@babel/plugin-proposal-nullish-coalescing-operator@npm:^7.18.6":
   version: 7.18.6
   resolution: "@babel/plugin-proposal-nullish-coalescing-operator@npm:7.18.6"
   dependencies:
@@ -461,7 +474,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/plugin-proposal-object-rest-spread@npm:^7.0.0, @babel/plugin-proposal-object-rest-spread@npm:^7.16.7":
+"@babel/plugin-proposal-object-rest-spread@npm:^7.0.0":
   version: 7.20.7
   resolution: "@babel/plugin-proposal-object-rest-spread@npm:7.20.7"
   dependencies:
@@ -476,7 +489,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/plugin-proposal-optional-chaining@npm:^7.16.7, @babel/plugin-proposal-optional-chaining@npm:^7.20.7":
+"@babel/plugin-proposal-optional-chaining@npm:^7.20.7":
   version: 7.21.0
   resolution: "@babel/plugin-proposal-optional-chaining@npm:7.21.0"
   dependencies:
@@ -489,12 +502,38 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@babel/plugin-proposal-private-methods@npm:^7.18.6":
+  version: 7.18.6
+  resolution: "@babel/plugin-proposal-private-methods@npm:7.18.6"
+  dependencies:
+    "@babel/helper-create-class-features-plugin": ^7.18.6
+    "@babel/helper-plugin-utils": ^7.18.6
+  peerDependencies:
+    "@babel/core": ^7.0.0-0
+  checksum: 22d8502ee96bca99ad2c8393e8493e2b8d4507576dd054490fd8201a36824373440106f5b098b6d821b026c7e72b0424ff4aeca69ed5f42e48f029d3a156d5ad
+  languageName: node
+  linkType: hard
+
 "@babel/plugin-proposal-private-property-in-object@npm:7.21.0-placeholder-for-preset-env.2":
   version: 7.21.0-placeholder-for-preset-env.2
   resolution: "@babel/plugin-proposal-private-property-in-object@npm:7.21.0-placeholder-for-preset-env.2"
   peerDependencies:
     "@babel/core": ^7.0.0-0
   checksum: d97745d098b835d55033ff3a7fb2b895b9c5295b08a5759e4f20df325aa385a3e0bc9bd5ad8f2ec554a44d4e6525acfc257b8c5848a1345cb40f26a30e277e91
+  languageName: node
+  linkType: hard
+
+"@babel/plugin-proposal-private-property-in-object@npm:^7.21.0":
+  version: 7.21.11
+  resolution: "@babel/plugin-proposal-private-property-in-object@npm:7.21.11"
+  dependencies:
+    "@babel/helper-annotate-as-pure": ^7.18.6
+    "@babel/helper-create-class-features-plugin": ^7.21.0
+    "@babel/helper-plugin-utils": ^7.20.2
+    "@babel/plugin-syntax-private-property-in-object": ^7.14.5
+  peerDependencies:
+    "@babel/core": ^7.0.0-0
+  checksum: 1b880543bc5f525b360b53d97dd30807302bb82615cd42bf931968f59003cac75629563d6b104868db50abd22235b3271fdf679fea5db59a267181a99cc0c265
   languageName: node
   linkType: hard
 
@@ -1424,7 +1463,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/preset-env@npm:^7.16.7, @babel/preset-env@npm:^7.19.4, @babel/preset-env@npm:^7.20.2":
+"@babel/preset-env@npm:^7.19.4, @babel/preset-env@npm:^7.20.12, @babel/preset-env@npm:^7.20.2":
   version: 7.22.5
   resolution: "@babel/preset-env@npm:7.22.5"
   dependencies:
@@ -1545,7 +1584,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/preset-typescript@npm:^7.16.7, @babel/preset-typescript@npm:^7.18.6":
+"@babel/preset-typescript@npm:^7.18.6, @babel/preset-typescript@npm:^7.20.12":
   version: 7.22.5
   resolution: "@babel/preset-typescript@npm:7.22.5"
   dependencies:
@@ -2509,19 +2548,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@metamask/approval-controller@npm:^2.1.1":
-  version: 2.1.1
-  resolution: "@metamask/approval-controller@npm:2.1.1"
-  dependencies:
-    "@metamask/base-controller": ^2.0.0
-    "@metamask/controller-utils": ^3.4.0
-    eth-rpc-errors: ^4.0.2
-    immer: ^9.0.6
-    nanoid: ^3.1.31
-  checksum: 2e3798e67821660be7c7a35cbe5d001085fd2814fb58bc21e1525383fe2fba66ddb4074896c530de29407d929790ee3a036e180c5576962e3b50a85afe3fd9df
-  languageName: node
-  linkType: hard
-
 "@metamask/approval-controller@npm:^3.0.0":
   version: 3.1.0
   resolution: "@metamask/approval-controller@npm:3.1.0"
@@ -2549,16 +2575,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@metamask/base-controller@npm:^2.0.0":
-  version: 2.0.0
-  resolution: "@metamask/base-controller@npm:2.0.0"
-  dependencies:
-    "@metamask/controller-utils": ^3.0.0
-    immer: ^9.0.6
-  checksum: afd7df59cbcd26261e3d015ac0669261efbfad8e106b55ae7184f7445979b867f78f0d56fe103566150236093847b3acc68473f979e46bd9c67f654857995458
-  languageName: node
-  linkType: hard
-
 "@metamask/base-controller@npm:^3.0.0":
   version: 3.0.0
   resolution: "@metamask/base-controller@npm:3.0.0"
@@ -2566,21 +2582,6 @@ __metadata:
     "@metamask/utils": ^5.0.2
     immer: ^9.0.6
   checksum: a0853d90b024466c4108531cbf4459bd2f66fa6e0b912e42bd27cdf54262411a5601117649b6061424475ffa6b9714c5199d686c21e4d07c3b7b1ee0b4c17caa
-  languageName: node
-  linkType: hard
-
-"@metamask/controller-utils@npm:^3.0.0, @metamask/controller-utils@npm:^3.4.0":
-  version: 3.4.0
-  resolution: "@metamask/controller-utils@npm:3.4.0"
-  dependencies:
-    "@metamask/utils": ^5.0.1
-    "@spruceid/siwe-parser": 1.1.3
-    eth-ens-namehash: ^2.0.8
-    eth-rpc-errors: ^4.0.2
-    ethereumjs-util: ^7.0.10
-    ethjs-unit: ^0.1.6
-    fast-deep-equal: ^3.1.3
-  checksum: c483a56a062118ad0b740ca65ec05810226af069bdcd7ff92adc250a9a4e8b9abf347876476ecd005f7890770b5bbf2f621a90b5a3698fdd059127d4337d7c6b
   languageName: node
   linkType: hard
 
@@ -2739,6 +2740,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@metamask/keyring-api@ssh://git@github.com/MetaMask/keyring-api.git#main":
+  version: 0.1.0
+  resolution: "@metamask/keyring-api@ssh://git@github.com/MetaMask/keyring-api.git#commit=5e8b8ff199218b8c673cc8b98a80ac421d83589a"
+  dependencies:
+    "@metamask/providers": ^11.0.0
+    "@metamask/snaps-controllers": ^0.34.1-flask.1
+    "@metamask/snaps-utils": ^0.34.1-flask.1
+    "@metamask/utils": ^5.0.2
+    "@types/uuid": ^9.0.1
+    superstruct: ^1.0.3
+    uuid: ^9.0.0
+  checksum: 51a337dd90764f24ea536188f3ea41874458e420848f80eeb492cc17d8b88fae90ba401bb20752d717f54f6cd77205fc9eed8fd6c8a235e38358884a224edb1a
+  languageName: node
+  linkType: hard
+
 "@metamask/object-multiplex@npm:^1.1.0, @metamask/object-multiplex@npm:^1.2.0":
   version: 1.2.0
   resolution: "@metamask/object-multiplex@npm:1.2.0"
@@ -2747,26 +2763,6 @@ __metadata:
     once: ^1.4.0
     readable-stream: ^2.3.3
   checksum: 7c622639cc164c3b780294d790311e4bcb327faf14626717728022e95da5834f32fe4e242d8f4e7d9b8c2b83f0c76450922786b2f6ef50e777bfe119b78bdab7
-  languageName: node
-  linkType: hard
-
-"@metamask/permission-controller@npm:^3.1.0":
-  version: 3.2.0
-  resolution: "@metamask/permission-controller@npm:3.2.0"
-  dependencies:
-    "@metamask/approval-controller": ^2.1.1
-    "@metamask/base-controller": ^2.0.0
-    "@metamask/controller-utils": ^3.4.0
-    "@metamask/types": ^1.1.0
-    "@types/deep-freeze-strict": ^1.1.0
-    deep-freeze-strict: ^1.1.1
-    eth-rpc-errors: ^4.0.2
-    immer: ^9.0.6
-    json-rpc-engine: ^6.1.0
-    nanoid: ^3.1.31
-  peerDependencies:
-    "@metamask/approval-controller": ^2.1.1
-  checksum: 34650f2d9b51170fc9b2a56d2004a2cd2ca3f427e9dad2e3229bbd0b1dfad40a98f639752b1bfe17946c39677e4c8fe52581b5dbbf42e4a18e83b72e8e06d9b0
   languageName: node
   linkType: hard
 
@@ -2881,31 +2877,31 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@metamask/snaps-browserify-plugin@npm:^0.32.2":
-  version: 0.32.2
-  resolution: "@metamask/snaps-browserify-plugin@npm:0.32.2"
+"@metamask/snaps-browserify-plugin@npm:^0.34.1-flask.1":
+  version: 0.34.1-flask.1
+  resolution: "@metamask/snaps-browserify-plugin@npm:0.34.1-flask.1"
   dependencies:
-    "@metamask/snaps-utils": ^0.32.2
+    "@metamask/snaps-utils": ^0.34.1-flask.1
     convert-source-map: ^1.8.0
-  checksum: cfdf6c07b86a97cccefa1dd5d60d49e13a315fe3b6ab8235301813654b058e32c6872a36fbb81a1a46b237e16cff83b15d776c4fc2c1e87fea9160f27dd05097
+  checksum: a53254eca09c628625f8d1cea49a45970815fdc4c75d7a741d880407cefe7fe8404b4aa10dfc93a32850c95b9155d4b74cdb2e50149300fede5551635bffb190
   languageName: node
   linkType: hard
 
-"@metamask/snaps-cli@npm:^0.32.2":
-  version: 0.32.2
-  resolution: "@metamask/snaps-cli@npm:0.32.2"
+"@metamask/snaps-cli@npm:^0.34.1-flask.1":
+  version: 0.34.1-flask.1
+  resolution: "@metamask/snaps-cli@npm:0.34.1-flask.1"
   dependencies:
-    "@babel/core": ^7.16.7
+    "@babel/core": ^7.20.12
     "@babel/plugin-proposal-class-properties": ^7.16.7
-    "@babel/plugin-proposal-nullish-coalescing-operator": ^7.16.7
-    "@babel/plugin-proposal-object-rest-spread": ^7.16.7
-    "@babel/plugin-proposal-optional-chaining": ^7.16.7
+    "@babel/plugin-proposal-class-static-block": ^7.21.0
+    "@babel/plugin-proposal-private-methods": ^7.18.6
+    "@babel/plugin-proposal-private-property-in-object": ^7.21.0
     "@babel/plugin-transform-runtime": ^7.16.7
-    "@babel/preset-env": ^7.16.7
-    "@babel/preset-typescript": ^7.16.7
-    "@metamask/snaps-browserify-plugin": ^0.32.2
-    "@metamask/snaps-utils": ^0.32.2
-    "@metamask/utils": ^5.0.0
+    "@babel/preset-env": ^7.20.12
+    "@babel/preset-typescript": ^7.20.12
+    "@metamask/snaps-browserify-plugin": ^0.34.1-flask.1
+    "@metamask/snaps-utils": ^0.34.1-flask.1
+    "@metamask/utils": ^6.0.0
     babelify: ^10.0.0
     browserify: ^17.0.0
     chokidar: ^3.5.2
@@ -2913,11 +2909,11 @@ __metadata:
     serve-handler: ^6.1.5
     ses: ^0.18.1
     superstruct: ^1.0.3
-    yargs: ^16.2.0
+    yargs: ^17.7.1
     yargs-parser: ^20.2.2
   bin:
-    mm-snap: dist/main.js
-  checksum: da7d95dc67f23093deacd075c1803df8cb20735e1e37d11fec4aa0bb24e44026d51b7fe2851c1cdf0d327be9690f917dc1bebd5b827bb2776f5d2cffb21d03c1
+    mm-snap: ./dist/main.js
+  checksum: 87229175085ece031d8953d2c1aa5f4f03aeb1c789ec8e1212839259c20362ba768ca051748abf9ab443ead19bf0c2c58616b76ef294388e7fa802c8ef9eea49
   languageName: node
   linkType: hard
 
@@ -2972,7 +2968,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@metamask/snaps-registry@npm:^1.2.0, @metamask/snaps-registry@npm:^1.2.1":
+"@metamask/snaps-registry@npm:^1.2.1":
   version: 1.2.1
   resolution: "@metamask/snaps-registry@npm:1.2.1"
   dependencies:
@@ -2983,13 +2979,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@metamask/snaps-ui@npm:^0.32.2":
-  version: 0.32.2
-  resolution: "@metamask/snaps-ui@npm:0.32.2"
+"@metamask/snaps-types@npm:^0.34.1-flask.1":
+  version: 0.34.1-flask.1
+  resolution: "@metamask/snaps-types@npm:0.34.1-flask.1"
   dependencies:
-    "@metamask/utils": ^5.0.0
-    superstruct: ^1.0.3
-  checksum: 98e8900efb63a0f1ec4893624290a1bf2d0fa416f99d57f33532865063f4e4b9b3787b77630629c64d7dc041e3508cac81044eca067ed76a07aa380bc5997db2
+    "@metamask/providers": ^10.2.1
+    "@metamask/rpc-methods": ^0.34.1-flask.1
+    "@metamask/snaps-utils": ^0.34.1-flask.1
+    "@metamask/utils": ^6.0.0
+  checksum: 52fe378003ad26094f2d6f4e3eff9398f1daba3e300637526e9f9c8776dcc563c4d01a0e359e00e3a99e24c71ecb97163c70025cc7a8b66c729878225d840412
   languageName: node
   linkType: hard
 
@@ -3000,33 +2998,6 @@ __metadata:
     "@metamask/utils": ^6.0.0
     superstruct: ^1.0.3
   checksum: eecce7119146ff4984a8e88cc6be3b68445941a6e1e905084d02530bf264c97902deac1197bde462a2d516819ba82f97db9f1d1d2ab3213c1a896b9881824868
-  languageName: node
-  linkType: hard
-
-"@metamask/snaps-utils@npm:^0.32.2":
-  version: 0.32.2
-  resolution: "@metamask/snaps-utils@npm:0.32.2"
-  dependencies:
-    "@babel/core": ^7.18.6
-    "@babel/types": ^7.18.7
-    "@metamask/base-controller": ^2.0.0
-    "@metamask/permission-controller": ^3.1.0
-    "@metamask/providers": ^10.2.1
-    "@metamask/snaps-registry": ^1.2.0
-    "@metamask/snaps-ui": ^0.32.2
-    "@metamask/utils": ^5.0.0
-    "@noble/hashes": ^1.1.3
-    "@scure/base": ^1.1.1
-    cron-parser: ^4.5.0
-    eth-rpc-errors: ^4.0.3
-    fast-deep-equal: ^3.1.3
-    fast-json-stable-stringify: ^2.1.0
-    rfdc: ^1.3.0
-    semver: ^7.3.7
-    ses: ^0.18.1
-    superstruct: ^1.0.3
-    validate-npm-package-name: ^5.0.0
-  checksum: 3568fb79cff8283eacb6e1bd498e20191f2c7c6774675be372f5305a4b5275512d1ded2a9fb36c106a8b10c5cbf480f6a87cdacfc70baf642b9bf3094ee3aefa
   languageName: node
   linkType: hard
 
@@ -3068,6 +3039,7 @@ __metadata:
     "@metamask/eslint-config-jest": ^11.1.0
     "@metamask/eslint-config-nodejs": ^11.1.0
     "@metamask/eslint-config-typescript": ^11.1.0
+    "@metamask/keyring-api": "ssh://git@github.com/MetaMask/keyring-api.git#main"
     "@typescript-eslint/eslint-plugin": ^5.55.0
     "@typescript-eslint/parser": ^5.55.0
     eslint: ^8.36.0
@@ -3079,7 +3051,6 @@ __metadata:
     eslint-plugin-prettier: ^4.2.1
     prettier: ^2.8.4
     prettier-plugin-packagejson: ^2.4.3
-    superstruct: ^1.0.3
     typescript: ^4.9.5
   languageName: unknown
   linkType: soft
@@ -3103,7 +3074,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@metamask/utils@npm:^5.0.0, @metamask/utils@npm:^5.0.1, @metamask/utils@npm:^5.0.2":
+"@metamask/utils@npm:^5.0.0, @metamask/utils@npm:^5.0.2":
   version: 5.0.2
   resolution: "@metamask/utils@npm:5.0.2"
   dependencies:
@@ -16083,8 +16054,9 @@ __metadata:
     "@metamask/eslint-config-nodejs": ^10.0.0
     "@metamask/eslint-config-typescript": ^10.0.0
     "@metamask/eth-sig-util": ^5.0.2
-    "@metamask/keyring-api": "ssh://git@github.com/MetaMask/keyring-api#main"
-    "@metamask/snaps-cli": ^0.32.2
+    "@metamask/snaps-cli": ^0.34.1-flask.1
+    "@metamask/snaps-types": ^0.34.1-flask.1
+    "@metamask/snaps-ui": ^0.34.1-flask.1
     "@metamask/utils": ^5.0.2
     "@typescript-eslint/eslint-plugin": ^5.33.0
     "@typescript-eslint/parser": ^5.33.0
@@ -18053,7 +18025,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"yargs@npm:^17.0.1":
+"yargs@npm:^17.0.1, yargs@npm:^17.7.1":
   version: 17.7.2
   resolution: "yargs@npm:17.7.2"
   dependencies:

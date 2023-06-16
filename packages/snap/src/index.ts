@@ -1,4 +1,4 @@
-import { KeyringRequest } from '@metamask/keyring-api';
+import { KeyringRequest, keyringRpcDispatcher } from '@metamask/keyring-api';
 import {
   ApproveRequestRequest,
   RejectRequestRequest,
@@ -124,6 +124,10 @@ async function dispatcher(
     }
   }
 }
+
+const keyringHandler: OnRpcRequestHandler = async ({ request }) => {
+  return await keyringRpcDispatcher(keyring, request);
+};
 
 export const onRpcRequest: OnRpcRequestHandler = async ({ origin, request }) =>
   await dispatcher(origin, request);

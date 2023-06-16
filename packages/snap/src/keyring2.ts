@@ -158,7 +158,7 @@ export class SimpleKeyring implements Keyring {
    */
   async submitRequest<Result extends Json = null>(
     request: KeyringRequest,
-  ): Promise<SubmitRequestResponse<Result>> {
+  ): Promise<SubmitRequestResponse> {
     const { method, params = '' } = request.request as JsonRpcRequest;
     const signedPayload = this.#handleSigningRequest(
       method as SigningMethods,
@@ -226,10 +226,7 @@ export class SimpleKeyring implements Keyring {
     throw new Error('[Snap] No reject request for this snap.');
   }
 
-  async filterSupportedChains(
-    _id: string,
-    chains: string[],
-  ): Promise<string[]> {
+  async filterAccountChains(_id: string, chains: string[]): Promise<string[]> {
     // id is not used because all the accounts created by snap are EOA for evm chains
     // EOA can sign for any evm chain
     return chains.filter((chain) => isEVMChain(chain));
