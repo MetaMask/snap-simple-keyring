@@ -106,13 +106,16 @@ export class SimpleKeyring implements Keyring {
     if (!validateNoDuplicateNames(account.name, Object.values(this.#wallets))) {
       throw new Error(`[Snap] Duplication name for wallet: ${account.name}`);
     }
+
     // TODO: update the KeyringController
+
     this.#wallets[account.id].account = newAccount;
     await this.#saveState();
   }
 
   async deleteAccount(id: string): Promise<void> {
     // TODO: update the KeyringController
+
     delete this.#wallets[id];
     await this.#saveState();
   }
@@ -249,8 +252,7 @@ export class SimpleKeyring implements Keyring {
     switch (method) {
       case 'personal_sign': {
         const [from, message] = params as string[];
-        const signedMessage = this.#signPersonalMessage(from, message);
-        return signedMessage;
+        return this.#signPersonalMessage(from, message);
       }
 
       case 'eth_sendTransaction':
@@ -301,12 +303,7 @@ export class SimpleKeyring implements Keyring {
       common,
     }).sign(privateKey);
 
-    const serializableSignedTx = serializeTransaction(
-      signedTx.toJSON(),
-      signedTx.type,
-    );
-
-    return serializableSignedTx;
+    return serializeTransaction(signedTx.toJSON(), signedTx.type);
   }
 
   #signTypedData(
@@ -340,22 +337,21 @@ export class SimpleKeyring implements Keyring {
     const privateKeyBuffer = Buffer.from(privateKey, 'hex');
     const messageBuffer = Buffer.from(request.slice(2), 'hex');
 
-    const signedMessageHex = personalSign({
+    const signature = personalSign({
       privateKey: privateKeyBuffer,
       data: messageBuffer,
     });
 
     const recoveredAddress = recoverPersonalSignature({
       data: messageBuffer,
-      signature: signedMessageHex,
+      signature: signature,
     });
     if (recoveredAddress !== from) {
-      console.log('incorrect address');
       throw new Error(
         `Signature verification failed for account "${from}" (got "${recoveredAddress}")`,
       );
     }
 
-    return signedMessageHex;
+    return signature;
   }
 }

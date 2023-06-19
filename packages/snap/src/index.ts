@@ -6,7 +6,7 @@ import {
 import type { OnRpcRequestHandler } from '@metamask/snaps-types';
 import { panel, heading, text } from '@metamask/snaps-ui';
 
-import { SimpleKeyring } from './keyring2';
+import { SimpleKeyring } from './keyring';
 import { InternalMethod, PERMISSIONS } from './permissions';
 import { getState } from './stateManagement';
 import { logRequest } from './util';
