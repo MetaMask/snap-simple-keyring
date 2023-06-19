@@ -65,5 +65,5 @@ export function validateNoDuplicateNames(
  * @returns Returns true if the chain is EVM-based, otherwise false.
  */
 export function isEVMChain(caip2ChainId: string): boolean {
-  return caip2ChainId.startsWith('eip155');
+  return caip2ChainId.startsWith('eip155:');
 }

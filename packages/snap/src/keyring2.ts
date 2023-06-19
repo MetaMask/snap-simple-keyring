@@ -1,4 +1,4 @@
-import Common, { Hardfork } from '@ethereumjs/common';
+import { Common, Hardfork } from '@ethereumjs/common';
 import { JsonTx, TransactionFactory } from '@ethereumjs/tx';
 import { Address } from '@ethereumjs/util';
 import {
@@ -16,6 +16,7 @@ import {
   SubmitRequestResponse,
 } from '@metamask/keyring-api';
 import type { Json, JsonRpcRequest } from '@metamask/utils';
+import { Buffer } from 'buffer';
 import { v4 as uuid } from 'uuid';
 
 import { SigningMethods } from './permissions';
@@ -80,9 +81,6 @@ export class SimpleKeyring implements Keyring {
     };
 
     this.#wallets[account.id] = { account, privateKey };
-    console.log(
-      `[Snap] Sending createAccount request to the SnapController...`,
-    );
     await snap.request({
       method: 'snap_manageAccounts',
       params: ['create', account.address],
@@ -126,9 +124,6 @@ export class SimpleKeyring implements Keyring {
   }
 
   async #saveState(): Promise<void> {
-    console.log('saving keyring');
-    console.log(this.#wallets);
-    console.log(this.#requests);
     await saveState({
       wallets: this.#wallets,
       requests: this.#requests,
@@ -156,18 +151,13 @@ export class SimpleKeyring implements Keyring {
    * @param request - The submitted request.
    * @returns A promise that resolves to the execution result.
    */
-  async submitRequest<Result extends Json = null>(
-    request: KeyringRequest,
-  ): Promise<SubmitRequestResponse> {
+  async submitRequest(request: KeyringRequest): Promise<SubmitRequestResponse> {
     const { method, params = '' } = request.request as JsonRpcRequest;
-    const signedPayload = this.#handleSigningRequest(
-      method as SigningMethods,
-      params,
-    );
+    const signedPayload = this.#handleSigningRequest(method, params);
 
     return {
       pending: false,
-      result: signedPayload as Result,
+      result: signedPayload as Json,
     };
   }
 
@@ -255,52 +245,59 @@ export class SimpleKeyring implements Keyring {
     return { privateKey: pk.toString('hex'), address };
   }
 
-  #handleSigningRequest(method: SigningMethods, params: Json): Json {
+  #handleSigningRequest(method: string, params: Json): Json {
     switch (method) {
-      case SigningMethods.EthSign: {
-        throw new Error(`[Snap] Eth sign not implemented`);
-      }
-      case SigningMethods.SignPersonalMessage: {
+      case 'personal_sign': {
         const [from, message] = params as string[];
         const signedMessage = this.#signPersonalMessage(from, message);
         return signedMessage;
       }
+
+      case 'eth_sendTransaction':
+      case 'eth_signTransaction':
       case SigningMethods.SignTransaction: {
-        const [from, ethTx, opts] = params as [string, JsonTx, Json];
-        return this.#signTransaction(from, ethTx, opts);
+        const [from, tx, opts] = params as [string, JsonTx, Json];
+        return this.#signTransaction(from, tx, opts);
       }
-      case SigningMethods.SignTypedData: {
-        const [from, typedData, opts] = params as [
+
+      case 'eth_signTypedData':
+      case 'eth_signTypedData_v1':
+      case 'eth_signTypedData_v2':
+      case 'eth_signTypedData_v3':
+      case 'eth_signTypedData_v4': {
+        const [from, data, opts] = params as [
           string,
           Json,
           { version: SignTypedDataVersion },
         ];
-        return this.#signTypedData(from, typedData, opts);
+        return this.#signTypedData(from, data, opts);
       }
+
       default: {
-        throw new Error(`[Snap] Unknwon method ${method as string}`);
+        throw new Error(`[Snap] Unsupported method: ${method}`);
       }
     }
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  #signTransaction(from: string, ethTx: any, opts: any): Json {
+  #signTransaction(from: string, tx: any, _opts: any): Json {
+    // Patch the transaction to make sure that the chainId is a hex string.
+    if (!tx.chainId.startsWith('0x')) {
+      tx.chainId = `0x${parseInt(tx.chainId).toString(16)}`;
+    }
+
     const wallet = this.#getWalletByAddress(from);
-
-    // eslint-disable-next-line no-restricted-globals
     const privateKey = Buffer.from(wallet.privateKey, 'hex');
-
     const common = Common.custom(
-      { chainId: ethTx.chainId },
+      { chainId: tx.chainId },
       {
         hardfork:
-          ethTx.maxPriorityFeePerGas || ethTx.maxFeePerGas
+          tx.maxPriorityFeePerGas || tx.maxFeePerGas
             ? Hardfork.London
             : Hardfork.Istanbul,
       },
     );
 
-    const signedTx = TransactionFactory.fromTxData(ethTx, {
+    const signedTx = TransactionFactory.fromTxData(tx, {
       common,
     }).sign(privateKey);
 
@@ -314,7 +311,7 @@ export class SimpleKeyring implements Keyring {
 
   #signTypedData(
     from: string,
-    typedData: Json,
+    data: Json,
     opts: { version?: SignTypedDataVersion },
   ): string {
     let version: SignTypedDataVersion;
@@ -329,23 +326,18 @@ export class SimpleKeyring implements Keyring {
     }
 
     const { privateKey } = this.#getWalletByAddress(from);
-
-    // eslint-disable-next-line no-restricted-globals
     const privateKeyBuffer = Buffer.from(privateKey, 'hex');
 
     return signTypedData({
       privateKey: privateKeyBuffer,
-      data: typedData as unknown as TypedDataV1 | TypedMessage<any>,
+      data: data as unknown as TypedDataV1 | TypedMessage<any>,
       version,
     });
   }
 
   #signPersonalMessage(from: string, request: string): string {
     const { privateKey } = this.#getWalletByAddress(from);
-    // eslint-disable-next-line no-restricted-globals
     const privateKeyBuffer = Buffer.from(privateKey, 'hex');
-
-    // eslint-disable-next-line no-restricted-globals
     const messageBuffer = Buffer.from(request.slice(2), 'hex');
 
     const signedMessageHex = personalSign({
