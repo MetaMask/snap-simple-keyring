@@ -2742,7 +2742,7 @@ __metadata:
 
 "@metamask/keyring-api@ssh://git@github.com/MetaMask/keyring-api.git#main":
   version: 0.1.0
-  resolution: "@metamask/keyring-api@ssh://git@github.com/MetaMask/keyring-api.git#commit=50988b357131fac1600d4a3ac6b5f93a3e13db5d"
+  resolution: "@metamask/keyring-api@ssh://git@github.com/MetaMask/keyring-api.git#commit=769c8bfe4ba380b85bc3a3939ccfaeebb7720fdd"
   dependencies:
     "@metamask/snaps-controllers": ^0.34.1-flask.1
     "@metamask/snaps-utils": ^0.34.1-flask.1
@@ -2750,7 +2750,7 @@ __metadata:
     "@types/uuid": ^9.0.1
     superstruct: ^1.0.3
     uuid: ^9.0.0
-  checksum: cc3deba6fbde2792aca48465b1135b139ad1a8d4e06231856167f218e905b87b644808694a0526a3740086c57b46017b06dd4c6d047f806902b2bdcc35ab3b3d
+  checksum: e78750c8c2cb398e27fcaba23b86914b28bfbcee60e69016d14bc2b64e9eb926cc3c1bd9ca2f02db23df0be965b8bf8577d69eba5ada5a1b82ccb6be5cf84e75
   languageName: node
   linkType: hard
 

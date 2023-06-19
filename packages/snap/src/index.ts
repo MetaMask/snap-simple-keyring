@@ -1,6 +1,6 @@
 import {
   MethodNotSupportedError,
-  buildHandlersChain,
+  chainHandlers,
   keyringRpcDispatcher,
 } from '@metamask/keyring-api';
 import type { OnRpcRequestHandler } from '@metamask/snaps-types';
@@ -112,9 +112,9 @@ const customHandler: OnRpcRequestHandler = async ({
   }
 };
 
-export const onRpcRequest: OnRpcRequestHandler = buildHandlersChain([
+export const onRpcRequest: OnRpcRequestHandler = chainHandlers(
   loggerHandler,
   permissionsHandler,
   keyringHandler,
   customHandler,
-]);
+);
