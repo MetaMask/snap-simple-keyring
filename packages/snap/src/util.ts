@@ -1,5 +1,5 @@
 import { JsonTx } from '@ethereumjs/tx';
-import { Json } from '@metamask/utils';
+import type { Json } from '@metamask/utils';
 
 import { Wallet } from './keyring2';
 import {

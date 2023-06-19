@@ -15,7 +15,7 @@ import {
   KeyringRequest,
   SubmitRequestResponse,
 } from '@metamask/keyring-api';
-import { Json, JsonRpcRequest } from '@metamask/snaps-types';
+import type { Json, JsonRpcRequest } from '@metamask/utils';
 import { v4 as uuid } from 'uuid';
 
 import { SigningMethods } from './permissions';

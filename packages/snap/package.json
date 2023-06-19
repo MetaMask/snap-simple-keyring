@@ -30,11 +30,12 @@
     "@ethereumjs/tx": "^4.1.2",
     "@ethereumjs/util": "^8.0.5",
     "@metamask/eth-sig-util": "^5.0.2",
+    "@metamask/keyring-api": "ssh://git@github.com/MetaMask/keyring-api.git#main",
     "@metamask/snaps-types": "^0.34.1-flask.1",
     "@metamask/snaps-ui": "^0.34.1-flask.1",
     "@metamask/utils": "^5.0.2",
+    "browserify": "^17.0.0",
     "buffer": "^6.0.3",
-    "node-polyfill-webpack-plugin": "^2.0.1",
     "stream-browserify": "^3.0.0",
     "uuid": "^9.0.0"
   },
@@ -76,7 +77,9 @@
       "@metamask/snaps-controllers>@metamask/base-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>keccak": false,
       "@metamask/snaps-controllers>@metamask/base-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>secp256k1": false,
       "@metamask/snaps-utils>@metamask/base-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>keccak": false,
-      "@metamask/snaps-utils>@metamask/base-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>secp256k1": false
+      "@metamask/snaps-utils>@metamask/base-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>secp256k1": false,
+      "@metamask/snaps-cli>@metamask/snaps-utils>@metamask/permission-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>keccak": false,
+      "@metamask/snaps-cli>@metamask/snaps-utils>@metamask/permission-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>secp256k1": false
     }
   }
 }

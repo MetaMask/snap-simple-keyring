@@ -1,22 +1,13 @@
-import { KeyringRequest, keyringRpcDispatcher } from '@metamask/keyring-api';
 import {
-  ApproveRequestRequest,
-  RejectRequestRequest,
-} from '@metamask/keyring-api/dist/keyring-internal-api';
-import {
-  OnRpcRequestHandler,
-  Json,
-  JsonRpcRequest,
-} from '@metamask/snaps-types';
+  MethodNotSupportedError,
+  buildHandlersChain,
+  keyringRpcDispatcher,
+} from '@metamask/keyring-api';
+import type { OnRpcRequestHandler } from '@metamask/snaps-types';
 import { panel, heading, text } from '@metamask/snaps-ui';
 
 import { SimpleKeyring } from './keyring2';
-import {
-  InternalMethod,
-  PERMISSIONS,
-  RequestMethods,
-  SnapKeyringMethod,
-} from './permissions';
+import { InternalMethod, PERMISSIONS } from './permissions';
 import { getState } from './stateManagement';
 import { logRequest } from './util';
 
@@ -34,30 +25,67 @@ function hasPermission(origin: string, method: string): boolean {
 }
 
 /**
- * Execute a JSON-RPC request.
+ * Log the requests.
  *
- * @param origin - Request origin.
- * @param request - Request to execute.
- * @returns The execution result.
+ * @param args - Request arguments.
+ * @param args.origin - Caller origin.
+ * @param args.request - Request to execute.
+ * @returns Nothing, always throws `MethodNotSupportedError`.
  */
-async function dispatcher(
-  origin: string,
-  request: JsonRpcRequest,
-): Promise<any> {
+const loggerHandler: OnRpcRequestHandler = async ({ origin, request }) => {
   console.log(
     `[Snap] request (id=${request.id ?? 'null'}, origin=${origin}):`,
     request,
   );
+  throw new MethodNotSupportedError(request.method);
+};
 
+/**
+ * Handle execution permissions.
+ *
+ * @param args - Request arguments.
+ * @param args.origin - Caller origin.
+ * @param args.request - Request to execute.
+ * @returns Nothing, throws `MethodNotSupportedError` if the caller IS allowed
+ * to call the method, throws an `Error` otherwise.
+ */
+const permissionsHandler: OnRpcRequestHandler = async ({
+  origin,
+  request,
+}): Promise<never> => {
   if (!hasPermission(origin, request.method)) {
     throw new Error(`origin ${origin} cannot call method ${request.method}`);
   }
+  throw new MethodNotSupportedError(request.method);
+};
 
-  const keyringState = await getState();
+/**
+ * Handle keyring requests.
+ *
+ * @param args - Request arguments.
+ * @param args.request - Request to execute.
+ * @returns The execution result.
+ */
+const keyringHandler: OnRpcRequestHandler = async ({ request }) => {
   if (!keyring) {
-    keyring = new SimpleKeyring(keyringState);
+    const keyringState = await getState();
+    if (!keyring) {
+      keyring = new SimpleKeyring(keyringState);
+    }
   }
+  return await keyringRpcDispatcher(keyring, request);
+};
 
+/**
+ * Execute a custom snap request.
+ *
+ * @param args - Request arguments.
+ * @param args.request - Request to execute.
+ * @returns The execution result.
+ */
+const customHandler: OnRpcRequestHandler = async ({
+  request,
+}): Promise<any> => {
   switch (request.method) {
     // internal methods
     case InternalMethod.Hello: {
@@ -72,62 +100,21 @@ async function dispatcher(
         },
       });
     }
+
     case InternalMethod.GetState: {
       logRequest(InternalMethod.GetState, request);
       return await getState();
     }
 
-    // Request Methods
-    case RequestMethods.SubmitRequest: {
-      logRequest(RequestMethods.SubmitRequest, request);
-      return await keyring.submitRequest(request.params as KeyringRequest);
-    }
-
-    case RequestMethods.ApproveRequest: {
-      logRequest(RequestMethods.ApproveRequest, request);
-      return await keyring.approveRequest(
-        (request.params as ApproveRequestRequest).params.id,
-      );
-    }
-
-    case RequestMethods.RejectRequest: {
-      logRequest(RequestMethods.RejectRequest, request.params);
-      return await keyring.rejectRequest(
-        (request.params as RejectRequestRequest).params.id,
-      );
-    }
-
-    // Keyring Methods
-    case SnapKeyringMethod.ListAccounts: {
-      logRequest(SnapKeyringMethod.ListAccounts, request.params);
-      return await keyring.listAccounts();
-    }
-
-    case SnapKeyringMethod.CreateAccount: {
-      logRequest(SnapKeyringMethod.CreateAccount, request.params);
-      const req = request.params as {
-        name: string;
-        options?: Record<string, Json>;
-      };
-      return await keyring.createAccount(req.name, req.options);
-    }
-
-    case SnapKeyringMethod.DeleteAccount: {
-      const req = request.params as {
-        id: string;
-      };
-      return await keyring.deleteAccount(req.id);
-    }
-
     default: {
-      throw new Error(`method not found: ${request.method}`);
+      throw new MethodNotSupportedError(request.method);
     }
   }
-}
-
-const keyringHandler: OnRpcRequestHandler = async ({ request }) => {
-  return await keyringRpcDispatcher(keyring, request);
 };
 
-export const onRpcRequest: OnRpcRequestHandler = async ({ origin, request }) =>
-  await dispatcher(origin, request);
+export const onRpcRequest: OnRpcRequestHandler = buildHandlersChain([
+  loggerHandler,
+  permissionsHandler,
+  keyringHandler,
+  customHandler,
+]);
