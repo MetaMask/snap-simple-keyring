@@ -2726,6 +2726,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@metamask/keyring-api@npm:^0.1.0":
+  version: 0.1.0
+  resolution: "@metamask/keyring-api@npm:0.1.0"
+  dependencies:
+    "@metamask/providers": ^11.0.0
+    "@metamask/snaps-controllers": ^0.34.1-flask.1
+    "@metamask/snaps-utils": ^0.34.1-flask.1
+    "@metamask/utils": ^6.0.1
+    "@types/uuid": ^9.0.1
+    superstruct: ^1.0.3
+    uuid: ^9.0.0
+  checksum: dcb46f395095774c05647c573edbb4998dd15e1ad8106bb82fed240083a1466f8748cc0cf5d68b5c697bde0cec7c08860a1858dea17ddd3ba964fbcd00c46050
+  languageName: node
+  linkType: hard
+
 "@metamask/keyring-api@ssh://git@github.com/MetaMask/keyring-api#main":
   version: 0.1.0
   resolution: "@metamask/keyring-api@ssh://git@github.com/MetaMask/keyring-api#commit=6490a3b3d0997917161e41fe145580309e26d2e5"
@@ -2737,20 +2752,6 @@ __metadata:
     "@types/uuid": ^9.0.1
     uuid: ^9.0.0
   checksum: a6ec94aaf4ab0ac7047bb27701acf99acaebc3e1ea011b053f1ddb42eae57f7cf2f10bdbec494358acddc0354533d41819abead5daa929a857e532206555e40c
-  languageName: node
-  linkType: hard
-
-"@metamask/keyring-api@ssh://git@github.com/MetaMask/keyring-api.git#main":
-  version: 0.1.0
-  resolution: "@metamask/keyring-api@ssh://git@github.com/MetaMask/keyring-api.git#commit=769c8bfe4ba380b85bc3a3939ccfaeebb7720fdd"
-  dependencies:
-    "@metamask/snaps-controllers": ^0.34.1-flask.1
-    "@metamask/snaps-utils": ^0.34.1-flask.1
-    "@metamask/utils": ^5.0.2
-    "@types/uuid": ^9.0.1
-    superstruct: ^1.0.3
-    uuid: ^9.0.0
-  checksum: e78750c8c2cb398e27fcaba23b86914b28bfbcee60e69016d14bc2b64e9eb926cc3c1bd9ca2f02db23df0be965b8bf8577d69eba5ada5a1b82ccb6be5cf84e75
   languageName: node
   linkType: hard
 
@@ -3095,6 +3096,19 @@ __metadata:
     semver: ^7.3.8
     superstruct: ^1.0.3
   checksum: 6eeed00986866d4a674bf65c5f9e264fc133a368dbf0e28b9b090a7c04a89c3c543e8de8a752eff770d283b43a8e02648ba34b9077627dc7ee8c063b6167a2da
+  languageName: node
+  linkType: hard
+
+"@metamask/utils@npm:^6.0.1":
+  version: 6.1.0
+  resolution: "@metamask/utils@npm:6.1.0"
+  dependencies:
+    "@ethereumjs/tx": ^4.1.2
+    "@types/debug": ^4.1.7
+    debug: ^4.3.4
+    semver: ^7.3.8
+    superstruct: ^1.0.3
+  checksum: d4eac3ce3c08674b8e9ef838d1661a5025690c6f266c26ebdb8e8d0da11fce786e54c326b5d9c6d33b262f37e7057e31d6545a3715613bd0a5bfa10e7755643a
   languageName: node
   linkType: hard
 
@@ -15946,7 +15960,7 @@ __metadata:
     "@metamask/eslint-config-nodejs": ^10.0.0
     "@metamask/eslint-config-typescript": ^10.0.0
     "@metamask/eth-sig-util": ^5.0.2
-    "@metamask/keyring-api": "ssh://git@github.com/MetaMask/keyring-api.git#main"
+    "@metamask/keyring-api": ^0.1.0
     "@metamask/snaps-cli": ^0.34.1-flask.1
     "@metamask/snaps-types": ^0.34.1-flask.1
     "@metamask/snaps-ui": ^0.34.1-flask.1
