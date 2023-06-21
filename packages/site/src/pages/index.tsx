@@ -1,109 +1,22 @@
-import { useContext, useState } from 'react';
-import styled from 'styled-components';
+/* eslint-disable import/no-extraneous-dependencies */
+/* eslint-disable @typescript-eslint/no-misused-promises */
+import { KeyringSnapRpcClient } from '@metamask/keyring-api';
+import Grid from '@mui/material/Grid';
+import { useContext, useState, useCallback } from 'react';
+import { FiInfo, FiAlertTriangle } from 'react-icons/fi';
 
-import { MetamaskActions, MetaMaskContext } from '../hooks';
 import {
-  connectSnap,
-  getSnap,
-  sendHello,
-  shouldDisplayReconnectButton,
-  getSnapState,
-  createNewAccount,
-  approvePendingRequest,
-  clearPendingRequests,
-} from '../utils';
-import {
-  ConnectButton,
-  InstallFlaskButton,
-  ReconnectButton,
-  SendHelloButton,
-  Card,
-} from '../components';
+  Container,
+  CardContainer,
+  Divider,
+  DividerTitle,
+  InformationBox,
+  StyledBox,
+} from './styledComponents';
+import { Card, ConnectButton, AccountList, Accordion } from '../components';
 import { defaultSnapOrigin } from '../config';
-
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  flex: 1;
-  margin-top: 7.6rem;
-  margin-bottom: 7.6rem;
-  ${({ theme }) => theme.mediaQueries.small} {
-    padding-left: 2.4rem;
-    padding-right: 2.4rem;
-    margin-top: 2rem;
-    margin-bottom: 2rem;
-    width: auto;
-  }
-`;
-
-const Heading = styled.h1`
-  margin-top: 0;
-  margin-bottom: 2.4rem;
-  text-align: center;
-`;
-
-const Span = styled.span`
-  color: ${(props) => props.theme.colors.primary.default};
-`;
-
-const Subtitle = styled.p`
-  font-size: ${({ theme }) => theme.fontSizes.large};
-  font-weight: 500;
-  margin-top: 0;
-  margin-bottom: 0;
-  ${({ theme }) => theme.mediaQueries.small} {
-    font-size: ${({ theme }) => theme.fontSizes.text};
-  }
-`;
-
-const CardContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  max-width: 64.8rem;
-  width: 100%;
-  height: 100%;
-  margin-top: 1.5rem;
-`;
-
-const Notice = styled.div`
-  background-color: ${({ theme }) => theme.colors.background.alternative};
-  border: 1px solid ${({ theme }) => theme.colors.border.default};
-  color: ${({ theme }) => theme.colors.text.alternative};
-  border-radius: ${({ theme }) => theme.radii.default};
-  padding: 2.4rem;
-  margin-top: 2.4rem;
-  max-width: 60rem;
-  width: 100%;
-
-  & > * {
-    margin: 0;
-  }
-  ${({ theme }) => theme.mediaQueries.small} {
-    margin-top: 1.2rem;
-    padding: 1.6rem;
-  }
-`;
-
-const ErrorMessage = styled.div`
-  background-color: ${({ theme }) => theme.colors.error.muted};
-  border: 1px solid ${({ theme }) => theme.colors.error.default};
-  color: ${({ theme }) => theme.colors.error.alternative};
-  border-radius: ${({ theme }) => theme.radii.default};
-  padding: 2.4rem;
-  margin-bottom: 2.4rem;
-  margin-top: 2.4rem;
-  max-width: 60rem;
-  width: 100%;
-  ${({ theme }) => theme.mediaQueries.small} {
-    padding: 1.6rem;
-    margin-bottom: 1.2rem;
-    margin-top: 1.2rem;
-    max-width: 100%;
-  }
-`;
+import { MetamaskActions, MetaMaskContext } from '../hooks';
+import { connectSnap, getSnap, getSnapState, sendHello } from '../utils';
 
 const snapId = defaultSnapOrigin;
 
@@ -112,154 +25,41 @@ const initialState = {
   accounts: [],
 };
 
-const PendingConfirmationCard = (props) => {
-  const { id, request } = props;
+const Action = ({ callback }: { callback: () => Promise<any> }) => {
+  const [state, dispatch] = useContext(MetaMaskContext);
+  const [input, setInput] = useState<string | null>();
+  const [response, setResponse] = useState<string | null>();
+  const [error, setError] = useState<string | null>();
+
+  const method = useCallback(async (): Promise<void> => {
+    setResponse(null);
+    setError(null);
+
+    try {
+      const newResponse = await callback();
+      setResponse(JSON.stringify(newResponse));
+    } catch (newError: any) {
+      dispatch({ type: MetamaskActions.SetError, payload: newError });
+      setError(JSON.stringify(newError));
+    }
+  }, []);
 
   return (
-    <Card
-      content={{
-        title: 'Pending Signature Request...',
-        description:
-          'Display a custom message within a confirmation screen in MetaMask.',
-        button: (
-          <SendHelloButton
-            onClick={() => approvePendingRequest(snapId, id, request)}
-          />
-        ),
-      }}
-    >
-      <pre>{JSON.stringify(request, null, 2)}</pre>
-    </Card>
-  );
-};
-
-const AccountCard = ({ account }) => {
-  return (
-    <Card content={{ title: 'Account', description: 'Snap account' }}>
-      <pre>{account}</pre>
-    </Card>
-  );
-};
-
-const WalletManagementCard = (props) => {
-  const { updateSnapState, createAccount } = props;
-
-  async function readAccount() {
-    try {
-      // eslint-disable-next-line no-restricted-globals
-      const response = await window.ethereum.request({
-        method: 'wallet_invokeSnap',
-        params: {
-          snapId,
-          request: {
-            method: 'manageAccounts',
-            params: ['read'],
-          },
-        },
-      });
-      console.log('Account read', response);
-    } catch (err) {
-      console.error(err);
-      alert('Problem happened: ' + err.message || err);
-    }
-  }
-
-  async function updateAccount(privateData: { value: string }) {
-    try {
-      const account = [publicKey, privateData];
-
-      // eslint-disable-next-line no-restricted-globals
-      const response = await window.ethereum.request({
-        method: 'wallet_invokeSnap',
-        params: {
-          snapId,
-          request: {
-            method: 'snap.keyrin.updateAccount',
-            params: account,
-          },
-        },
-      });
-      console.log('Account updated', response);
-    } catch (err) {
-      console.error(err);
-      alert(`Problem happened: ${err.message}` || err);
-    }
-  }
-
-  async function deleteAccount(_address) {
-    try {
-      // eslint-disable-next-line no-restricted-globals
-      const response = await window.ethereum.request({
-        method: 'wallet_invokeSnap',
-        params: {
-          snapId,
-          request: {
-            method: 'keyring_removeAccount',
-            params: publicKey,
-          },
-        },
-      });
-      console.log('Account delete', response);
-    } catch (err) {
-      console.error(err);
-      alert('Problem happened: ' + err.message || err);
-    }
-  }
-
-  return (
-    <Card
-      content={{
-        title: 'Wallet Management',
-        description:
-          'Display a custom message within a confirmation screen in MetaMask.',
-      }}
-    >
-      <h2>Operations</h2>
-      <div>
-        <p id="publicAddress"></p>
-        <button
-          onClick={() => {
-            createAccount();
-          }}
-          className="createAccount"
-        >
-          Create account
-        </button>
-        <button
-          onClick={() => {
-            readAccount();
-          }}
-          className="readAccount"
-        >
-          Read account
-        </button>
-        <button
-          onClick={() => {
-            updateAccount({ value: 'new updated value' });
-          }}
-          className="updateAccount"
-        >
-          Update account
-        </button>
-        <button
-          onClick={() => {
-            deleteAccount(badPublicKey);
-          }}
-          className="deleteAccount"
-        >
-          Delete account
-        </button>
-      </div>
-
-      <button
-        onClick={() => {
-          updateSnapState();
-        }}
-        className="updateSnapState"
-      >
-        Get state
-      </button>
-    </Card>
+    <>
+      <button onClick={method}>Execute</button>
+      {response && (
+        <InformationBox error={false}>
+          <FiInfo />
+          <p>{response}</p>
+        </InformationBox>
+      )}
+      {error && (
+        <InformationBox error={true}>
+          <FiAlertTriangle />
+          <p>{error}</p>
+        </InformationBox>
+      )}
+    </>
   );
 };
 
@@ -267,14 +67,15 @@ const Index = () => {
   const [state, dispatch] = useContext(MetaMaskContext);
   const [snapState, setSnapState] = useState(initialState);
 
-  async function updateSnapState(publicKey) {
+  async function updateSnapState() {
     try {
       const response = await getSnapState(snapId);
       console.log('Got state', response);
       setSnapState(response);
-    } catch (err) {
-      console.error(err);
-      alert('Problem happened: ' + err.message || err);
+    } catch (error) {
+      console.error(error);
+      // eslint-disable-next-line no-alert
+      alert(`Problem happened: ${error.message}` || error);
     }
   }
 
@@ -287,62 +88,99 @@ const Index = () => {
         type: MetamaskActions.SetInstalled,
         payload: installedSnap,
       });
-    } catch (e) {
-      console.error(e);
-      dispatch({ type: MetamaskActions.SetError, payload: e });
+    } catch (error) {
+      console.error(error);
+      dispatch({ type: MetamaskActions.SetError, payload: error });
     }
   };
 
-  const handleSendHelloClick = async () => {
-    try {
-      await sendHello();
-    } catch (e) {
-      console.error(e);
-      dispatch({ type: MetamaskActions.SetError, payload: e });
-    }
-  };
+  const utilityMethods = [
+    {
+      name: 'Update snap state',
+      description: 'No description',
+      actionUI: <Action callback={async () => await updateSnapState()} />,
+    },
+    {
+      name: 'Send hello',
+      description: 'Send a simple hello, not a goodbye',
+      actionUI: <Action callback={async () => await sendHello()} />,
+    },
+  ];
 
-  const createAccount = async () => {
-    try {
-      await createNewAccount();
-    } catch (e) {
-      console.error(e);
-      dispatch({ type: MetamaskActions.SetError, payload: e });
-    }
-  };
+  const accountManagementMethods = [
+    {
+      name: 'Create Account',
+      description: 'Method to create a new account',
+      actionUI: (
+        <Action
+          callback={async () => {
+            const client = new KeyringSnapRpcClient(snapId);
+            return await client.createAccount('Account X');
+          }}
+        />
+      ),
+    },
+    {
+      name: 'Get Account',
+      description: 'Get the data about a select account',
+      actionUI: (
+        <Action
+          callback={async () => {
+            return { response: 'mock response' };
+          }}
+        />
+      ),
+    },
+    {
+      name: 'Edit Account',
+      descriptions:
+        'Edit an account (provide a object with the attributes to update)', // TODO: Add input field
+      actionUI: <Action callback={async () => console.log('Edit Account')} />,
+    },
+    {
+      name: 'List Accounts',
+      description: 'Method to list all account that the SSK manages',
+      actionUI: (
+        <Action
+          callback={async () => {
+            const client = new KeyringSnapRpcClient(snapId);
+            const accounts = await client.listAccounts();
+            console.log('[UI] list of accounts:', accounts);
+            const addresses = accounts.map(
+              (a: { address: string }) => a.address,
+            );
+            console.log(addresses);
+            setSnapState({
+              accounts: [],
+              pendingRequests: {},
+            });
+          }}
+        />
+      ),
+    },
+    {
+      name: 'Update Account',
+      description: 'Update a select account', // TODO: Add input field
+      actionUI: <Action callback={async () => console.log('Update Account')} />,
+    },
+    {
+      name: 'Remove Account',
+      description: 'Remove a select account', // TODO: Add input field
+      actionUI: <Action callback={async () => console.log('Remove Account')} />,
+    },
+  ];
+
+  const requestMethods = [
+    {
+      name: 'Get Requests',
+      description: 'Get all the request made by an account', // TODO: Add input field
+      actionUI: <Action callback={async () => console.log('Get Requests')} />,
+    },
+  ];
 
   return (
     <Container>
-      <Heading>
-        Welcome to <Span>template-snap</Span>
-      </Heading>
-      <Subtitle>
-        Get started by editing <code>src/index.ts</code>
-      </Subtitle>
       <CardContainer>
-        <button onClick={() => handleSendHelloClick()}>Show dialog</button>
-
-        {state.installedSnap &&
-          Object.entries(snapState.accounts).map((account) => {
-            return <AccountCard account={account[0]} key={account[0]} />;
-          })}
-
-        {state.error && (
-          <ErrorMessage>
-            <b>An error happened:</b> {state.error.message}
-          </ErrorMessage>
-        )}
-        {!state.isFlask && (
-          <Card
-            content={{
-              title: 'Install',
-              description:
-                'Snaps is pre-release software only available in MetaMask Flask, a canary distribution for developers with access to upcoming features.',
-              button: <InstallFlaskButton />,
-            }}
-            fullWidth
-          />
-        )}
         {!state.installedSnap && (
           <Card
             content={{
@@ -359,51 +197,29 @@ const Index = () => {
             disabled={!state.isFlask}
           />
         )}
-        <Card
-          content={{
-            title: 'Update Snap State',
-            description: 'get latest snap state',
-            button: (
-              <SendHelloButton
-                onClick={updateSnapState}
-                disabled={!state.installedSnap}
-              />
-            ),
-          }}
-        />
-        <Card
-          content={{
-            title: 'Reset Pending',
-            description: 'clear pending requests',
-            button: (
-              <SendHelloButton
-                onClick={() => clearPendingRequests(snapId)}
-                disabled={!state.installedSnap}
-              />
-            ),
-          }}
-        />
-        {state.installedSnap && (
-          <WalletManagementCard
-            updateSnapState={updateSnapState}
-            createAccount={createAccount}
-          />
-        )}
-        {state.installedSnap &&
-          Object.entries(snapState.pendingRequests).map(([id, request]) => {
-            return (
-              <PendingConfirmationCard key={id} id={id} request={request} />
-            );
-          })}
-        <Notice>
-          <p>
-            Please note that the <b>snap.manifest.json</b> and{' '}
-            <b>package.json</b> must be located in the server root directory and
-            the bundle must be hosted at the location specified by the location
-            field.
-          </p>
-        </Notice>
       </CardContainer>
+
+      <StyledBox sx={{ flexGrow: 1 }}>
+        <Grid container spacing={4} columns={[1, 2, 3]}>
+          <Grid item xs={8} sm={4} md={2}>
+            <Divider />
+            <DividerTitle>Account Management Methods</DividerTitle>
+            <Accordion items={accountManagementMethods} />
+            <Divider />
+            <DividerTitle>Request Methods</DividerTitle>
+            <Accordion items={requestMethods} />
+            <Divider />
+            <DividerTitle>Utility Methods</DividerTitle>
+            <Accordion items={utilityMethods} />
+          </Grid>
+          <Grid item xs={4} sm={2} md={1}>
+            <Divider />
+            <DividerTitle>Current Accounts</DividerTitle>
+            {/* TODO: Connect to correct data source */}
+            <AccountList accounts={[]} />
+          </Grid>
+        </Grid>
+      </StyledBox>
     </Container>
   );
 };

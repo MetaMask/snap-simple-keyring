@@ -25,14 +25,19 @@
     ]
   },
   "dependencies": {
-    "@ethereumjs/util": "^8.0.5",
-    "@metamask/eth-sig-util": "^5.0.2",
+    "@emotion/react": "^11.11.0",
+    "@emotion/styled": "^11.11.0",
+    "@metamask/keyring-api": "ssh://git@github.com/MetaMask/keyring-api#main",
     "@metamask/providers": "^10.2.1",
+    "@mui/material": "^5.13.2",
+    "@types/uuid": "^9.0.1",
     "buffer": "^6.0.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-icons": "^4.8.0",
     "react-is": "^18.2.0",
-    "styled-components": "5.3.9"
+    "styled-components": "5.3.9",
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "@metamask/eslint-config": "^11.1.0",

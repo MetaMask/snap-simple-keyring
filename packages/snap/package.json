@@ -28,11 +28,16 @@
   "dependencies": {
     "@ethereumjs/common": "^3.1.2",
     "@ethereumjs/tx": "^4.1.2",
-    "@ethereumjs/util": "^8.0.6",
-    "@metamask/eth-sig-util": "5.0.2",
-    "@metamask/snaps-types": "^0.32.2",
-    "@metamask/snaps-ui": "^0.32.2",
-    "buffer": "^6.0.3"
+    "@ethereumjs/util": "^8.0.5",
+    "@metamask/eth-sig-util": "^5.0.2",
+    "@metamask/keyring-api": "ssh://git@github.com/MetaMask/keyring-api.git#main",
+    "@metamask/snaps-types": "^0.34.1-flask.1",
+    "@metamask/snaps-ui": "^0.34.1-flask.1",
+    "@metamask/utils": "^5.0.2",
+    "browserify": "^17.0.0",
+    "buffer": "^6.0.3",
+    "stream-browserify": "^3.0.0",
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "@lavamoat/allow-scripts": "^2.0.3",
@@ -41,7 +46,7 @@
     "@metamask/eslint-config-jest": "^10.0.0",
     "@metamask/eslint-config-nodejs": "^10.0.0",
     "@metamask/eslint-config-typescript": "^10.0.0",
-    "@metamask/snaps-cli": "^0.32.2",
+    "@metamask/snaps-cli": "^0.34.1-flask.1",
     "@typescript-eslint/eslint-plugin": "^5.33.0",
     "@typescript-eslint/parser": "^5.33.0",
     "eslint": "^8.21.0",
@@ -64,5 +69,17 @@
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"
+  },
+  "lavamoat": {
+    "allowScripts": {
+      "@ethereumjs/tx>ethereumjs-util>ethereum-cryptography>keccak": false,
+      "@ethereumjs/tx>ethereumjs-util>ethereum-cryptography>secp256k1": false,
+      "@metamask/snaps-controllers>@metamask/base-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>keccak": false,
+      "@metamask/snaps-controllers>@metamask/base-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>secp256k1": false,
+      "@metamask/snaps-utils>@metamask/base-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>keccak": false,
+      "@metamask/snaps-utils>@metamask/base-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>secp256k1": false,
+      "@metamask/snaps-cli>@metamask/snaps-utils>@metamask/permission-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>keccak": false,
+      "@metamask/snaps-cli>@metamask/snaps-utils>@metamask/permission-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>secp256k1": false
+    }
   }
 }
