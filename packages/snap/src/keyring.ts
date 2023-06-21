@@ -160,7 +160,7 @@ export class SimpleKeyring implements Keyring {
 
     return {
       pending: false,
-      result: signedPayload as Json,
+      result: signedPayload,
     };
   }
 
@@ -284,7 +284,7 @@ export class SimpleKeyring implements Keyring {
   #signTransaction(from: string, tx: any, _opts: any): Json {
     // Patch the transaction to make sure that the chainId is a hex string.
     if (!tx.chainId.startsWith('0x')) {
-      tx.chainId = `0x${parseInt(tx.chainId).toString(16)}`;
+      tx.chainId = `0x${parseInt(tx.chainId, 10).toString(16)}`;
     }
 
     const wallet = this.#getWalletByAddress(from);
@@ -344,7 +344,7 @@ export class SimpleKeyring implements Keyring {
 
     const recoveredAddress = recoverPersonalSignature({
       data: messageBuffer,
-      signature: signature,
+      signature,
     });
     if (recoveredAddress !== from) {
       throw new Error(
