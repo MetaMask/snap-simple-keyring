@@ -83,7 +83,9 @@ export class SimpleKeyring implements Keyring {
     this.#wallets[account.id] = { account, privateKey };
     await snap.request({
       method: 'snap_manageAccounts',
-      params: ['create', account.address],
+      params: {
+        method: 'createAccount',
+      },
     });
 
     await this.#saveState();
