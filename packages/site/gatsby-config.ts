@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { GatsbyConfig } from 'gatsby';
 
 const config: GatsbyConfig = {
