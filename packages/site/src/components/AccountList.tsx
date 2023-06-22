@@ -1,4 +1,5 @@
 /* eslint-disable import/no-extraneous-dependencies */
+import { KeyringAccount } from '@metamask/keyring-api';
 import Grid from '@mui/material/Grid';
 import {
   GiAbstract019,
@@ -12,20 +13,6 @@ import {
 import styled from 'styled-components';
 
 import { StyledBox } from '../pages/styledComponents';
-
-type Chain = {
-  id: string;
-  name: string;
-};
-
-type Account = {
-  id: string;
-  name: string;
-  address: string;
-  type: string;
-  chains: Chain[];
-  capabilities: string[];
-};
 
 const List = styled.ul`
   list-style-type: none;
@@ -67,7 +54,7 @@ const icons = [
   <GiAstronautHelmet />,
 ];
 
-export const AccountList = ({ accounts }: { accounts: Account[] }) => (
+export const AccountList = ({ accounts }: { accounts: KeyringAccount[] }) => (
   <List>
     {accounts.map((account) => (
       <Li key={account.id}>
@@ -81,21 +68,30 @@ export const AccountList = ({ accounts }: { accounts: Account[] }) => (
             </Grid>
           </Grid>
         </StyledBox>
-        <AccountText>
-          {account.address} | {account.type}
-        </AccountText>
-        <ul>
-          {account.chains.map((chain) => (
-            <ChainLi key={chain.id}>{chain.name}</ChainLi>
-          ))}
-        </ul>
-        {account.capabilities && (
+        <AccountText>Id: {account.id}</AccountText>
+        <AccountText>Address: {account.address}</AccountText>
+        <AccountText>Type: {account.type}</AccountText>
+        {account.supportedMethods && (
           <>
-            <AccountText>Account Capabilities</AccountText>
+            <AccountText>Account Supported Methods</AccountText>
             <ul>
-              {account.capabilities.map((cap, index) => (
-                <ChainLi key={index}>{cap}</ChainLi>
+              {account.supportedMethods.map((method: string, index: number) => (
+                <ChainLi key={index}>{method}</ChainLi>
               ))}
+            </ul>
+          </>
+        )}
+        {account.options && (
+          <>
+            <AccountText>Account Options</AccountText>
+            <ul>
+              {Object.entries(account.options).map(
+                (option: [string, any], index: number) => (
+                  <AccountText>
+                    {option[0]} : {JSON.stringify(option[1])}
+                  </AccountText>
+                ),
+              )}
             </ul>
           </>
         )}
