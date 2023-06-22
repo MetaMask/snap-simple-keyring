@@ -32,6 +32,7 @@ import {
   QueryRequestForm,
   QueryRequestFormType,
 } from '../components/QueryRequestForm';
+import { EditAccountForm } from '../components/EditAccount';
 
 const snapId = defaultSnapOrigin;
 
@@ -241,6 +242,12 @@ const Index = () => {
       name: 'Edit Account',
       descriptions:
         'Edit an account (provide a object with the attributes to update)',
+      inputUI: (
+        <EditAccountForm
+          accounts={snapState.accounts}
+          onChange={handleAccountPayloadChange}
+        />
+      ),
       actionUI: (
         <Action
           enabled

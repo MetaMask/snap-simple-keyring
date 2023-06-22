@@ -1,6 +1,13 @@
 import { KeyringAccount } from '@metamask/keyring-api';
-import { FormControl, FormGroup, FormLabel, TextField } from '@mui/material';
-import React from 'react';
+import {
+  FormControl,
+  FormGroup,
+  FormLabel,
+  MenuItem,
+  Select,
+  TextField,
+} from '@mui/material';
+import React, { useState } from 'react';
 
 export const EditAccountForm = ({
   accounts,
@@ -9,28 +16,44 @@ export const EditAccountForm = ({
   accounts: KeyringAccount[];
   onChange: (account: KeyringAccount) => void;
 }) => {
-  const [account, setAccount] = React.useState<
+  if (accounts.length === 0) {
+    return null;
+  }
+  const [account, setAccount] = useState<KeyringAccount>(accounts[0]);
+  const [updateAccountPayload, setUpdateAccountPayload] = useState<
     Pick<KeyringAccount, 'name' | 'options'>
   >({
     name: '',
     options: {},
   });
 
-  const handleAccountChange = (event: any) => {
-    setAccount({ ...account, [event.target.name]: event.target.value });
+  const handleEditAccountChange = (payload: any) => {
+    setUpdateAccountPayload({ ...updateAccountPayload, ...payload });
+    onChange({ ...account, ...payload });
   };
 
   return (
     <FormControl>
       <FormGroup row>
-        <FormLabel>Select Account</FormLabel>
-        <TextField
-          fullWidth
-          type="text"
-          variant="outlined"
-          label={'Name'}
-          onChange={handleAccountChange}
-        />
+        <Select
+          label={'Select Account'}
+          value={account?.address}
+          onChange={(event) => {
+            const account = accounts.find(
+              (account) => account.address === event.target.value,
+            );
+            setAccount(account!);
+            handleEditAccountChange(account!);
+          }}
+        >
+          {accounts.map((account, index) => {
+            return (
+              <MenuItem key={index} value={account.address}>
+                {account.address}
+              </MenuItem>
+            );
+          })}
+        </Select>
       </FormGroup>
       <FormGroup row>
         <FormLabel>Account Name</FormLabel>
@@ -38,8 +61,10 @@ export const EditAccountForm = ({
           fullWidth
           type="text"
           variant="outlined"
-          label={'Name'}
-          onChange={handleAccountChange}
+          value={updateAccountPayload.name}
+          onChange={(event) =>
+            handleEditAccountChange({ name: event.target.value })
+          }
         />
       </FormGroup>
       <FormGroup row>
@@ -48,8 +73,14 @@ export const EditAccountForm = ({
           fullWidth
           type="text"
           variant="outlined"
-          label={'Name'}
-          onChange={handleAccountChange}
+          value={
+            updateAccountPayload.options
+              ? JSON.stringify(updateAccountPayload.options)
+              : JSON.stringify({})
+          }
+          onChange={(event) =>
+            handleEditAccountChange({ options: event.target.value })
+          }
         />
       </FormGroup>
     </FormControl>
