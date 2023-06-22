@@ -10,6 +10,12 @@ import Grid from '@mui/material/Grid';
 import { useContext, useState, useCallback, useEffect } from 'react';
 import { FiInfo, FiAlertTriangle } from 'react-icons/fi';
 
+import { Card, ConnectButton, AccountList, Accordion } from '../components';
+import { EditAccountForm } from '../components/EditAccount';
+import {
+  QueryRequestForm,
+  QueryRequestFormType,
+} from '../components/QueryRequestForm';
 import {
   Container,
   CardContainer,
@@ -18,7 +24,6 @@ import {
   InformationBox,
   StyledBox,
 } from '../components/styledComponents';
-import { Card, ConnectButton, AccountList, Accordion } from '../components';
 import { defaultSnapOrigin } from '../config';
 import { MetamaskActions, MetaMaskContext } from '../hooks';
 import {
@@ -28,11 +33,6 @@ import {
   getSnapState,
   sendHello,
 } from '../utils';
-import {
-  QueryRequestForm,
-  QueryRequestFormType,
-} from '../components/QueryRequestForm';
-import { EditAccountForm } from '../components/EditAccount';
 
 const snapId = defaultSnapOrigin;
 
@@ -207,7 +207,7 @@ const Index = () => {
       ),
       actionUI: (
         <Action
-          enabled={!!accountName}
+          enabled={Boolean(accountName)}
           callback={async () => {
             return await sendCreateAccount();
           }}
@@ -225,7 +225,7 @@ const Index = () => {
       ),
       actionUI: (
         <Action
-          enabled={!!accountId}
+          enabled={Boolean(accountId)}
           callback={async () => {
             try {
               const account = await client.getAccount(accountId as string);
@@ -300,7 +300,7 @@ const Index = () => {
       ),
       actionUI: (
         <Action
-          enabled={!!accountId}
+          enabled={Boolean(accountId)}
           callback={async () => {
             const result = await client.deleteAccount(accountId as string);
             return result;
@@ -322,7 +322,7 @@ const Index = () => {
       ),
       actionUI: (
         <Action
-          enabled={!!requestId}
+          enabled={Boolean(requestId)}
           callback={async () => {
             try {
               const request = await client.getRequest(requestId as string);
@@ -360,7 +360,7 @@ const Index = () => {
       ),
       actionUI: (
         <Action
-          enabled={!!requestId}
+          enabled={Boolean(requestId)}
           callback={async () => {
             const request = await client.approveRequest(requestId as string);
             return request;
@@ -379,7 +379,7 @@ const Index = () => {
       ),
       actionUI: (
         <Action
-          enabled={!!requestId}
+          enabled={Boolean(requestId)}
           callback={async () => {
             const request = await client.getRequest(requestId as string);
             return request;
