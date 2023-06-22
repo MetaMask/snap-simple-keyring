@@ -144,18 +144,6 @@ const Index = () => {
     return newAccount;
   };
 
-  async function updateSnapState() {
-    try {
-      const response = await getSnapState(snapId);
-      console.log('Got state', response);
-      setSnapState(response);
-    } catch (error) {
-      console.error(error);
-      // eslint-disable-next-line no-alert, @typescript-eslint/restrict-template-expressions, no-restricted-globals
-      alert(`Problem happened: ${error.message}` || error);
-    }
-  }
-
   const handleConnectClick = async () => {
     try {
       await connectSnap();
@@ -172,13 +160,6 @@ const Index = () => {
   };
 
   const utilityMethods = [
-    {
-      name: 'Update snap state',
-      description: 'No description',
-      actionUI: (
-        <Action enabled callback={async () => await updateSnapState()} />
-      ),
-    },
     {
       name: 'Send hello',
       description: 'Send a simple hello, not a goodbye',
