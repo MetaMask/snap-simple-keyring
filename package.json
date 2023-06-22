@@ -27,7 +27,8 @@
   },
   "dependencies": {
     "@ethereumjs/tx": "^4.1.1",
-    "@ethereumjs/util": "^8.0.5"
+    "@ethereumjs/util": "^8.0.5",
+    "@metamask/keyring-api": "^0.1.0"
   },
   "devDependencies": {
     "@metamask/eslint-config": "^11.1.0",
