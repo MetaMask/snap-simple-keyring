@@ -1,4 +1,11 @@
+import { KeyringAccount, KeyringRequest } from '@metamask/keyring-api';
+
 import { defaultSnapOrigin } from '../config';
+
+export type KeyringState = {
+  pendingRequests: KeyringRequest[];
+  accounts: KeyringAccount[];
+};
 
 export async function sendMessageToSnap(snapId: string, message: any) {
   return window.ethereum.request({
@@ -23,10 +30,10 @@ export async function awaitEvent(
 }
 
 export async function getSnapState(snapId: string = defaultSnapOrigin) {
-  return sendMessageToSnap(snapId, {
+  return (await sendMessageToSnap(snapId, {
     method: 'snap.internal.getState',
     params: [],
-  });
+  })) as KeyringState;
 }
 
 export async function setSnapState(

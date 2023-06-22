@@ -16,6 +16,7 @@ export const StyledBox = styled(Box)`
 `;
 
 export const InformationBox = styled.div<{ error: boolean }>`
+  display: flex;
   background-color: ${({ error }) => (error ? '#B22222' : '#50c878')};
   padding: 10px;
   margin: 10px 0;
