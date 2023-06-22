@@ -1,8 +1,13 @@
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable @typescript-eslint/no-misused-promises */
-import { KeyringSnapRpcClient } from '@metamask/keyring-api';
+import {
+  KeyringAccount,
+  KeyringRequest,
+  KeyringSnapRpcClient,
+} from '@metamask/keyring-api';
+import { FormGroup, FormLabel, Input, TextField } from '@mui/material';
 import Grid from '@mui/material/Grid';
-import { useContext, useState, useCallback } from 'react';
+import { useContext, useState, useCallback, useEffect } from 'react';
 import { FiInfo, FiAlertTriangle } from 'react-icons/fi';
 
 import {
