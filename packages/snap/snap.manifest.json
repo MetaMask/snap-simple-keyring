@@ -1,13 +1,13 @@
 {
   "version": "0.1.0",
-  "description": "An example Snap written in TypeScript.",
-  "proposedName": "TypeScript Example Snap",
+  "description": "An example of a key management snap for a simple keyring.",
+  "proposedName": "MetaMask Snap Simple Keyring",
   "repository": {
     "type": "git",
     "url": "https://github.com/MetaMask/template-snap-monorepo.git"
   },
   "source": {
-    "shasum": "VhE6j6B0z5JARI7dDVrudGM2KZJ2fxbmsArd7vsRw/c=",
+    "shasum": "bdrGYiKmwyp9BUhH5gpxo3ihoy3RR0rNnr7nHNVZuW4=",
     "location": {
       "npm": {
         "filePath": "dist/bundle.js",
