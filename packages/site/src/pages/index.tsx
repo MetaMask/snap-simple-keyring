@@ -1,10 +1,21 @@
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable @typescript-eslint/no-misused-promises */
-import { KeyringSnapRpcClient } from '@metamask/keyring-api';
+import {
+  KeyringAccount,
+  KeyringRequest,
+  KeyringSnapRpcClient,
+} from '@metamask/keyring-api';
+import { FormGroup, FormLabel, Input, TextField } from '@mui/material';
 import Grid from '@mui/material/Grid';
-import { useContext, useState, useCallback } from 'react';
+import { useContext, useState, useCallback, useEffect } from 'react';
 import { FiInfo, FiAlertTriangle } from 'react-icons/fi';
 
+import { Card, ConnectButton, AccountList, Accordion } from '../components';
+import { EditAccountForm } from '../components/EditAccount';
+import {
+  QueryRequestForm,
+  QueryRequestFormType,
+} from '../components/QueryRequestForm';
 import {
   Container,
   CardContainer,
@@ -12,26 +23,39 @@ import {
   DividerTitle,
   InformationBox,
   StyledBox,
-} from './styledComponents';
-import { Card, ConnectButton, AccountList, Accordion } from '../components';
+} from '../components/styledComponents';
 import { defaultSnapOrigin } from '../config';
 import { MetamaskActions, MetaMaskContext } from '../hooks';
-import { connectSnap, getSnap, getSnapState, sendHello } from '../utils';
+import {
+  KeyringState,
+  connectSnap,
+  getSnap,
+  getSnapState,
+  sendHello,
+} from '../utils';
 
 const snapId = defaultSnapOrigin;
 
-const initialState = {
-  pendingRequests: {},
+const initialState: {
+  pendingRequests: KeyringRequest[];
+  accounts: KeyringAccount[];
+} = {
+  pendingRequests: [],
   accounts: [],
 };
 
-const Action = ({ callback }: { callback: () => Promise<any> }) => {
-  const [state, dispatch] = useContext(MetaMaskContext);
-  const [input, setInput] = useState<string | null>();
+const Action = ({
+  enabled = true,
+  callback,
+}: {
+  enabled: boolean;
+  callback: () => Promise<any>;
+}) => {
+  const [, dispatch] = useContext(MetaMaskContext);
   const [response, setResponse] = useState<string | null>();
   const [error, setError] = useState<string | null>();
 
-  const method = useCallback(async (): Promise<void> => {
+  const method = async (): Promise<void> => {
     setResponse(null);
     setError(null);
 
@@ -42,11 +66,13 @@ const Action = ({ callback }: { callback: () => Promise<any> }) => {
       dispatch({ type: MetamaskActions.SetError, payload: newError });
       setError(JSON.stringify(newError));
     }
-  }, []);
+  };
 
   return (
     <>
-      <button onClick={method}>Execute</button>
+      <button onClick={method} disabled={!enabled}>
+        Execute
+      </button>
       {response && (
         <InformationBox error={false}>
           <FiInfo />
@@ -65,7 +91,58 @@ const Action = ({ callback }: { callback: () => Promise<any> }) => {
 
 const Index = () => {
   const [state, dispatch] = useContext(MetaMaskContext);
-  const [snapState, setSnapState] = useState(initialState);
+  const [snapState, setSnapState] = useState<KeyringState>(initialState);
+  const [accountName, setAccountName] = useState<string | null>();
+  const [accountId, setAccountId] = useState<string | null>();
+  const [requestId, setRequestId] = useState<string | null>(null);
+  const [accountPayload, setAccountPayload] =
+    useState<Pick<KeyringAccount, 'name' | 'options'>>();
+  const client = new KeyringSnapRpcClient(snapId, window.ethereum);
+
+  useEffect(() => {
+    async function getState() {
+      const accounts = await client.listAccounts();
+      const pendingRequests = await client.listRequests();
+      setSnapState({
+        accounts,
+        pendingRequests,
+      });
+    }
+
+    getState().catch((error) => console.error(error));
+  }, []);
+
+  const handleAccountIdChange = useCallback(
+    (newAccountId: string) => {
+      setAccountId(newAccountId);
+    },
+    [accountId],
+  );
+
+  const handleRequestIdChange = useCallback(
+    (newRequestId: string) => {
+      setRequestId(newRequestId);
+    },
+    [requestId],
+  );
+
+  const handleAccountPayloadChange = useCallback(
+    (newAccountPayload: KeyringAccount) => {
+      setAccountPayload(newAccountPayload);
+    },
+    [accountPayload],
+  );
+
+  const sendCreateAccount = async () => {
+    console.log('Creating account', accountName);
+    const newAccount = await client.createAccount(accountName as string);
+    const accounts = await client.listAccounts();
+    setSnapState({
+      ...snapState,
+      accounts,
+    });
+    return newAccount;
+  };
 
   async function updateSnapState() {
     try {
@@ -74,7 +151,7 @@ const Index = () => {
       setSnapState(response);
     } catch (error) {
       console.error(error);
-      // eslint-disable-next-line no-alert
+      // eslint-disable-next-line no-alert, @typescript-eslint/restrict-template-expressions, no-restricted-globals
       alert(`Problem happened: ${error.message}` || error);
     }
   }
@@ -98,12 +175,14 @@ const Index = () => {
     {
       name: 'Update snap state',
       description: 'No description',
-      actionUI: <Action callback={async () => await updateSnapState()} />,
+      actionUI: (
+        <Action enabled callback={async () => await updateSnapState()} />
+      ),
     },
     {
       name: 'Send hello',
       description: 'Send a simple hello, not a goodbye',
-      actionUI: <Action callback={async () => await sendHello()} />,
+      actionUI: <Action enabled callback={async () => await sendHello()} />,
     },
   ];
 
@@ -111,11 +190,26 @@ const Index = () => {
     {
       name: 'Create Account',
       description: 'Method to create a new account',
+      inputUI: (
+        <FormGroup>
+          <FormLabel>Account Name</FormLabel>
+          <TextField
+            fullWidth
+            type="text"
+            variant="outlined"
+            label={'Name'}
+            onChange={(event) => {
+              console.log(event.target.value);
+              setAccountName(event.target.value);
+            }}
+          />
+        </FormGroup>
+      ),
       actionUI: (
         <Action
+          enabled={Boolean(accountName)}
           callback={async () => {
-            const client = new KeyringSnapRpcClient(snapId);
-            return await client.createAccount('Account X');
+            return await sendCreateAccount();
           }}
         />
       ),
@@ -123,10 +217,23 @@ const Index = () => {
     {
       name: 'Get Account',
       description: 'Get the data about a select account',
+      inputUI: (
+        <QueryRequestForm
+          type={QueryRequestFormType.Account}
+          onChange={handleAccountIdChange}
+        />
+      ),
       actionUI: (
         <Action
+          enabled={Boolean(accountId)}
           callback={async () => {
-            return { response: 'mock response' };
+            try {
+              const account = await client.getAccount(accountId as string);
+              return account;
+            } catch (error) {
+              console.error(error);
+              dispatch({ type: MetamaskActions.SetError, payload: error });
+            }
           }}
         />
       ),
@@ -134,16 +241,39 @@ const Index = () => {
     {
       name: 'Edit Account',
       descriptions:
-        'Edit an account (provide a object with the attributes to update)', // TODO: Add input field
-      actionUI: <Action callback={async () => console.log('Edit Account')} />,
+        'Edit an account (provide a object with the attributes to update)',
+      inputUI: (
+        <EditAccountForm
+          accounts={snapState.accounts}
+          onChange={handleAccountPayloadChange}
+        />
+      ),
+      actionUI: (
+        <Action
+          enabled
+          callback={async () => {
+            const result = await client.updateAccount(
+              accountPayload as KeyringAccount,
+            );
+            const accounts = await client.listAccounts();
+            setSnapState({
+              accounts,
+              pendingRequests: {
+                ...snapState.pendingRequests,
+              },
+            });
+            return result;
+          }}
+        />
+      ),
     },
     {
       name: 'List Accounts',
       description: 'Method to list all account that the SSK manages',
       actionUI: (
         <Action
+          enabled
           callback={async () => {
-            const client = new KeyringSnapRpcClient(snapId);
             const accounts = await client.listAccounts();
             console.log('[UI] list of accounts:', accounts);
             const addresses = accounts.map(
@@ -151,30 +281,111 @@ const Index = () => {
             );
             console.log(addresses);
             setSnapState({
-              accounts: [],
-              pendingRequests: {},
+              ...snapState,
+              accounts,
             });
+            return { accounts };
           }}
         />
       ),
     },
     {
-      name: 'Update Account',
-      description: 'Update a select account', // TODO: Add input field
-      actionUI: <Action callback={async () => console.log('Update Account')} />,
-    },
-    {
       name: 'Remove Account',
-      description: 'Remove a select account', // TODO: Add input field
-      actionUI: <Action callback={async () => console.log('Remove Account')} />,
+      description: 'Remove a select account',
+      inputUI: (
+        <QueryRequestForm
+          type={QueryRequestFormType.Account}
+          onChange={handleAccountIdChange}
+        />
+      ),
+      actionUI: (
+        <Action
+          enabled={Boolean(accountId)}
+          callback={async () => {
+            const result = await client.deleteAccount(accountId as string);
+            return result;
+          }}
+        />
+      ),
     },
   ];
 
   const requestMethods = [
     {
-      name: 'Get Requests',
-      description: 'Get all the request made by an account', // TODO: Add input field
-      actionUI: <Action callback={async () => console.log('Get Requests')} />,
+      name: 'Get Request by Id',
+      description: 'Get a request made by id',
+      inputUI: (
+        <QueryRequestForm
+          type={QueryRequestFormType.Request}
+          onChange={handleRequestIdChange}
+        />
+      ),
+      actionUI: (
+        <Action
+          enabled={Boolean(requestId)}
+          callback={async () => {
+            try {
+              const request = await client.getRequest(requestId as string);
+              console.log(request);
+              return request;
+            } catch (error) {
+              console.error(error);
+              return error;
+            }
+          }}
+        />
+      ),
+    },
+    {
+      name: 'Get all Requests',
+      description: 'Get all requests',
+      actionUI: (
+        <Action
+          enabled
+          callback={async () => {
+            const requests = await client.listRequests();
+            return requests;
+          }}
+        />
+      ),
+    },
+    {
+      name: 'Approve a request',
+      description: 'Approve a request by their id',
+      inputUI: (
+        <QueryRequestForm
+          type={QueryRequestFormType.Request}
+          onChange={handleRequestIdChange}
+        />
+      ),
+      actionUI: (
+        <Action
+          enabled={Boolean(requestId)}
+          callback={async () => {
+            const request = await client.approveRequest(requestId as string);
+            return request;
+          }}
+        />
+      ),
+    },
+    {
+      name: 'Reject a request',
+      description: 'Get a request made by id',
+      inputUI: (
+        <QueryRequestForm
+          type={QueryRequestFormType.Request}
+          onChange={handleRequestIdChange}
+        />
+      ),
+      actionUI: (
+        <Action
+          enabled={Boolean(requestId)}
+          callback={async () => {
+            const request = await client.getRequest(requestId as string);
+            return request;
+          }}
+        />
+      ),
     },
   ];
 
@@ -215,8 +426,7 @@ const Index = () => {
           <Grid item xs={4} sm={2} md={1}>
             <Divider />
             <DividerTitle>Current Accounts</DividerTitle>
-            {/* TODO: Connect to correct data source */}
-            <AccountList accounts={[]} />
+            <AccountList accounts={snapState.accounts} />
           </Grid>
         </Grid>
       </StyledBox>

@@ -1,5 +1,5 @@
-import styled from 'styled-components';
 import Box from '@mui/material/Box';
+import styled from 'styled-components';
 
 export const Container = styled.div`
   display: flex;
@@ -16,6 +16,7 @@ export const StyledBox = styled(Box)`
 `;
 
 export const InformationBox = styled.div<{ error: boolean }>`
+  display: flex;
   background-color: ${({ error }) => (error ? '#B22222' : '#50c878')};
   padding: 10px;
   margin: 10px 0;

@@ -16152,7 +16152,7 @@ __metadata:
     "@metamask/eslint-config-nodejs": ^11.1.0
     "@metamask/eslint-config-typescript": ^11.1.0
     "@metamask/keyring-api": ^0.1.0
-    "@metamask/providers": ^10.2.1
+    "@metamask/providers": ^11.0.0
     "@mui/material": ^5.13.2
     "@svgr/webpack": ^6.5.1
     "@testing-library/dom": ^9.0.1

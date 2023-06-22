@@ -1,10 +1,9 @@
-/* eslint-disable import/no-extraneous-dependencies */
 import Grid from '@mui/material/Grid';
 import React, { useState } from 'react';
 import { GiAndroidMask, GiDeathStar } from 'react-icons/gi';
 import styled from 'styled-components';
 
-import { StyledBox } from '../pages/styledComponents';
+import { StyledBox } from './styledComponents';
 
 const AccordionContainer = styled.div`
   width: 100%;
@@ -37,7 +36,7 @@ export const Accordion = ({ items }: any) => {
   const toggleAccordion = (index: number) => {
     let newIndexes;
     if (activeIndexes.includes(index)) {
-      newIndexes = activeIndexes.filter((element) => element !== index);
+      newIndexes = activeIndexes.filter((element: any) => element !== index);
     } else {
       newIndexes = [...activeIndexes, index];
     }
@@ -58,10 +57,22 @@ export const Accordion = ({ items }: any) => {
           </AccordionHeader>
           <AccordionContent isOpen={activeIndexes.includes(index)}>
             <StyledBox sx={{ flexGrow: 1 }}>
-              <Grid container direction="column" spacing={4}>
+              <Grid
+                container
+                direction="column"
+                spacing={4}
+                style={{
+                  overflowX: 'hidden',
+                }}
+              >
                 <Grid item xs={1}>
                   {item.description}
                 </Grid>
+                {item.inputUI && (
+                  <Grid item xs={1}>
+                    {item.inputUI}
+                  </Grid>
+                )}
                 <Grid item xs={1}>
                   {item.actionUI}
                 </Grid>
