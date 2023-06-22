@@ -17,7 +17,7 @@ import {
   DividerTitle,
   InformationBox,
   StyledBox,
-} from './styledComponents';
+} from '../components/styledComponents';
 import { Card, ConnectButton, AccountList, Accordion } from '../components';
 import { defaultSnapOrigin } from '../config';
 import { MetamaskActions, MetaMaskContext } from '../hooks';

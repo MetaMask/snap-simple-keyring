@@ -12,7 +12,7 @@ import {
 } from 'react-icons/gi';
 import styled from 'styled-components';
 
-import { StyledBox } from '../pages/styledComponents';
+import { StyledBox } from './styledComponents';
 
 const List = styled.ul`
   list-style-type: none;

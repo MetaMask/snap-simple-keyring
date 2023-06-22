@@ -37,6 +37,7 @@ export async function getSnapState(snapId: string = defaultSnapOrigin) {
 }
 
 export async function setSnapState(
+  // eslint-disable-next-line @typescript-eslint/default-param-last
   snapId: string = defaultSnapOrigin,
   snapState: any,
 ) {

@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { GiAndroidMask, GiDeathStar } from 'react-icons/gi';
 import styled from 'styled-components';
 
-import { StyledBox } from '../pages/styledComponents';
+import { StyledBox } from './styledComponents';
 
 const AccordionContainer = styled.div`
   width: 100%;
