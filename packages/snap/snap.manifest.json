@@ -1,5 +1,5 @@
 {
-  "version": "0.1.1",
+  "version": "0.0.0",
   "description": "An example of a key management snap for a simple keyring.",
   "proposedName": "MetaMask Snap Simple Keyring",
   "repository": {
