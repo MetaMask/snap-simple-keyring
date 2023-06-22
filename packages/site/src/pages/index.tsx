@@ -25,13 +25,18 @@ const initialState = {
   accounts: [],
 };
 
-const Action = ({ callback }: { callback: () => Promise<any> }) => {
-  const [state, dispatch] = useContext(MetaMaskContext);
-  const [input, setInput] = useState<string | null>();
+const Action = ({
+  enabled = true,
+  callback,
+}: {
+  enabled: boolean;
+  callback: () => Promise<any>;
+}) => {
+  const [, dispatch] = useContext(MetaMaskContext);
   const [response, setResponse] = useState<string | null>();
   const [error, setError] = useState<string | null>();
 
-  const method = useCallback(async (): Promise<void> => {
+  const method = async (): Promise<void> => {
     setResponse(null);
     setError(null);
 
@@ -42,11 +47,13 @@ const Action = ({ callback }: { callback: () => Promise<any> }) => {
       dispatch({ type: MetamaskActions.SetError, payload: newError });
       setError(JSON.stringify(newError));
     }
-  }, []);
+  };
 
   return (
     <>
-      <button onClick={method}>Execute</button>
+      <button onClick={method} disabled={!enabled}>
+        Execute
+      </button>
       {response && (
         <InformationBox error={false}>
           <FiInfo />
