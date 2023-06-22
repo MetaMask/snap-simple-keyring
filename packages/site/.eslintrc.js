@@ -10,7 +10,7 @@ module.exports = {
       rules: {
         'jsdoc/require-jsdoc': 0,
         'no-alert': 'off',
-        'no-restricted-globals': [],
+        'no-restricted-globals': 0,
       },
     },
   ],
