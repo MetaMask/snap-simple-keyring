@@ -34,7 +34,7 @@ jobs:
         run: yarn build
         env:
           GATSBY_PATH_PREFIX: ${{ github.event.repository.name }}/${{ inputs.destination_dir }}/
-          SNAP_ORIGIN: npm:${{ github.event.repository.name }}-snap
+          SNAP_ORIGIN: npm:@metamask/${{ github.event.repository.name }}-snap
       - name: Deploy to `${{ inputs.destination_dir }}` directory of `gh-pages` branch
         uses: peaceiris/actions-gh-pages@de7ea6f8efb354206b205ef54722213d99067935
         with:
