@@ -1,7 +1,7 @@
 {
-  "name": "snap",
+  "name": "@metamask/example-keyring-snap",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
   "description": "A simple keyring snap that integrates with MetaMask accounts.",
   "keywords": [
     "metamask",
