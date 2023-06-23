@@ -1,10 +1,11 @@
 import { Common, Hardfork } from '@ethereumjs/common';
 import { JsonTx, TransactionFactory } from '@ethereumjs/tx';
-import { Address } from '@ethereumjs/util';
+import { Address, ecsign, stripHexPrefix, toBuffer } from '@ethereumjs/util';
 import {
   SignTypedDataVersion,
   TypedDataV1,
   TypedMessage,
+  concatSig,
   personalSign,
   recoverPersonalSignature,
   signTypedData,
@@ -276,6 +277,10 @@ export class SimpleKeyring implements Keyring {
         ];
         return this.#signTypedData(from, data, opts);
       }
+      case 'eth_sign': {
+        const [from, data] = params as [string, string];
+        return this.#signMessage(from, data);
+      }
 
       default: {
         throw new Error(`[Snap] Unsupported method: ${method}`);
@@ -355,5 +360,15 @@ export class SimpleKeyring implements Keyring {
     }
 
     return signature;
+  }
+
+  #signMessage(from: string, data: string): string {
+    const { privateKey } = this.#getWalletByAddress(from);
+    const privateKeyBuffer = Buffer.from(privateKey, 'hex');
+
+    const message = stripHexPrefix(data);
+    const msgSig = ecsign(Buffer.from(message, 'hex'), privateKeyBuffer);
+    const rawMsgSig = concatSig(toBuffer(msgSig.v), msgSig.r, msgSig.s);
+    return rawMsgSig;
   }
 }
