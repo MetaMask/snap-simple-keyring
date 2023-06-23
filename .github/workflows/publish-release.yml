@@ -34,7 +34,7 @@ jobs:
         id: restore-build
         with:
           path: |
-            ./dist
+            ./packages/*/dist
             ./node_modules/.yarn-state.yml
           key: ${{ github.sha }}
 
