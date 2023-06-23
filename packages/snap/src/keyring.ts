@@ -277,6 +277,7 @@ export class SimpleKeyring implements Keyring {
         ];
         return this.#signTypedData(from, data, opts);
       }
+
       case 'eth_sign': {
         const [from, data] = params as [string, string];
         return this.#signMessage(from, data);
