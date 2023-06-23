@@ -19,10 +19,7 @@ export type AppProps = {
 
 export const App: FunctionComponent<AppProps> = ({ children }) => {
   const toggleTheme = useContext(ToggleThemeContext);
-  // Make sure we are on a browser, otherwise we can't use window.ethereum.
-  if (typeof window === 'undefined') {
-    return <div>Window is undefined</div>;
-  }
+
   return (
     <>
       <GlobalStyle />

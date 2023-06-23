@@ -5,7 +5,7 @@ import {
   KeyringRequest,
   KeyringSnapRpcClient,
 } from '@metamask/keyring-api';
-import { FormGroup, FormLabel, Input, TextField } from '@mui/material';
+import { FormGroup, FormLabel, TextField } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import { useContext, useState, useCallback, useEffect } from 'react';
 import { FiInfo, FiAlertTriangle } from 'react-icons/fi';
@@ -26,13 +26,7 @@ import {
 } from '../components/styledComponents';
 import { defaultSnapOrigin } from '../config';
 import { MetamaskActions, MetaMaskContext } from '../hooks';
-import {
-  KeyringState,
-  connectSnap,
-  getSnap,
-  getSnapState,
-  sendHello,
-} from '../utils';
+import { KeyringState, connectSnap, getSnap, sendHello } from '../utils';
 
 const snapId = defaultSnapOrigin;
 
@@ -97,20 +91,30 @@ const Index = () => {
   const [requestId, setRequestId] = useState<string | null>(null);
   const [accountPayload, setAccountPayload] =
     useState<Pick<KeyringAccount, 'name' | 'options'>>();
-  const client = new KeyringSnapRpcClient(snapId, window.ethereum);
+  const [client, setClient] = useState<KeyringSnapRpcClient>();
 
   useEffect(() => {
     async function getState() {
-      const accounts = await client.listAccounts();
-      const pendingRequests = await client.listRequests();
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const accounts = await client!.listAccounts();
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const pendingRequests = await client!.listRequests();
       setSnapState({
         accounts,
         pendingRequests,
       });
     }
 
+    if (typeof window !== 'undefined') {
+      setClient(new KeyringSnapRpcClient(snapId, window.ethereum));
+    }
+
     getState().catch((error) => console.error(error));
   }, []);
+
+  if (!client) {
+    return <div>Provider is missing</div>;
+  }
 
   const handleAccountIdChange = useCallback(
     (newAccountId: string) => {
