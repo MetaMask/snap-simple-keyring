@@ -32,7 +32,7 @@ jobs:
         run: yarn --immutable
       - name: Set snap origin
         run: |
-          echo SNAP_ORIGIN=npm:@metamask/${{ github.event.repository.name }}-snap >> .env.production
+          echo GATSBY_SNAP_ORIGIN=npm:@metamask/${{ github.event.repository.name }}-snap >> .env.production
       - name: Run build script
         run: yarn build
         env:
