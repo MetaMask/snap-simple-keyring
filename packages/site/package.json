@@ -1,5 +1,5 @@
 {
-  "name": "site",
+  "name": "@metamask/snap-simple-keyring-site",
   "version": "0.1.0",
   "private": true,
   "license": "(MIT-0 OR Apache-2.0)",
