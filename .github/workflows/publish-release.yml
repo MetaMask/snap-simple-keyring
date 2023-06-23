@@ -32,11 +32,11 @@ jobs:
       - run: yarn build
 
       - name: Publish site to GitHub Pages
-        uses: MetaMask/action-publish-gh-pages@v2
+        uses: peaceiris/actions-gh-pages@de7ea6f8efb354206b205ef54722213d99067935
         with:
-          source-directory: packages/site/public
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          personal_token: ${{ secrets.PUBLISH_DOCS_TOKEN }}
+          publish_dir: ./packages/site/public
+          destination_dir: latest
 
       - name: Publish snap to NPM (dry run)
         uses: MetaMask/action-npm-publish@v4
