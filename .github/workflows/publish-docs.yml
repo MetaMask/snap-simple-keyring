@@ -31,7 +31,7 @@ jobs:
       - name: Install npm dependencies
         run: yarn --immutable
       - name: Run build script
-        run: yarn build:docs
+        run: yarn build
       - name: Deploy to `${{ inputs.destination_dir }}` directory of `gh-pages` branch
         uses: peaceiris/actions-gh-pages@de7ea6f8efb354206b205ef54722213d99067935
         with:
