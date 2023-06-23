@@ -30,11 +30,13 @@ jobs:
           cache: 'yarn'
       - name: Install npm dependencies
         run: yarn --immutable
+      - name: Set snap origin
+        run: |
+          echo SNAP_ORIGIN=npm:@metamask/${{ github.event.repository.name }}-snap >> .env.production
       - name: Run build script
         run: yarn build
         env:
           GATSBY_PATH_PREFIX: ${{ github.event.repository.name }}/${{ inputs.destination_dir }}/
-          SNAP_ORIGIN: npm:@metamask/${{ github.event.repository.name }}-snap
       - name: Deploy to `${{ inputs.destination_dir }}` directory of `gh-pages` branch
         uses: peaceiris/actions-gh-pages@de7ea6f8efb354206b205ef54722213d99067935
         with:
