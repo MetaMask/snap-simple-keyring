@@ -2864,6 +2864,97 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@metamask/snap-simple-keyring-site@workspace:packages/site":
+  version: 0.0.0-use.local
+  resolution: "@metamask/snap-simple-keyring-site@workspace:packages/site"
+  dependencies:
+    "@emotion/react": ^11.11.0
+    "@emotion/styled": ^11.11.0
+    "@metamask/eslint-config": ^11.1.0
+    "@metamask/eslint-config-jest": ^11.1.0
+    "@metamask/eslint-config-nodejs": ^11.1.0
+    "@metamask/eslint-config-typescript": ^11.1.0
+    "@metamask/keyring-api": ^0.1.0
+    "@metamask/providers": ^11.0.0
+    "@mui/material": ^5.13.2
+    "@svgr/webpack": ^6.5.1
+    "@testing-library/dom": ^9.0.1
+    "@testing-library/jest-dom": ^5.16.5
+    "@testing-library/react": ^14.0.0
+    "@testing-library/user-event": ^14.4.3
+    "@types/jest": ^29.4.4
+    "@types/react": ^18.0.28
+    "@types/react-dom": ^18.0.11
+    "@types/styled-components": ^5.1.26
+    "@types/uuid": ^9.0.1
+    "@typescript-eslint/eslint-plugin": ^5.55.0
+    "@typescript-eslint/parser": ^5.55.0
+    buffer: ^6.0.3
+    cross-env: ^7.0.3
+    eslint: ^8.36.0
+    eslint-config-prettier: ^8.7.0
+    eslint-plugin-import: ^2.27.5
+    eslint-plugin-jest: ^27.2.1
+    eslint-plugin-jsdoc: ^40.0.3
+    eslint-plugin-node: ^11.1.0
+    eslint-plugin-prettier: ^4.2.1
+    gatsby: ^4.24.4
+    gatsby-plugin-manifest: ^4.24.0
+    gatsby-plugin-styled-components: ^5.24.0
+    gatsby-plugin-svgr: ^3.0.0-beta.0
+    prettier: ^2.8.4
+    prettier-plugin-packagejson: ^2.4.3
+    react: ^18.2.0
+    react-dom: ^18.2.0
+    react-icons: ^4.8.0
+    react-is: ^18.2.0
+    rimraf: ^4.4.0
+    styled-components: 5.3.9
+    typescript: ^4.9.5
+    uuid: ^9.0.0
+  languageName: unknown
+  linkType: soft
+
+"@metamask/snap-simple-keyring-snap@workspace:packages/snap":
+  version: 0.0.0-use.local
+  resolution: "@metamask/snap-simple-keyring-snap@workspace:packages/snap"
+  dependencies:
+    "@ethereumjs/common": ^3.1.2
+    "@ethereumjs/tx": ^4.1.2
+    "@ethereumjs/util": ^8.0.5
+    "@lavamoat/allow-scripts": ^2.0.3
+    "@metamask/auto-changelog": ^2.6.0
+    "@metamask/eslint-config": ^10.0.0
+    "@metamask/eslint-config-jest": ^10.0.0
+    "@metamask/eslint-config-nodejs": ^10.0.0
+    "@metamask/eslint-config-typescript": ^10.0.0
+    "@metamask/eth-sig-util": ^5.0.2
+    "@metamask/keyring-api": ^0.1.0
+    "@metamask/snaps-cli": ^0.34.1-flask.1
+    "@metamask/snaps-types": ^0.34.1-flask.1
+    "@metamask/snaps-ui": ^0.34.1-flask.1
+    "@metamask/utils": ^5.0.2
+    "@typescript-eslint/eslint-plugin": ^5.33.0
+    "@typescript-eslint/parser": ^5.33.0
+    browserify: ^17.0.0
+    buffer: ^6.0.3
+    eslint: ^8.21.0
+    eslint-config-prettier: ^8.1.0
+    eslint-plugin-import: ^2.26.0
+    eslint-plugin-jest: ^26.8.2
+    eslint-plugin-jsdoc: ^39.2.9
+    eslint-plugin-node: ^11.1.0
+    eslint-plugin-prettier: ^4.2.1
+    prettier: ^2.2.1
+    prettier-plugin-packagejson: ^2.2.11
+    rimraf: ^3.0.2
+    stream-browserify: ^3.0.0
+    through2: ^4.0.2
+    typescript: ^4.7.4
+    uuid: ^9.0.0
+  languageName: unknown
+  linkType: soft
+
 "@metamask/snap-simple-keyring@workspace:.":
   version: 0.0.0-use.local
   resolution: "@metamask/snap-simple-keyring@workspace:."
@@ -16100,57 +16191,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"site@workspace:packages/site":
-  version: 0.0.0-use.local
-  resolution: "site@workspace:packages/site"
-  dependencies:
-    "@emotion/react": ^11.11.0
-    "@emotion/styled": ^11.11.0
-    "@metamask/eslint-config": ^11.1.0
-    "@metamask/eslint-config-jest": ^11.1.0
-    "@metamask/eslint-config-nodejs": ^11.1.0
-    "@metamask/eslint-config-typescript": ^11.1.0
-    "@metamask/keyring-api": ^0.1.0
-    "@metamask/providers": ^11.0.0
-    "@mui/material": ^5.13.2
-    "@svgr/webpack": ^6.5.1
-    "@testing-library/dom": ^9.0.1
-    "@testing-library/jest-dom": ^5.16.5
-    "@testing-library/react": ^14.0.0
-    "@testing-library/user-event": ^14.4.3
-    "@types/jest": ^29.4.4
-    "@types/react": ^18.0.28
-    "@types/react-dom": ^18.0.11
-    "@types/styled-components": ^5.1.26
-    "@types/uuid": ^9.0.1
-    "@typescript-eslint/eslint-plugin": ^5.55.0
-    "@typescript-eslint/parser": ^5.55.0
-    buffer: ^6.0.3
-    cross-env: ^7.0.3
-    eslint: ^8.36.0
-    eslint-config-prettier: ^8.7.0
-    eslint-plugin-import: ^2.27.5
-    eslint-plugin-jest: ^27.2.1
-    eslint-plugin-jsdoc: ^40.0.3
-    eslint-plugin-node: ^11.1.0
-    eslint-plugin-prettier: ^4.2.1
-    gatsby: ^4.24.4
-    gatsby-plugin-manifest: ^4.24.0
-    gatsby-plugin-styled-components: ^5.24.0
-    gatsby-plugin-svgr: ^3.0.0-beta.0
-    prettier: ^2.8.4
-    prettier-plugin-packagejson: ^2.4.3
-    react: ^18.2.0
-    react-dom: ^18.2.0
-    react-icons: ^4.8.0
-    react-is: ^18.2.0
-    rimraf: ^4.4.0
-    styled-components: 5.3.9
-    typescript: ^4.9.5
-    uuid: ^9.0.0
-  languageName: unknown
-  linkType: soft
-
 "slash@npm:^3.0.0":
   version: 3.0.0
   resolution: "slash@npm:3.0.0"
@@ -16199,46 +16239,6 @@ __metadata:
   checksum: 0a7a79900bbb36f8aaa922cf111702a3647ac6165736d5dc96d3ef367efc50465cac70c53cd172c382b022dac72ec91710608e5393de71f76d7142e6fd80e8a3
   languageName: node
   linkType: hard
-
-"snap@workspace:packages/snap":
-  version: 0.0.0-use.local
-  resolution: "snap@workspace:packages/snap"
-  dependencies:
-    "@ethereumjs/common": ^3.1.2
-    "@ethereumjs/tx": ^4.1.2
-    "@ethereumjs/util": ^8.0.5
-    "@lavamoat/allow-scripts": ^2.0.3
-    "@metamask/auto-changelog": ^2.6.0
-    "@metamask/eslint-config": ^10.0.0
-    "@metamask/eslint-config-jest": ^10.0.0
-    "@metamask/eslint-config-nodejs": ^10.0.0
-    "@metamask/eslint-config-typescript": ^10.0.0
-    "@metamask/eth-sig-util": ^5.0.2
-    "@metamask/keyring-api": ^0.1.0
-    "@metamask/snaps-cli": ^0.34.1-flask.1
-    "@metamask/snaps-types": ^0.34.1-flask.1
-    "@metamask/snaps-ui": ^0.34.1-flask.1
-    "@metamask/utils": ^5.0.2
-    "@typescript-eslint/eslint-plugin": ^5.33.0
-    "@typescript-eslint/parser": ^5.33.0
-    browserify: ^17.0.0
-    buffer: ^6.0.3
-    eslint: ^8.21.0
-    eslint-config-prettier: ^8.1.0
-    eslint-plugin-import: ^2.26.0
-    eslint-plugin-jest: ^26.8.2
-    eslint-plugin-jsdoc: ^39.2.9
-    eslint-plugin-node: ^11.1.0
-    eslint-plugin-prettier: ^4.2.1
-    prettier: ^2.2.1
-    prettier-plugin-packagejson: ^2.2.11
-    rimraf: ^3.0.2
-    stream-browserify: ^3.0.0
-    through2: ^4.0.2
-    typescript: ^4.7.4
-    uuid: ^9.0.0
-  languageName: unknown
-  linkType: soft
 
 "socket.io-adapter@npm:~2.4.0":
   version: 2.4.0
