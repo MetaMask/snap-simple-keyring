@@ -1,8 +1,11 @@
-# TypeScript Example Snap
+# Simple Keyring Snap
 
-This Snap demonstrates how to develop a Snap with TypeScript.
+This repository contains a simple example of a keyring snap.
 
-## Notes
+Keyring snaps enable developers to enhance MetaMask by adding new account
+types. These accounts are natively supported within the extension, appearing in
+MetaMask's UI, and can be used with dapps.
 
-- Babel is used for transpiling TypeScript to JavaScript, so when building with the CLI,
-  `transpilationMode` must be set to `localOnly` (default) or `localAndDeps`.
+MetaMask Snaps is a system that allows anyone to safely expand the capabilities
+of MetaMask. A _snap_ is a program that we run in an isolated environment that
+can customize the wallet experience.
