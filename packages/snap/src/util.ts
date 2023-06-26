@@ -61,6 +61,6 @@ export function isUniqueAccountName(name: string, wallets: Wallet[]): boolean {
  * @param caip2ChainId - The CAIP-2 chain ID to check.
  * @returns Returns true if the chain is EVM-based, otherwise false.
  */
-export function isEVMChain(caip2ChainId: string): boolean {
+export function isEvmChain(caip2ChainId: string): boolean {
   return caip2ChainId.startsWith('eip155:');
 }

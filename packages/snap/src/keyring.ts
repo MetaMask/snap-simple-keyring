@@ -22,7 +22,7 @@ import { v4 as uuid } from 'uuid';
 
 import { SigningMethods } from './permissions';
 import { saveState } from './stateManagement';
-import { isEVMChain, serializeTransaction, isUniqueAccountName } from './util';
+import { isEvmChain, serializeTransaction, isUniqueAccountName } from './util';
 
 export type KeyringState = {
   wallets: Record<string, Wallet>;
@@ -86,8 +86,13 @@ export class SimpleKeyring implements Keyring {
     });
 
     await this.#saveState();
-
     return account;
+  }
+
+  async filterAccountChains(_id: string, chains: string[]): Promise<string[]> {
+    // The `id` argument is not used because all accounts created by this snap
+    // are expected to be compatible with any EVM chain.
+    return chains.filter((chain) => isEvmChain(chain));
   }
 
   async updateAccount(account: KeyringAccount): Promise<void> {
@@ -131,19 +136,6 @@ export class SimpleKeyring implements Keyring {
     await this.#saveState();
   }
 
-  async exportAccount(id: string): Promise<Record<string, Json>> {
-    return {
-      privateKey: this.#wallets[id].privateKey,
-    };
-  }
-
-  async #saveState(): Promise<void> {
-    await saveState({
-      wallets: this.#wallets,
-      requests: this.#requests,
-    });
-  }
-
   async listRequests(): Promise<KeyringRequest[]> {
     return Object.values(this.#requests);
   }
@@ -152,101 +144,43 @@ export class SimpleKeyring implements Keyring {
     return this.#requests[id];
   }
 
-  /**
-   * Submit a request to be processed by the keyring.
-   *
-   * This implementation is synchronous, which means that the request doesn't
-   * need to be approved and the execution result will be returned to the
-   * caller.
-   *
-   * In an asynchronous implementation, the request should be stored in queue
-   * of pending requests to be approved or rejected by the user.
-   *
-   * @param request - The submitted request.
-   * @returns A promise that resolves to the execution result.
-   */
+  // This snap implements a synchronous keyring, which means that the request
+  // doesn't need to be approved and the execution result will be returned to
+  // the caller by the `submitRequest` method.
+  //
+  // In an asynchronous implementation, the request should be stored in queue
+  // of pending requests to be approved or rejected by the user.
   async submitRequest(request: KeyringRequest): Promise<SubmitRequestResponse> {
     const { method, params = '' } = request.request as JsonRpcRequest;
-    const signedPayload = this.#handleSigningRequest(method, params);
-
+    const signature = this.#handleSigningRequest(method, params);
     return {
       pending: false,
-      result: signedPayload,
+      result: signature,
     };
   }
 
   async approveRequest(_id: string): Promise<void> {
-    // Example of approve an async pending request.
-    //
-    // const request = this.#requests[id];
-    // const confirmation = await snap.request({
-    //   method: 'snap_dialog',
-    //   params: {
-    //     type: 'confirmation',
-    //     content: panel([
-    //       heading(`Signing Request: ${request.request.method}`),
-    //       text(`Would you like to sign this request?`),
-    //       ...Object.entries((request.request as JsonRpcRequest).params).map(
-    //         ([key, value]) => {
-    //           return text(`${key}: ${JSON.stringify(value)}`);
-    //         },
-    //       ),
-    //     ]),
-    //   },
-    // });
-
-    // if (!confirmation) {
-    //   throw new Error(
-    //     `[Snap] User rejected signing request: ${request.request.method}`,
-    //   );
-    // }
-
-    // // sign request
-    // const result = this.#handleSigningRequest(
-    //   request.request.method as SigningMethods,
-    //   (request.request as JsonRpcRequest).params,
-    // );
-
-    // // notify extension
-    // const payload = {
-    //   id: request.request.id,
-    //   result,
-    // };
-    // await snap.request({
-    //   method: 'snap_manageAccounts',
-    //   params: ['submit', payload],
-    // });
-
-    throw new Error('[Snap] Signing already done in submit request.');
+    throw new Error(
+      'The "approveRequest" method is not available on this snap.',
+    );
   }
 
   async rejectRequest(_id: string): Promise<void> {
-    // await snap.request({
-    //   method: 'snap_manageAccounts',
-    //   params: ['submit', payload],
-    // });
-    // delete this.#requests[id];
-
-    throw new Error('[Snap] No reject request for this snap.');
-  }
-
-  async filterAccountChains(_id: string, chains: string[]): Promise<string[]> {
-    // id is not used because all the accounts created by snap are EOA for evm chains
-    // EOA can sign for any evm chain
-    return chains.filter((chain) => isEVMChain(chain));
+    throw new Error(
+      'The "rejectRequest" method is not available on this snap.',
+    );
   }
 
   #getWalletByAddress(address: string): Wallet {
-    const wallet = Object.values(this.#wallets).find(
-      (keyringAccount) =>
-        keyringAccount.account.address.toLowerCase() === address.toLowerCase(),
+    const walletMatch = Object.values(this.#wallets).find(
+      (wallet) =>
+        wallet.account.address.toLowerCase() === address.toLowerCase(),
     );
 
-    if (!wallet) {
-      throw new Error(`[Snap] Cannot find wallet with address ${address}`);
+    if (walletMatch === undefined) {
+      throw new Error(`Cannot find wallet for address: ${address}`);
     }
-
-    return wallet;
+    return walletMatch;
   }
 
   #generateKeyPair(): {
@@ -292,13 +226,13 @@ export class SimpleKeyring implements Keyring {
       }
 
       default: {
-        throw new Error(`[Snap] Unsupported method: ${method}`);
+        throw new Error(`EVM method not supported: ${method}`);
       }
     }
   }
 
   #signTransaction(from: string, tx: any, _opts: any): Json {
-    // Patch the transaction to make sure that the chainId is a hex string.
+    // Patch the transaction to make sure that the `chainId` is a hex string.
     if (!tx.chainId.startsWith('0x')) {
       tx.chainId = `0x${parseInt(tx.chainId, 10).toString(16)}`;
     }
@@ -325,26 +259,17 @@ export class SimpleKeyring implements Keyring {
   #signTypedData(
     from: string,
     data: Json,
-    opts: { version?: SignTypedDataVersion },
+    opts: { version: SignTypedDataVersion } = {
+      version: SignTypedDataVersion.V1,
+    },
   ): string {
-    let version: SignTypedDataVersion;
-    if (
-      opts.version &&
-      Object.keys(SignTypedDataVersion).includes(opts.version as string)
-    ) {
-      version = opts.version;
-    } else {
-      // Treat invalid versions as "V1"
-      version = SignTypedDataVersion.V1;
-    }
-
     const { privateKey } = this.#getWalletByAddress(from);
     const privateKeyBuffer = Buffer.from(privateKey, 'hex');
 
     return signTypedData({
       privateKey: privateKeyBuffer,
       data: data as unknown as TypedDataV1 | TypedMessage<any>,
-      version,
+      version: opts.version,
     });
   }
 
@@ -374,10 +299,15 @@ export class SimpleKeyring implements Keyring {
   #signMessage(from: string, data: string): string {
     const { privateKey } = this.#getWalletByAddress(from);
     const privateKeyBuffer = Buffer.from(privateKey, 'hex');
-
     const message = stripHexPrefix(data);
-    const msgSig = ecsign(Buffer.from(message, 'hex'), privateKeyBuffer);
-    const rawMsgSig = concatSig(toBuffer(msgSig.v), msgSig.r, msgSig.s);
-    return rawMsgSig;
+    const signature = ecsign(Buffer.from(message, 'hex'), privateKeyBuffer);
+    return concatSig(toBuffer(signature.v), signature.r, signature.s);
+  }
+
+  async #saveState(): Promise<void> {
+    await saveState({
+      wallets: this.#wallets,
+      requests: this.#requests,
+    });
   }
 }
