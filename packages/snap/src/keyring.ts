@@ -45,7 +45,6 @@ export class SimpleKeyring implements Keyring {
   }
 
   async listAccounts(): Promise<KeyringAccount[]> {
-    console.log('[Snap] listAccounts', this.#wallets);
     return Object.values(this.#wallets).map((wallet) => wallet.account);
   }
 
@@ -104,7 +103,7 @@ export class SimpleKeyring implements Keyring {
     };
 
     if (!isUniqueAccountName(account.name, Object.values(this.#wallets))) {
-      throw new Error(`[Snap] Duplication name for wallet: ${account.name}`);
+      throw new Error(`Account name already in use: ${account.name}`);
     }
 
     await snap.request({
