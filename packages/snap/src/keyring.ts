@@ -22,11 +22,7 @@ import { v4 as uuid } from 'uuid';
 
 import { SigningMethods } from './permissions';
 import { saveState } from './stateManagement';
-import {
-  isEVMChain,
-  serializeTransaction,
-  validateNoDuplicateNames,
-} from './util';
+import { isEVMChain, serializeTransaction, isUniqueAccountName } from './util';
 
 export type KeyringState = {
   wallets: Record<string, Wallet>;
@@ -86,6 +82,7 @@ export class SimpleKeyring implements Keyring {
       method: 'snap_manageAccounts',
       params: {
         method: 'createAccount',
+        params: { account },
       },
     });
 
@@ -110,14 +107,26 @@ export class SimpleKeyring implements Keyring {
       throw new Error(`[Snap] Duplication name for wallet: ${account.name}`);
     }
 
-    // TODO: update the KeyringController
+    await snap.request({
+      method: 'snap_manageAccounts',
+      params: {
+        method: 'updateAccount',
+        params: { account },
+      },
+    });
 
     this.#wallets[account.id].account = newAccount;
     await this.#saveState();
   }
 
   async deleteAccount(id: string): Promise<void> {
-    // TODO: update the KeyringController
+    await snap.request({
+      method: 'snap_manageAccounts',
+      params: {
+        method: 'deleteAccount',
+        params: { id },
+      },
+    });
 
     delete this.#wallets[id];
     await this.#saveState();
