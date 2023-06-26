@@ -51,10 +51,7 @@ export function serializeTransaction(tx: JsonTx, type: number): Json {
  * @param wallets - The array of wallets to search for duplicate names.
  * @returns Returns true if no duplicate names are found, otherwise false.
  */
-export function validateNoDuplicateNames(
-  name: string,
-  wallets: Wallet[],
-): boolean {
+export function isUniqueAccountName(name: string, wallets: Wallet[]): boolean {
   return !wallets.find((wallet) => wallet.account.name === name);
 }
 

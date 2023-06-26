@@ -106,7 +106,7 @@ export class SimpleKeyring implements Keyring {
       options: currentAccount.options,
     };
 
-    if (!validateNoDuplicateNames(account.name, Object.values(this.#wallets))) {
+    if (!isUniqueAccountName(account.name, Object.values(this.#wallets))) {
       throw new Error(`[Snap] Duplication name for wallet: ${account.name}`);
     }
 
