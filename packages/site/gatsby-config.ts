@@ -20,6 +20,7 @@ const config: GatsbyConfig = {
         display: 'standalone',
       },
     },
+    `gatsby-plugin-react-helmet`,
   ],
 };
 
