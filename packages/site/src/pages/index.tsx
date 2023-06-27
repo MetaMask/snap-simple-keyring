@@ -179,6 +179,7 @@ const Index = () => {
             type="text"
             variant="outlined"
             label={'Name'}
+            placeholder="Name"
             onChange={(event) => {
               console.log(event.target.value);
               setAccountName(event.target.value);
