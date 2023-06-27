@@ -78,7 +78,7 @@ export const InstallFlaskButton = () => (
 
 export const ConnectButton = (props: ComponentProps<typeof Button>) => {
   return (
-    <Button {...props}>
+    <Button id="connectButton" {...props}>
       <FlaskFox />
       <ButtonText>Connect</ButtonText>
     </Button>
@@ -120,7 +120,7 @@ export const HeaderButtons = ({
   return (
     <ConnectedContainer>
       <ConnectedIndicator />
-      <ButtonText>Connected</ButtonText>
+      <ButtonText id="snapConnected">Connected</ButtonText>
     </ConnectedContainer>
   );
 };
