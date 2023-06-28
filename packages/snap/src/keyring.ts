@@ -195,7 +195,7 @@ export class SimpleKeyring implements Keyring {
   } {
     // eslint-disable-next-line no-restricted-globals
     const pk = Buffer.from(crypto.getRandomValues(new Uint8Array(32)));
-    const address = Address.fromPrivateKey(pk).toString();
+    const address = toChecksumAddress(Address.fromPrivateKey(pk).toString());
     return { privateKey: pk.toString('hex'), address };
   }
 
