@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.3]
+### Uncategorized
+- chore: update snap checksum ([#46](https://github.com/MetaMask/snap-simple-keyring/pull/46))
+- fix: fix address checksum ([#44](https://github.com/MetaMask/snap-simple-keyring/pull/44))
+- fix: fix unique name during account creation ([#43](https://github.com/MetaMask/snap-simple-keyring/pull/43))
+
 ## [0.1.2]
 ### Changed
 - Update snaps and API dependencies. ([#41](https://github.com/MetaMask/snap-simple-keyring/pull/41))
@@ -22,7 +28,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Initial release.
 
-[Unreleased]: https://github.com/MetaMask/snap-simple-keyring/compare/v0.1.2...HEAD
+[Unreleased]: https://github.com/MetaMask/snap-simple-keyring/compare/v0.1.3...HEAD
+[0.1.3]: https://github.com/MetaMask/snap-simple-keyring/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/MetaMask/snap-simple-keyring/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/MetaMask/snap-simple-keyring/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/MetaMask/snap-simple-keyring/releases/tag/v0.1.0
