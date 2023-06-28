@@ -57,6 +57,11 @@ export class SimpleKeyring implements Keyring {
     options: Record<string, Json> | null = null,
   ): Promise<KeyringAccount> {
     const { privateKey, address } = this.#generateKeyPair();
+
+    if (!isUniqueAccountName(name, Object.values(this.#wallets))) {
+      throw new Error(`Account name already in use: ${name}`);
+    }
+
     const account: KeyringAccount = {
       id: uuid(),
       name,
