@@ -1,6 +1,12 @@
 import { Common, Hardfork } from '@ethereumjs/common';
 import { JsonTx, TransactionFactory } from '@ethereumjs/tx';
-import { Address, ecsign, stripHexPrefix, toBuffer } from '@ethereumjs/util';
+import {
+  Address,
+  ecsign,
+  stripHexPrefix,
+  toBuffer,
+  toChecksumAddress,
+} from '@ethereumjs/util';
 import {
   SignTypedDataVersion,
   TypedDataV1,
@@ -77,6 +83,8 @@ export class SimpleKeyring implements Keyring {
     };
 
     this.#wallets[account.id] = { account, privateKey };
+    await this.#saveState();
+
     await snap.request({
       method: 'snap_manageAccounts',
       params: {
@@ -84,8 +92,6 @@ export class SimpleKeyring implements Keyring {
         params: { account },
       },
     });
-
-    await this.#saveState();
     return account;
   }
 
@@ -111,6 +117,9 @@ export class SimpleKeyring implements Keyring {
       throw new Error(`Account name already in use: ${account.name}`);
     }
 
+    this.#wallets[account.id].account = newAccount;
+    await this.#saveState();
+
     await snap.request({
       method: 'snap_manageAccounts',
       params: {
@@ -118,12 +127,12 @@ export class SimpleKeyring implements Keyring {
         params: { account },
       },
     });
-
-    this.#wallets[account.id].account = newAccount;
-    await this.#saveState();
   }
 
   async deleteAccount(id: string): Promise<void> {
+    delete this.#wallets[id];
+    await this.#saveState();
+
     await snap.request({
       method: 'snap_manageAccounts',
       params: {
@@ -131,9 +140,6 @@ export class SimpleKeyring implements Keyring {
         params: { id },
       },
     });
-
-    delete this.#wallets[id];
-    await this.#saveState();
   }
 
   async listRequests(): Promise<KeyringRequest[]> {
