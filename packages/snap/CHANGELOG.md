@@ -7,10 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ## [0.1.3]
-### Uncategorized
-- chore: update snap checksum ([#46](https://github.com/MetaMask/snap-simple-keyring/pull/46))
-- fix: fix address checksum ([#44](https://github.com/MetaMask/snap-simple-keyring/pull/44))
-- fix: fix unique name during account creation ([#43](https://github.com/MetaMask/snap-simple-keyring/pull/43))
+### Fixed
+- Fix address checksum and account update order. ([#44](https://github.com/MetaMask/snap-simple-keyring/pull/44))
+- Fix unique name during account creation. ([#43](https://github.com/MetaMask/snap-simple-keyring/pull/43))
 
 ## [0.1.2]
 ### Changed
