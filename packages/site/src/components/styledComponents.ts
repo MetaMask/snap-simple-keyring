@@ -24,9 +24,14 @@ export const InformationBox = styled.div<{ error: boolean }>`
 `;
 
 export const Divider = styled.div`
-  border-bottom: 1px solid #ccc;
-  margin: 10px 0;
-  padding: 10px 0;
+  color: #24272a;
+
+  /* Heading-MD */
+  font-family: Euclid Circular B;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 32px; /* 133.333% */
 `;
 
 export const DividerTitle = styled.p`
