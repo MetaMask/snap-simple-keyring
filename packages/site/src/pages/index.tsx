@@ -26,13 +26,7 @@ import {
 } from '../components/styledComponents';
 import { defaultSnapOrigin } from '../config';
 import { MetamaskActions, MetaMaskContext } from '../hooks';
-import {
-  KeyringState,
-  connectSnap,
-  getSnap,
-  getSnapState,
-  sendHello,
-} from '../utils';
+import { KeyringState, connectSnap, getSnap, sendHello } from '../utils';
 
 const snapId = defaultSnapOrigin;
 
@@ -407,7 +401,7 @@ const Index = () => {
           </Grid>
           <Grid item xs={4} sm={2} md={1}>
             <Divider />
-            <DividerTitle>Current Accounts</DividerTitle>
+            <DividerTitle>Accounts</DividerTitle>
             <AccountList accounts={snapState.accounts} />
           </Grid>
         </Grid>
