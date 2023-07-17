@@ -34,7 +34,6 @@ const AccountTitleIconContainer = styled.div`
 const AccountContainer = styled.div`
   display: flex;
   flex: 1;
-  width: 302px;
   padding: 16px;
   margin-bottom: 20px;
   flex-direction: column;

@@ -390,7 +390,7 @@ const Index = () => {
         <Grid container spacing={4} columns={[1, 2, 3]}>
           <Grid item xs={8} sm={4} md={2}>
             <Divider />
-            <DividerTitle>Account Management Methods</DividerTitle>
+            <DividerTitle>Methods</DividerTitle>
             <Accordion items={accountManagementMethods} />
             <Divider />
             <DividerTitle>Request Methods</DividerTitle>
