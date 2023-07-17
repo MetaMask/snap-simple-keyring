@@ -55,7 +55,7 @@ const AccountRow = styled.div`
 
 const CopyableItem = styled.div`
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   padding: 4px 12px;
   align-items: center;
   gap: 4px;
