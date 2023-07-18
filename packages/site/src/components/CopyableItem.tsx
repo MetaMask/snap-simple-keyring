@@ -8,17 +8,17 @@ import {
 } from './styledComponents';
 
 export const CopyableItem = ({ value }: { value: string }) => {
-  const [showAnimation, setShowAnimation] = useState(false);
+  const [active, setActive] = useState(false);
 
   return (
     <AccountRow>
       <CopyableContainer
-        clicked={showAnimation}
+        active={active}
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
         onClick={async () => {
-          setShowAnimation(true);
+          setActive(false);
           await navigator.clipboard.writeText(value);
-          setShowAnimation(false);
+          setActive(true);
         }}
       >
         <CopyableItemValue>{value}</CopyableItemValue>

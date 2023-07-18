@@ -1,5 +1,5 @@
 import Box from '@mui/material/Box';
-import styled, { keyframes } from 'styled-components';
+import styled, { keyframes, css } from 'styled-components';
 
 export const Container = styled.div`
   display: flex;
@@ -126,14 +126,14 @@ const copyKeyframe = keyframes`
     opacity: 1;
   }
   50% {
-    opacity: 0.5;
+    opacity: 0;
   }
   100% {
     opacity: 1;
   }
 `;
 
-export const CopyableContainer = styled.div<{ clicked: boolean }>`
+export const CopyableContainer = styled.div<{ active: boolean }>`
   display: flex;
   justify-content: space-between;
   padding: 4px 12px;
@@ -143,8 +143,12 @@ export const CopyableContainer = styled.div<{ clicked: boolean }>`
   border-radius: 4px;
   background: rgba(3, 118, 201, 0.1);
   overflow-x: wrap;
-  animation: ${({ clicked }) => (clicked ? copyKeyframe : 'none')} 1s
-    ease-in-out;
+  animation: ${({ active }) =>
+    active
+      ? css`
+          ${copyKeyframe} 0.2s linear
+        `
+      : 'none'};
 `;
 
 export const CopyableItemValue = styled.p`
