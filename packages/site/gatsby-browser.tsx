@@ -2,6 +2,7 @@ import { GatsbyBrowser } from 'gatsby';
 import { StrictMode } from 'react';
 import { App } from './src/App';
 import { Root } from './src/Root';
+import './global.css';
 
 export const wrapRootElement: GatsbyBrowser['wrapRootElement'] = ({
   element,
