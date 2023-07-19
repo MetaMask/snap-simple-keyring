@@ -5,7 +5,6 @@ import {
   KeyringRequest,
   KeyringSnapRpcClient,
 } from '@metamask/keyring-api';
-import { FormGroup, FormLabel, Input, TextField } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import { useContext, useState, useCallback, useEffect } from 'react';
 import { FiInfo, FiAlertTriangle } from 'react-icons/fi';
@@ -26,7 +25,8 @@ import {
 } from '../components/styledComponents';
 import { defaultSnapOrigin } from '../config';
 import { MetamaskActions, MetaMaskContext } from '../hooks';
-import { KeyringState, connectSnap, getSnap, sendHello } from '../utils';
+import { InputType } from '../types';
+import { KeyringState, connectSnap, getSnap } from '../utils';
 
 const snapId = defaultSnapOrigin;
 
