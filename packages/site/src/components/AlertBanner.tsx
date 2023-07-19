@@ -68,7 +68,6 @@ export const AlertBanner = ({
     }
   };
 
-  console.log(alertType, alertType === AlertType.Failure);
   return (
     <StyledAlertContainer error={alertType === AlertType.Failure}>
       <Side error={alertType === AlertType.Failure} />
