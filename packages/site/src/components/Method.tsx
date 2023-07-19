@@ -67,10 +67,7 @@ export const Method = ({ description, inputs, action }: MethodProps) => {
   const [response, setResponse] = useState<unknown>();
   const [error, setError] = useState<unknown>();
 
-  console.log({ description, inputs, action });
-
   const inputSwitch = (props: any) => {
-    console.log(props);
     switch (props.type) {
       case InputType.TextField:
         return (
