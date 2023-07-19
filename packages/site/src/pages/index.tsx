@@ -173,6 +173,7 @@ const Index = () => {
         },
         label: 'Create Account',
       },
+      successMessage: 'Account Created',
     },
     {
       name: 'Get Account',
@@ -206,35 +207,7 @@ const Index = () => {
         },
         label: 'Get data',
       },
-    },
-    {
-      name: 'Edit Account',
-      descriptions:
-        'Edit an account (provide a object with the attributes to update)',
-      inputUI: (
-        <EditAccountForm
-          accounts={snapState.accounts}
-          onChange={handleAccountPayloadChange}
-        />
-      ),
-      actionUI: (
-        <Action
-          enabled
-          callback={async () => {
-            const result = await client.updateAccount(
-              accountPayload as KeyringAccount,
-            );
-            const accounts = await client.listAccounts();
-            setSnapState({
-              accounts,
-              pendingRequests: {
-                ...snapState.pendingRequests,
-              },
-            });
-            return result;
-          }}
-        />
-      ),
+      successMessage: 'Data Fetched',
     },
     {
       name: 'List Accounts',
