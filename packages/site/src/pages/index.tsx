@@ -212,24 +212,21 @@ const Index = () => {
     {
       name: 'List Accounts',
       description: 'Method to list all account that the SSK manages',
-      actionUI: (
-        <Action
-          enabled
-          callback={async () => {
-            const accounts = await client.listAccounts();
-            console.log('[UI] list of accounts:', accounts);
-            const addresses = accounts.map(
-              (a: { address: string }) => a.address,
-            );
-            console.log(addresses);
-            setSnapState({
-              ...snapState,
-              accounts,
-            });
-            return { accounts };
-          }}
-        />
-      ),
+      action: {
+        disabled: false,
+        callback: async () => {
+          const accounts = await client.listAccounts();
+          console.log('[UI] list of accounts:', accounts);
+          const addresses = accounts.map((a: { address: string }) => a.address);
+          console.log(addresses);
+          setSnapState({
+            ...snapState,
+            accounts,
+          });
+          return { accounts };
+        },
+        label: 'List Accounts',
+      },
     },
     {
       name: 'Remove Account',
