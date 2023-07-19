@@ -128,7 +128,6 @@ const Index = () => {
   );
 
   const sendCreateAccount = async () => {
-    console.log('Creating account', accountName);
     const newAccount = await client.createAccount(accountName as string);
     const accounts = await client.listAccounts();
     setSnapState({
