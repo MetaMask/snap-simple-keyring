@@ -127,12 +127,13 @@ export const Method = ({ description, inputs, action }: MethodProps) => {
       {action ? (
         <MethodButton
           onClick={async () => {
+            setResponse(null);
+            setError(null);
             try {
               const res = await action.callback();
               setResponse(res);
               // eslint-disable-next-line id-length
             } catch (e: any) {
-              setResponse(null);
               setError(e);
             }
           }}
@@ -148,16 +149,16 @@ export const Method = ({ description, inputs, action }: MethodProps) => {
               title={'Account Created'}
               alertType={AlertType.Success}
             />
-            <CopyableItem value={JSON.stringify(response, null, 2)} />
+            <CopyableItem value={JSON.stringify(response)} />
           </>
         ) : null}
         {error ? (
           <>
             <AlertBanner
-              title={'Account Created'}
-              alertType={AlertType.Success}
+              title={'Error Request'}
+              alertType={AlertType.Failure}
             />
-            <CopyableItem value={JSON.stringify(response, null, 2)} />
+            <CopyableItem value={JSON.stringify(error)} />
           </>
         ) : null}
       </CopyableContainer>
