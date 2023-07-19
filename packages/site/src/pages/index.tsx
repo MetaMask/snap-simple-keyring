@@ -185,7 +185,13 @@ const Index = () => {
           options: snapState.accounts.map((account) => {
             return { value: account.address };
           }),
-          onChange: () => console.log(snapState.accounts),
+          onChange: (event: any) => {
+            snapState.accounts.forEach((account) => {
+              if (account.address === event.currentTarget.value) {
+                setAccountId(account.id);
+              }
+            });
+          },
         },
       ],
       action: {

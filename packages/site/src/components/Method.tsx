@@ -80,7 +80,7 @@ export const Method = ({ description, inputs, action }: MethodProps) => {
         );
       case InputType.Dropdown:
         return (
-          <StyledSelect onChange={() => console.log('Hello from dropdown')}>
+          <StyledSelect onChange={props.onChange}>
             <StyledSelectItem disabled value="">
               <em>{props.placeholder}</em>
             </StyledSelectItem>
