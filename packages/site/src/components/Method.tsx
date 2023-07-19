@@ -61,9 +61,17 @@ export type MethodProps = {
     disabled: boolean;
     label: string;
   };
+  successMessage?: string;
+  failureMessage?: string;
 };
 
-export const Method = ({ description, inputs, action }: MethodProps) => {
+export const Method = ({
+  description,
+  inputs,
+  action,
+  successMessage,
+  failureMessage,
+}: MethodProps) => {
   const [response, setResponse] = useState<unknown>();
   const [error, setError] = useState<unknown>();
 
@@ -75,8 +83,7 @@ export const Method = ({ description, inputs, action }: MethodProps) => {
             id="outlined-basic"
             placeholder={props.placeholder}
             variant="no-outlined"
-            onChange={props.onChange}
-          />
+            onChange={props.onChange} />
         );
       case InputType.Dropdown:
         return (
@@ -146,16 +153,16 @@ export const Method = ({ description, inputs, action }: MethodProps) => {
         {response ? (
           <>
             <AlertBanner
-              title={'Account Created'}
+              title={successMessage ?? 'Successful Request'}
               alertType={AlertType.Success}
             />
-            <CopyableItem value={JSON.stringify(response)} />
+            <CopyableItem value={JSON.stringify(response, null, 3)} />
           </>
         ) : null}
         {error ? (
           <>
             <AlertBanner
-              title={'Error Request'}
+              title={failureMessage ?? 'Error Request'}
               alertType={AlertType.Failure}
             />
             <CopyableItem value={JSON.stringify(error)} />
