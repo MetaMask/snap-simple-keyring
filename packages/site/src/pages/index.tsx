@@ -93,9 +93,6 @@ const Index = () => {
     useState<Pick<KeyringAccount, 'name' | 'options'>>();
   const client = new KeyringSnapRpcClient(snapId, window.ethereum);
 
-  console.log(snapState.accounts);
-  console.log(snapState.accounts.map((account) => account.address));
-
   useEffect(() => {
     async function getState() {
       const accounts = await client.listAccounts();
