@@ -93,6 +93,9 @@ const Index = () => {
     useState<Pick<KeyringAccount, 'name' | 'options'>>();
   const client = new KeyringSnapRpcClient(snapId, window.ethereum);
 
+  console.log(snapState.accounts);
+  console.log(snapState.accounts.map((account) => account.address));
+
   useEffect(() => {
     async function getState() {
       const accounts = await client.listAccounts();
@@ -152,66 +155,54 @@ const Index = () => {
     }
   };
 
-  const utilityMethods = [
-    {
-      name: 'Send hello',
-      description: 'Send a simple hello, not a goodbye',
-      actionUI: <Action enabled callback={async () => await sendHello()} />,
-    },
-  ];
-
   const accountManagementMethods = [
     {
       name: 'Create Account',
       description: 'Method to create a new account',
-      inputUI: (
-        <FormGroup>
-          <FormLabel>Account Name</FormLabel>
-          <TextField
-            fullWidth
-            type="text"
-            variant="outlined"
-            label={'Name'}
-            placeholder="Name"
-            onChange={(event) => {
-              console.log(event.target.value);
-              setAccountName(event.target.value);
-            }}
-          />
-        </FormGroup>
-      ),
-      actionUI: (
-        <Action
-          enabled={Boolean(accountName)}
-          callback={async () => {
-            return await sendCreateAccount();
-          }}
-        />
-      ),
+      inputs: [
+        {
+          title: 'Account Name',
+          type: InputType.TextField,
+          placeholder: 'E.g. My new account',
+          onChange: (event: any) => {
+            setAccountName(event.currentTarget.value);
+          },
+        },
+      ],
+      action: {
+        disabled: Boolean(accountName),
+        callback: async () => {
+          return await sendCreateAccount();
+        },
+        label: 'Create Account',
+      },
     },
     {
       name: 'Get Account',
       description: 'Get the data about a select account',
-      inputUI: (
-        <QueryRequestForm
-          type={QueryRequestFormType.Account}
-          onChange={handleAccountIdChange}
-        />
-      ),
-      actionUI: (
-        <Action
-          enabled={Boolean(accountId)}
-          callback={async () => {
-            try {
-              const account = await client.getAccount(accountId as string);
-              return account;
-            } catch (error) {
-              console.error(error);
-              dispatch({ type: MetamaskActions.SetError, payload: error });
-            }
-          }}
-        />
-      ),
+      inputs: [
+        {
+          title: 'Account ID',
+          type: InputType.Dropdown,
+          placeholder: 'Select Account ID',
+          options: snapState.accounts.map((account) => {
+            return { value: account.address };
+          }),
+          onChange: () => console.log(snapState.accounts),
+        },
+      ],
+      action: {
+        disabled: Boolean(accountId),
+        callback: async () => {
+          try {
+            const account = await client.getAccount(accountId as string);
+            return account;
+          } catch (error) {
+            dispatch({ type: MetamaskActions.SetError, payload: error });
+          }
+        },
+        label: 'Get data',
+      },
     },
     {
       name: 'Edit Account',
@@ -395,8 +386,6 @@ const Index = () => {
             <DividerTitle>Request Methods</DividerTitle>
             <Accordion items={requestMethods} />
             <Divider />
-            <DividerTitle>Utility Methods</DividerTitle>
-            <Accordion items={utilityMethods} />
           </Grid>
           <Grid item xs={4} sm={2} md={1}>
             <Divider />
