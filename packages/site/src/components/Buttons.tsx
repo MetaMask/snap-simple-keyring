@@ -1,7 +1,8 @@
 import { ComponentProps } from 'react';
 import styled from 'styled-components';
-import { MetamaskState } from '../hooks';
+
 import { ReactComponent as FlaskFox } from '../assets/flask_fox.svg';
+import { MetamaskState } from '../hooks';
 import { shouldDisplayReconnectButton } from '../utils';
 
 const Link = styled.a`
@@ -69,6 +70,21 @@ const ConnectedIndicator = styled.div`
   background-color: green;
 `;
 
+const ActionButton = styled.button`
+  width: 95%;
+  background-color: #0376c9;
+  border-radius: 999px;
+  padding: 5px 20px;
+  margin-left: 16px;
+  margin-right: 2.5%;
+  margin-top: 16px;
+
+  &:hover {
+    background-color: #0376ff;
+    color: #fff;
+  }
+`;
+
 export const InstallFlaskButton = () => (
   <Link href="https://metamask.io/flask/" target="_blank">
     <FlaskFox />
@@ -122,5 +138,13 @@ export const HeaderButtons = ({
       <ConnectedIndicator />
       <ButtonText id="snapConnected">Connected</ButtonText>
     </ConnectedContainer>
+  );
+};
+
+export const MethodButton = (props: any) => {
+  return (
+    <ActionButton disabled={props.disabled} onClick={props.onClick}>
+      {props.label}
+    </ActionButton>
   );
 };
