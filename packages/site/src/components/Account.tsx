@@ -3,6 +3,7 @@ import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useState } from 'react';
 
+import { CopyableItem } from './CopyableItem';
 import {
   AccountContainer,
   AccountTitleContainer,
@@ -12,7 +13,6 @@ import {
   AccountRowTitle,
   AccountRowValue,
 } from './styledComponents';
-import { CopyableItem } from './CopyableItem';
 
 export const Account = ({ account }: { account: KeyringAccount }) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
