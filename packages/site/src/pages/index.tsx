@@ -106,13 +106,6 @@ const Index = () => {
     getState().catch((error) => console.error(error));
   }, []);
 
-  const handleAccountIdChange = useCallback(
-    (newAccountId: string) => {
-      setAccountId(newAccountId);
-    },
-    [accountId],
-  );
-
   const handleRequestIdChange = useCallback(
     (newRequestId: string) => {
       setRequestId(newRequestId);
@@ -231,21 +224,31 @@ const Index = () => {
     {
       name: 'Remove Account',
       description: 'Remove a select account',
-      inputUI: (
-        <QueryRequestForm
-          type={QueryRequestFormType.Account}
-          onChange={handleAccountIdChange}
-        />
-      ),
-      actionUI: (
-        <Action
-          enabled={Boolean(accountId)}
-          callback={async () => {
-            const result = await client.deleteAccount(accountId as string);
-            return result;
-          }}
-        />
-      ),
+      inputs: [
+        {
+          title: 'Account ID',
+          type: InputType.Dropdown,
+          placeholder: 'Select Account ID',
+          options: snapState.accounts.map((account) => {
+            return { value: account.address };
+          }),
+          onChange: (event: any) => {
+            snapState.accounts.forEach((account) => {
+              if (account.address === event.currentTarget.value) {
+                setAccountId(account.id);
+              }
+            });
+          },
+        },
+      ],
+      action: {
+        disabled: Boolean(accountId),
+        callback: async () => {
+          await client.deleteAccount(accountId as string);
+        },
+        label: 'Remove account',
+      },
+      successMessage: 'Account Removed',
     },
   ];
 
