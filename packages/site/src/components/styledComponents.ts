@@ -151,7 +151,7 @@ export const CopyableContainer = styled.div<{ active: boolean }>`
       : 'none'};
 `;
 
-export const CopyableItemValue = styled.p`
+export const CopyableItemValue = styled.div`
   color: #0376c9;
   text-align: center;
   max-width: 80%;
