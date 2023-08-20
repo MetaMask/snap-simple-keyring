@@ -10,7 +10,6 @@ import { useContext, useState, useCallback, useEffect } from 'react';
 import { FiInfo, FiAlertTriangle } from 'react-icons/fi';
 
 import { Card, ConnectButton, AccountList, Accordion } from '../components';
-import { EditAccountForm } from '../components/EditAccount';
 import {
   QueryRequestForm,
   QueryRequestFormType,
