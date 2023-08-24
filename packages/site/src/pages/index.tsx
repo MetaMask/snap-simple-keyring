@@ -9,7 +9,13 @@ import Grid from '@mui/material/Grid';
 import { useContext, useState, useCallback, useEffect } from 'react';
 import { FiInfo, FiAlertTriangle } from 'react-icons/fi';
 
-import { Card, ConnectButton, AccountList, Accordion } from '../components';
+import {
+  Card,
+  ConnectButton,
+  AccountList,
+  Accordion,
+  Toggle,
+} from '../components';
 import {
   QueryRequestForm,
   QueryRequestFormType,
@@ -25,16 +31,24 @@ import {
 import { defaultSnapOrigin } from '../config';
 import { MetamaskActions, MetaMaskContext } from '../hooks';
 import { InputType } from '../types';
-import { KeyringState, connectSnap, getSnap } from '../utils';
+import {
+  KeyringState,
+  connectSnap,
+  getSnap,
+  toggleSynchronousApprovals,
+  isSynchronousMode,
+} from '../utils';
 
 const snapId = defaultSnapOrigin;
 
 const initialState: {
   pendingRequests: KeyringRequest[];
   accounts: KeyringAccount[];
+  useSynchronousApprovals: boolean;
 } = {
   pendingRequests: [],
   accounts: [],
+  useSynchronousApprovals: false,
 };
 
 const Action = ({
@@ -100,9 +114,11 @@ const Index = () => {
     async function getState() {
       const accounts = await client.listAccounts();
       const pendingRequests = await client.listRequests();
+      const isSynchronous = await isSynchronousMode();
       setSnapState({
         accounts,
         pendingRequests,
+        useSynchronousApprovals: isSynchronous,
       });
     }
 
@@ -159,6 +175,18 @@ const Index = () => {
       dispatch({ type: MetamaskActions.SetError, payload: error });
     }
   };
+
+  const handleUseSyncToggle = useCallback(async () => {
+    console.log(
+      'Toggling synchronous approval with the value of:',
+      !snapState.useSynchronousApprovals,
+    );
+    await toggleSynchronousApprovals();
+    setSnapState({
+      ...snapState,
+      useSynchronousApprovals: !snapState.useSynchronousApprovals,
+    });
+  }, []);
 
   const accountManagementMethods = [
     {
@@ -347,7 +375,7 @@ const Index = () => {
       ),
       actionUI: (
         <Action
-          enabled={Boolean(requestId)}
+          enabled={Boolean(requestId) && !snapState.useSynchronousApprovals}
           callback={async () => {
             await client.approveRequest(requestId as string);
           }}
@@ -365,7 +393,7 @@ const Index = () => {
       ),
       actionUI: (
         <Action
-          enabled={Boolean(requestId)}
+          enabled={Boolean(requestId) && !snapState.useSynchronousApprovals}
           callback={async () => {
             await client.rejectRequest(requestId as string);
           }}
@@ -398,6 +426,13 @@ const Index = () => {
       <StyledBox sx={{ flexGrow: 1 }}>
         <Grid container spacing={4} columns={[1, 2, 3]}>
           <Grid item xs={8} sm={4} md={2}>
+          <Toggle
+              title="Use Synchronous Approval"
+              checkedIcon="✅"
+              uncheckedIcon="❌"
+              defaultChecked={snapState.useSynchronousApprovals}
+              onToggle={handleUseSyncToggle}
+            />
             <Divider />
             <DividerTitle>Methods</DividerTitle>
             <Accordion items={accountManagementMethods} />

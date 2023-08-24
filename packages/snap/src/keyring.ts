@@ -41,6 +41,7 @@ import {
 export type KeyringState = {
   wallets: Record<string, Wallet>;
   requests: Record<string, KeyringRequest>;
+  useSynchronousApprovals: boolean;
 };
 
 export type Wallet = {
@@ -51,11 +52,14 @@ export type Wallet = {
 export class SimpleKeyring implements Keyring {
   #wallets: Record<string, Wallet>;
 
+  #useSynchronousApprovals = false;
+
   #pendingRequests: Record<string, KeyringRequest>;
 
   constructor(state: KeyringState) {
     this.#wallets = state.wallets;
     this.#pendingRequests = state.requests;
+    this.#useSynchronousApprovals = state.useSynchronousApprovals || false;
   }
 
   async listAccounts(): Promise<KeyringAccount[]> {
@@ -112,6 +116,14 @@ export class SimpleKeyring implements Keyring {
       },
     });
     return account;
+  }
+
+  toggleSynchronousApprovals(): void {
+    this.#useSynchronousApprovals = !this.#useSynchronousApprovals;
+  }
+
+  isSynchronousMode(): boolean {
+    return this.#useSynchronousApprovals;
   }
 
   async filterAccountChains(_id: string, chains: string[]): Promise<string[]> {
@@ -176,6 +188,50 @@ export class SimpleKeyring implements Keyring {
   // In an asynchronous implementation, the request should be stored in queue
   // of pending requests to be approved or rejected by the user.
   async submitRequest(request: KeyringRequest): Promise<SubmitRequestResponse> {
+    if (this.#useSynchronousApprovals) {
+      return this.#handleSynchronousSubmitRequest(request);
+    }
+    return this.#handleAsyncSubmitRequest(request);
+  }
+
+  async approveRequest(_id: string): Promise<void> {
+    if (this.#useSynchronousApprovals) {
+      throw new Error(
+        'The "approveRequest" method is not when synchronous approvals are enabled. Disable synchronous approvals by calling toggleSynchronousApprovals.',
+      );
+    } else {
+      const request: KeyringRequest = await this.getRequest(_id);
+      const { method, params = '' } = request.request as JsonRpcRequest;
+      const signature = this.#handleSigningRequest(method, params);
+      await snap.request({
+        method: 'snap_manageAccounts',
+        params: {
+          method: 'submitResponse',
+          params: { id: _id, result: signature },
+        },
+      });
+    }
+  }
+
+  async rejectRequest(_id: string): Promise<void> {
+    if (this.#useSynchronousApprovals) {
+      throw new Error(
+        'The "rejectRequest" method is not when synchronous approvals are enabled. Disable synchronous approvals by calling toggleSynchronousApprovals.',
+      );
+    } else {
+      await snap.request({
+        method: 'snap_manageAccounts',
+        params: {
+          method: 'submitResponse',
+          params: { id: _id, result: null },
+        },
+      });
+    }
+  }
+
+  async #handleAsyncSubmitRequest(
+    request: KeyringRequest,
+  ): Promise<SubmitRequestResponse> {
     this.#pendingRequests[request.request.id] = request;
     await this.#saveState();
     return {
@@ -183,27 +239,15 @@ export class SimpleKeyring implements Keyring {
     };
   }
 
-  async approveRequest(_id: string): Promise<void> {
-    const request: KeyringRequest = await this.getRequest(_id);
+  async #handleSynchronousSubmitRequest(
+    request: KeyringRequest,
+  ): Promise<SubmitRequestResponse> {
     const { method, params = '' } = request.request as JsonRpcRequest;
     const signature = this.#handleSigningRequest(method, params);
-    await snap.request({
-      method: 'snap_manageAccounts',
-      params: {
-        method: 'submitResponse',
-        params: { id: _id, result: signature },
-      },
-    });
-  }
-
-  async rejectRequest(_id: string): Promise<void> {
-    await snap.request({
-      method: 'snap_manageAccounts',
-      params: {
-        method: 'submitResponse',
-        params: { id: _id, result: null },
-      },
-    });
+    return {
+      pending: false,
+      result: signature,
+    };
   }
 
   #getWalletByAddress(address: string): Wallet {
@@ -351,6 +395,7 @@ export class SimpleKeyring implements Keyring {
     await saveState({
       wallets: this.#wallets,
       requests: this.#pendingRequests,
+      useSynchronousApprovals: this.#useSynchronousApprovals,
     });
   }
 }

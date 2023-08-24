@@ -106,6 +106,26 @@ const customHandler: OnRpcRequestHandler = async ({
       return await getState();
     }
 
+    case InternalMethod.ToggleSynchronousApprovals: {
+      if (!keyring) {
+        const keyringState = await getState();
+        if (!keyring) {
+          keyring = new SimpleKeyring(keyringState);
+        }
+      }
+      return keyring.toggleSynchronousApprovals();
+    }
+
+    case InternalMethod.IsSynchronousMode: {
+      if (!keyring) {
+        const keyringState = await getState();
+        if (!keyring) {
+          keyring = new SimpleKeyring(keyringState);
+        }
+      }
+      return keyring.isSynchronousMode();
+    }
+
     default: {
       throw new MethodNotSupportedError(request.method);
     }

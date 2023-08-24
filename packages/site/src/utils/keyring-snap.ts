@@ -5,6 +5,7 @@ import { defaultSnapOrigin } from '../config';
 export type KeyringState = {
   pendingRequests: KeyringRequest[];
   accounts: KeyringAccount[];
+  useSynchronousApprovals: boolean;
 };
 
 export async function sendMessageToSnap(snapId: string, message: any) {
