@@ -1,24 +1,17 @@
-const through = require('through2');
+/* eslint-disable no-restricted-globals */
+/* eslint-disable import/no-nodejs-modules */
+import type { SnapConfig } from '@metamask/snaps-cli';
+import { resolve } from 'path';
 
-module.exports = {
-  cliOptions: {
-    src: './src/index.ts',
+const config: SnapConfig = {
+  bundler: 'webpack',
+  input: resolve(__dirname, 'src/index.ts'),
+  server: {
     port: 8080,
   },
-  bundlerCustomizer: (bundler) => {
-    bundler.transform(function () {
-      let data = '';
-      return through(
-        function (buffer, _encoding, callback) {
-          data += buffer;
-          callback();
-        },
-        function (callback) {
-          this.push("globalThis.Buffer = require('buffer/').Buffer;");
-          this.push(data);
-          callback();
-        },
-      );
-    });
+  polyfills: {
+    buffer: true,
   },
 };
+
+export default config;
