@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ## [0.1.4]
-### Uncategorized
+### Changed
 - Bump `@metamask/snaps-cli` to `v0.38.2-flask.1` ([#55](https://github.com/MetaMask/snap-simple-keyring/pull/55))
 
 ## [0.1.3]

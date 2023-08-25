@@ -7,8 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ## [0.1.4]
-### Uncategorized
-- fix: `rejectRequest` in site package ([#53](https://github.com/MetaMask/snap-simple-keyring/pull/53))
+### Fixed
+- Fix `rejectRequest` call in site package ([#53](https://github.com/MetaMask/snap-simple-keyring/pull/53))
 
 ## [0.1.3]
 ### Changed
