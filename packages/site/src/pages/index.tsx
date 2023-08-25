@@ -363,7 +363,7 @@ const Index = () => {
         <Action
           enabled={Boolean(requestId)}
           callback={async () => {
-            const request = await client.getRequest(requestId as string);
+            const request = await client.rejectRequest(requestId as string);
             return request;
           }}
         />
