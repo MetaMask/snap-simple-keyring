@@ -181,6 +181,41 @@ const Index = () => {
       successMessage: 'Account Created',
     },
     {
+      name: 'Import Account (Private Key)',
+      description: 'Method to import an account',
+      inputs: [
+        {
+          title: 'Account Name',
+          type: InputType.TextField,
+          placeholder: 'E.g. My new account',
+          onChange: (event: any) => {
+            setAccountName(event.currentTarget.value);
+          },
+        },
+        {
+          title: 'Private Key',
+          type: InputType.TextField,
+          placeholder: 'Private key',
+          onChange: (event: any) => {
+            setPrivateKey(event.currentTarget.value);
+            // const uint8ArrayPK = toBuffer(event.currentTarget.value);
+            console.log({
+              privateKey: event.currentTarget.value,
+              // uint8ArrayPK,
+            });
+          },
+        },
+      ],
+      action: {
+        disabled: Boolean(accountName),
+        callback: async () => {
+          return await importAccount();
+        },
+        label: 'Import Account',
+      },
+      successMessage: 'Account Imported',
+    },
+    {
       name: 'Get Account',
       description: 'Get the data about a select account',
       inputs: [
