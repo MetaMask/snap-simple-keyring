@@ -88,8 +88,8 @@ const Index = () => {
   const [accountName, setAccountName] = useState<string | null>();
   const [accountId, setAccountId] = useState<string | null>();
   const [requestId, setRequestId] = useState<string | null>(null);
-  const [accountPayload, setAccountPayload] =
-    useState<Pick<KeyringAccount, 'name' | 'options'>>();
+  // const [accountPayload, setAccountPayload] =
+  //   useState<Pick<KeyringAccount, 'name' | 'options'>>();
   const client = new KeyringSnapRpcClient(snapId, window.ethereum);
 
   useEffect(() => {
@@ -112,12 +112,12 @@ const Index = () => {
     [requestId],
   );
 
-  const handleAccountPayloadChange = useCallback(
-    (newAccountPayload: KeyringAccount) => {
-      setAccountPayload(newAccountPayload);
-    },
-    [accountPayload],
-  );
+  // const handleAccountPayloadChange = useCallback(
+  //   (newAccountPayload: KeyringAccount) => {
+  //     setAccountPayload(newAccountPayload);
+  //   },
+  //   [accountPayload],
+  // );
 
   const sendCreateAccount = async () => {
     const newAccount = await client.createAccount(accountName as string);
