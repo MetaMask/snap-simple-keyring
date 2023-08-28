@@ -203,6 +203,7 @@ export class SimpleKeyring implements Keyring {
       const request: KeyringRequest = await this.getRequest(_id);
       const { method, params = '' } = request.request as JsonRpcRequest;
       const signature = this.#handleSigningRequest(method, params);
+      await this.#removePendingRequest(_id);
       await snap.request({
         method: 'snap_manageAccounts',
         params: {
@@ -219,6 +220,7 @@ export class SimpleKeyring implements Keyring {
         'The "rejectRequest" method is not when synchronous approvals are enabled. Disable synchronous approvals by calling toggleSynchronousApprovals.',
       );
     } else {
+      await this.#removePendingRequest(_id);
       await snap.request({
         method: 'snap_manageAccounts',
         params: {
@@ -226,6 +228,19 @@ export class SimpleKeyring implements Keyring {
           params: { id: _id, result: null },
         },
       });
+    }
+  }
+
+  async #removePendingRequest(id: string): Promise<void> {
+    try {
+      delete this.#pendingRequests[id];
+      await this.#saveState();
+    } catch (error) {
+      throw new Error(
+        `Cannot remove pending request with id: ${id}. Error: ${
+          (error as Error).message
+        }`,
+      );
     }
   }
 

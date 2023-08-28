@@ -17,10 +17,6 @@ import {
   Toggle,
 } from '../components';
 import {
-  QueryRequestForm,
-  QueryRequestFormType,
-} from '../components/QueryRequestForm';
-import {
   Container,
   CardContainer,
   Divider,
@@ -49,51 +45,6 @@ const initialState: {
   pendingRequests: [],
   accounts: [],
   useSynchronousApprovals: false,
-};
-
-const Action = ({
-  enabled = true,
-  callback,
-}: {
-  enabled: boolean;
-  callback: () => Promise<any>;
-}) => {
-  const [, dispatch] = useContext(MetaMaskContext);
-  const [response, setResponse] = useState<string | null>();
-  const [error, setError] = useState<string | null>();
-
-  const method = async (): Promise<void> => {
-    setResponse(null);
-    setError(null);
-
-    try {
-      const newResponse = await callback();
-      setResponse(JSON.stringify(newResponse));
-    } catch (newError: any) {
-      dispatch({ type: MetamaskActions.SetError, payload: newError });
-      setError(JSON.stringify(newError));
-    }
-  };
-
-  return (
-    <>
-      <button onClick={method} disabled={!enabled}>
-        Execute
-      </button>
-      {response && (
-        <InformationBox error={false}>
-          <FiInfo />
-          <p>{response}</p>
-        </InformationBox>
-      )}
-      {error && (
-        <InformationBox error={true}>
-          <FiAlertTriangle />
-          <p>{error}</p>
-        </InformationBox>
-      )}
-    </>
-  );
 };
 
 const Index = () => {
@@ -177,10 +128,7 @@ const Index = () => {
   };
 
   const handleUseSyncToggle = useCallback(async () => {
-    console.log(
-      'Toggling synchronous approval with the value of:',
-      !snapState.useSynchronousApprovals,
-    );
+    console.log('Toggling synchronous approval');
     await toggleSynchronousApprovals();
     setSnapState({
       ...snapState,
@@ -329,76 +277,95 @@ const Index = () => {
     {
       name: 'Get Request by Id',
       description: 'Get a request made by id',
-      inputUI: (
-        <QueryRequestForm
-          type={QueryRequestFormType.Request}
-          onChange={handleRequestIdChange}
-        />
-      ),
-      actionUI: (
-        <Action
-          enabled={Boolean(requestId)}
-          callback={async () => {
-            try {
-              const request = await client.getRequest(requestId as string);
-              console.log(request);
-              return request;
-            } catch (error) {
-              console.error(error);
-              return error;
-            }
-          }}
-        />
-      ),
+      inputs: [
+        {
+          title: 'Request ID',
+          type: InputType.TextField,
+          placeholder: 'E.g. Request ID',
+          onChange: (event: any) => {
+            handleRequestIdChange(event.currentTarget.value);
+          },
+        },
+      ],
+      action: {
+        enabled: Boolean(requestId),
+        callback: async () => {
+          try {
+            const request = await client.getRequest(requestId as string);
+            console.log(request);
+            return request;
+          } catch (error) {
+            console.error(error);
+            return error;
+          }
+        },
+      },
     },
     {
       name: 'Get all Requests',
       description: 'Get all requests',
-      actionUI: (
-        <Action
-          enabled
-          callback={async () => {
-            const requests = await client.listRequests();
-            return requests;
-          }}
-        />
-      ),
+      action: {
+        disabled: false,
+        callback: async () => {
+          const requests = await client.listRequests();
+          setSnapState({
+            ...snapState,
+            pendingRequests: requests,
+          });
+          return { requests };
+        },
+        label: 'List Pending Requests',
+      },
     },
     {
       name: 'Approve a request',
       description: 'Approve a request by their id',
-      inputUI: (
-        <QueryRequestForm
-          type={QueryRequestFormType.Request}
-          onChange={handleRequestIdChange}
-        />
-      ),
-      actionUI: (
-        <Action
-          enabled={Boolean(requestId) && !snapState.useSynchronousApprovals}
-          callback={async () => {
+      inputs: [
+        {
+          title: 'Request ID',
+          type: InputType.TextField,
+          placeholder: 'E.g. Request ID',
+          onChange: (event: any) => {
+            handleRequestIdChange(event.currentTarget.value);
+          },
+        },
+      ],
+      action: {
+        disabled: !requestId,
+        callback: async () => {
+          try {
             await client.approveRequest(requestId as string);
-          }}
-        />
-      ),
+          } catch (error) {
+            console.error(error);
+          }
+        },
+        label: 'Approve Request',
+      },
     },
     {
       name: 'Reject a request',
-      description: 'Get a request made by id',
-      inputUI: (
-        <QueryRequestForm
-          type={QueryRequestFormType.Request}
-          onChange={handleRequestIdChange}
-        />
-      ),
-      actionUI: (
-        <Action
-          enabled={Boolean(requestId) && !snapState.useSynchronousApprovals}
-          callback={async () => {
+      description: 'Reject a request by id',
+      inputs: [
+        {
+          title: 'Request ID',
+          type: InputType.TextField,
+          placeholder: 'E.g. Request ID',
+          onChange: (event: any) => {
+            handleRequestIdChange(event.currentTarget.value);
+          },
+        },
+      ],
+      action: {
+        disabled: !requestId,
+        callback: async () => {
+          try {
             await client.rejectRequest(requestId as string);
-          }}
-        />
-      ),
+          } catch (error) {
+            console.error(error);
+          }
+        },
+        label: 'Reject Request',
+      },
     },
   ];
 
@@ -426,7 +393,7 @@ const Index = () => {
       <StyledBox sx={{ flexGrow: 1 }}>
         <Grid container spacing={4} columns={[1, 2, 3]}>
           <Grid item xs={8} sm={4} md={2}>
-          <Toggle
+            <Toggle
               title="Use Synchronous Approval"
               checkedIcon="✅"
               uncheckedIcon="❌"
