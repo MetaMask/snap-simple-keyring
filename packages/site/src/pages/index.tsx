@@ -260,7 +260,6 @@ const Index = () => {
         disabled: false,
         callback: async () => {
           const accounts = await client.listAccounts();
-          console.log('[UI] list of accounts:', accounts);
           const addresses = accounts.map((a: { address: string }) => a.address);
           console.log(addresses);
           setSnapState({
