@@ -31,7 +31,12 @@ import { v4 as uuid } from 'uuid';
 
 import { SigningMethods } from './permissions';
 import { saveState } from './stateManagement';
-import { isEvmChain, serializeTransaction, isUniqueAccountName } from './util';
+import {
+  isEvmChain,
+  serializeTransaction,
+  isUniqueAccountName,
+  isUniqueAddress,
+} from './util';
 
 export type KeyringState = {
   wallets: Record<string, Wallet>;
@@ -71,6 +76,10 @@ export class SimpleKeyring implements Keyring {
 
     if (!isUniqueAccountName(name, Object.values(this.#wallets))) {
       throw new Error(`Account name already in use: ${name}`);
+    }
+
+    if (!isUniqueAddress(address, Object.values(this.#wallets))) {
+      throw new Error(`Account address already in use: ${address}`);
     }
 
     const account: KeyringAccount = {

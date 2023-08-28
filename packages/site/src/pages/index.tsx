@@ -142,7 +142,6 @@ const Index = () => {
       ...snapState,
       accounts,
     });
-    setPrivateKey(null);
     return newAccount;
   };
 
@@ -198,15 +197,11 @@ const Index = () => {
         },
         {
           title: 'Private Key',
+          value: privateKey,
           type: InputType.TextField,
           placeholder: 'Private key',
           onChange: (event: any) => {
             setPrivateKey(event.currentTarget.value);
-            // const uint8ArrayPK = toBuffer(event.currentTarget.value);
-            console.log({
-              privateKey: event.currentTarget.value,
-              // uint8ArrayPK,
-            });
           },
         },
       ],
