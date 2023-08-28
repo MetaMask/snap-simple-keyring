@@ -1,8 +1,8 @@
-import Grid from '@mui/material/Grid';
 import React, { useState } from 'react';
-import { GiAndroidMask, GiDeathStar } from 'react-icons/gi';
+import { IoIosArrowUp, IoIosArrowDown } from 'react-icons/io';
 import styled from 'styled-components';
 
+import { Method } from './Method';
 import { StyledBox } from './styledComponents';
 
 const AccordionContainer = styled.div`
@@ -13,21 +13,22 @@ const AccordionContainer = styled.div`
 const AccordionItem = styled.div`
   border: 1px solid #eaeaea;
   border-radius: 4px;
-  margin-bottom: 2rem;
+  margin-bottom: 20px;
   width: 100%;
 `;
 
 const AccordionHeader = styled.div`
-  padding: 16px;
+  margin: 16px;
   font-weight: bold;
   cursor: pointer;
   display: flex;
   justify-content: space-between;
+  font-size: 16px;
 `;
 
 const AccordionContent = styled.div`
-  padding: 16px;
   display: ${({ isOpen }: { isOpen: boolean }) => (isOpen ? 'block' : 'none')};
+  padding: 0px 32px;
 `;
 
 export const Accordion = ({ items }: any) => {
@@ -45,42 +46,29 @@ export const Accordion = ({ items }: any) => {
 
   return (
     <AccordionContainer>
-      {items.map((item: any, index: number) => (
-        <AccordionItem key={index}>
-          <AccordionHeader onClick={() => toggleAccordion(index)}>
-            {item.name}
-            {activeIndexes.includes(index) ? (
-              <GiAndroidMask />
-            ) : (
-              <GiDeathStar />
-            )}
-          </AccordionHeader>
-          <AccordionContent isOpen={activeIndexes.includes(index)}>
-            <StyledBox sx={{ flexGrow: 1 }}>
-              <Grid
-                container
-                direction="column"
-                spacing={4}
-                style={{
-                  overflowX: 'hidden',
-                }}
-              >
-                <Grid item xs={1}>
-                  {item.description}
-                </Grid>
-                {item.inputUI && (
-                  <Grid item xs={1}>
-                    {item.inputUI}
-                  </Grid>
-                )}
-                <Grid item xs={1}>
-                  {item.actionUI}
-                </Grid>
-              </Grid>
-            </StyledBox>
-          </AccordionContent>
-        </AccordionItem>
-      ))}
+      {items.map((item: any, index: number) => {
+        return (
+          <AccordionItem key={index}>
+            <AccordionHeader onClick={() => toggleAccordion(index)}>
+              {item.name}
+              {activeIndexes.includes(index) ? (
+                <IoIosArrowUp />
+              ) : (
+                <IoIosArrowDown />
+              )}
+            </AccordionHeader>
+            <AccordionContent isOpen={activeIndexes.includes(index)}>
+              <StyledBox sx={{ flexGrow: 1 }}>
+                <Method
+                  description={item.description}
+                  inputs={item.inputs}
+                  action={item.action}
+                />
+              </StyledBox>
+            </AccordionContent>
+          </AccordionItem>
+        );
+      })}
     </AccordionContainer>
   );
 };

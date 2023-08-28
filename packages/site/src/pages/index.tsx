@@ -5,13 +5,11 @@ import {
   KeyringRequest,
   KeyringSnapRpcClient,
 } from '@metamask/keyring-api';
-import { FormGroup, FormLabel, Input, TextField } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import { useContext, useState, useCallback, useEffect } from 'react';
 import { FiInfo, FiAlertTriangle } from 'react-icons/fi';
 
 import { Card, ConnectButton, AccountList, Accordion } from '../components';
-import { EditAccountForm } from '../components/EditAccount';
 import {
   QueryRequestForm,
   QueryRequestFormType,
@@ -26,13 +24,8 @@ import {
 } from '../components/styledComponents';
 import { defaultSnapOrigin } from '../config';
 import { MetamaskActions, MetaMaskContext } from '../hooks';
-import {
-  KeyringState,
-  connectSnap,
-  getSnap,
-  getSnapState,
-  sendHello,
-} from '../utils';
+import { InputType } from '../types';
+import { KeyringState, connectSnap, getSnap } from '../utils';
 
 const snapId = defaultSnapOrigin;
 
@@ -93,10 +86,14 @@ const Index = () => {
   const [state, dispatch] = useContext(MetaMaskContext);
   const [snapState, setSnapState] = useState<KeyringState>(initialState);
   const [accountName, setAccountName] = useState<string | null>();
+  // Is not a good practice to store sensitive data in the state of
+  // a component but for this case it should be ok since this is an
+  // internal development and testing tool.
+  const [privateKey, setPrivateKey] = useState<string | null>();
   const [accountId, setAccountId] = useState<string | null>();
   const [requestId, setRequestId] = useState<string | null>(null);
-  const [accountPayload, setAccountPayload] =
-    useState<Pick<KeyringAccount, 'name' | 'options'>>();
+  // const [accountPayload, setAccountPayload] =
+  //   useState<Pick<KeyringAccount, 'name' | 'options'>>();
   const client = new KeyringSnapRpcClient(snapId, window.ethereum);
 
   useEffect(() => {
@@ -112,13 +109,6 @@ const Index = () => {
     getState().catch((error) => console.error(error));
   }, []);
 
-  const handleAccountIdChange = useCallback(
-    (newAccountId: string) => {
-      setAccountId(newAccountId);
-    },
-    [accountId],
-  );
-
   const handleRequestIdChange = useCallback(
     (newRequestId: string) => {
       setRequestId(newRequestId);
@@ -126,21 +116,33 @@ const Index = () => {
     [requestId],
   );
 
-  const handleAccountPayloadChange = useCallback(
-    (newAccountPayload: KeyringAccount) => {
-      setAccountPayload(newAccountPayload);
-    },
-    [accountPayload],
-  );
+  // const handleAccountPayloadChange = useCallback(
+  //   (newAccountPayload: KeyringAccount) => {
+  //     setAccountPayload(newAccountPayload);
+  //   },
+  //   [accountPayload],
+  // );
 
   const sendCreateAccount = async () => {
-    console.log('Creating account', accountName);
     const newAccount = await client.createAccount(accountName as string);
     const accounts = await client.listAccounts();
     setSnapState({
       ...snapState,
       accounts,
     });
+    return newAccount;
+  };
+
+  const importAccount = async () => {
+    const newAccount = await client.createAccount(accountName as string, {
+      privateKey: privateKey as string,
+    });
+    const accounts = await client.listAccounts();
+    setSnapState({
+      ...snapState,
+      accounts,
+    });
+    setPrivateKey(null);
     return newAccount;
   };
 
@@ -159,136 +161,145 @@ const Index = () => {
     }
   };
 
-  const utilityMethods = [
-    {
-      name: 'Send hello',
-      description: 'Send a simple hello, not a goodbye',
-      actionUI: <Action enabled callback={async () => await sendHello()} />,
-    },
-  ];
-
   const accountManagementMethods = [
     {
       name: 'Create Account',
       description: 'Method to create a new account',
-      inputUI: (
-        <FormGroup>
-          <FormLabel>Account Name</FormLabel>
-          <TextField
-            fullWidth
-            type="text"
-            variant="outlined"
-            label={'Name'}
-            placeholder="Name"
-            onChange={(event) => {
-              console.log(event.target.value);
-              setAccountName(event.target.value);
-            }}
-          />
-        </FormGroup>
-      ),
-      actionUI: (
-        <Action
-          enabled={Boolean(accountName)}
-          callback={async () => {
-            return await sendCreateAccount();
-          }}
-        />
-      ),
+      inputs: [
+        {
+          title: 'Account Name',
+          type: InputType.TextField,
+          placeholder: 'E.g. My new account',
+          onChange: (event: any) => {
+            setAccountName(event.currentTarget.value);
+          },
+        },
+      ],
+      action: {
+        disabled: Boolean(accountName),
+        callback: async () => {
+          return await sendCreateAccount();
+        },
+        label: 'Create Account',
+      },
+      successMessage: 'Account Created',
+    },
+    {
+      name: 'Import Account (Private Key)',
+      description: 'Method to import an account',
+      inputs: [
+        {
+          title: 'Account Name',
+          type: InputType.TextField,
+          placeholder: 'E.g. My new account',
+          onChange: (event: any) => {
+            setAccountName(event.currentTarget.value);
+          },
+        },
+        {
+          title: 'Private Key',
+          type: InputType.TextField,
+          placeholder: 'Private key',
+          onChange: (event: any) => {
+            setPrivateKey(event.currentTarget.value);
+            // const uint8ArrayPK = toBuffer(event.currentTarget.value);
+            console.log({
+              privateKey: event.currentTarget.value,
+              // uint8ArrayPK,
+            });
+          },
+        },
+      ],
+      action: {
+        disabled: Boolean(accountName),
+        callback: async () => {
+          return await importAccount();
+        },
+        label: 'Import Account',
+      },
+      successMessage: 'Account Imported',
     },
     {
       name: 'Get Account',
       description: 'Get the data about a select account',
-      inputUI: (
-        <QueryRequestForm
-          type={QueryRequestFormType.Account}
-          onChange={handleAccountIdChange}
-        />
-      ),
-      actionUI: (
-        <Action
-          enabled={Boolean(accountId)}
-          callback={async () => {
-            try {
-              const account = await client.getAccount(accountId as string);
-              return account;
-            } catch (error) {
-              console.error(error);
-              dispatch({ type: MetamaskActions.SetError, payload: error });
-            }
-          }}
-        />
-      ),
-    },
-    {
-      name: 'Edit Account',
-      descriptions:
-        'Edit an account (provide a object with the attributes to update)',
-      inputUI: (
-        <EditAccountForm
-          accounts={snapState.accounts}
-          onChange={handleAccountPayloadChange}
-        />
-      ),
-      actionUI: (
-        <Action
-          enabled
-          callback={async () => {
-            const result = await client.updateAccount(
-              accountPayload as KeyringAccount,
-            );
-            const accounts = await client.listAccounts();
-            setSnapState({
-              accounts,
-              pendingRequests: {
-                ...snapState.pendingRequests,
-              },
+      inputs: [
+        {
+          title: 'Account ID',
+          type: InputType.Dropdown,
+          placeholder: 'Select Account ID',
+          options: snapState.accounts.map((account) => {
+            return { value: account.address };
+          }),
+          onChange: (event: any) => {
+            snapState.accounts.forEach((account) => {
+              if (account.address === event.currentTarget.value) {
+                setAccountId(account.id);
+              }
             });
-            return result;
-          }}
-        />
-      ),
+          },
+        },
+      ],
+      action: {
+        disabled: Boolean(accountId),
+        callback: async () => {
+          try {
+            const account = await client.getAccount(accountId as string);
+            return account;
+          } catch (error) {
+            dispatch({ type: MetamaskActions.SetError, payload: error });
+          }
+        },
+        label: 'Get data',
+      },
+      successMessage: 'Data Fetched',
     },
     {
       name: 'List Accounts',
       description: 'Method to list all account that the SSK manages',
-      actionUI: (
-        <Action
-          enabled
-          callback={async () => {
-            const accounts = await client.listAccounts();
-            console.log('[UI] list of accounts:', accounts);
-            const addresses = accounts.map(
-              (a: { address: string }) => a.address,
-            );
-            console.log(addresses);
-            setSnapState({
-              ...snapState,
-              accounts,
-            });
-            return { accounts };
-          }}
-        />
-      ),
+      action: {
+        disabled: false,
+        callback: async () => {
+          const accounts = await client.listAccounts();
+          console.log('[UI] list of accounts:', accounts);
+          const addresses = accounts.map((a: { address: string }) => a.address);
+          console.log(addresses);
+          setSnapState({
+            ...snapState,
+            accounts,
+          });
+          return { accounts };
+        },
+        label: 'List Accounts',
+      },
     },
     {
       name: 'Remove Account',
       description: 'Remove a select account',
-      inputUI: (
-        <QueryRequestForm
-          type={QueryRequestFormType.Account}
-          onChange={handleAccountIdChange}
-        />
-      ),
-      actionUI: (
-        <Action
-          enabled={Boolean(accountId)}
-          callback={async () => {
-            const result = await client.deleteAccount(accountId as string);
-            return result;
-          }}
-        />
-      ),
+      inputs: [
+        {
+          title: 'Account ID',
+          type: InputType.Dropdown,
+          placeholder: 'Select Account ID',
+          options: snapState.accounts.map((account) => {
+            return { value: account.address };
+          }),
+          onChange: (event: any) => {
+            snapState.accounts.forEach((account) => {
+              if (account.address === event.currentTarget.value) {
+                setAccountId(account.id);
+              }
+            });
+          },
+        },
+      ],
+      action: {
+        disabled: Boolean(accountId),
+        callback: async () => {
+          await client.deleteAccount(accountId as string);
+        },
+        label: 'Remove account',
+      },
+      successMessage: 'Account Removed',
     },
   ];
 
@@ -396,18 +407,16 @@ const Index = () => {
         <Grid container spacing={4} columns={[1, 2, 3]}>
           <Grid item xs={8} sm={4} md={2}>
             <Divider />
-            <DividerTitle>Account Management Methods</DividerTitle>
+            <DividerTitle>Methods</DividerTitle>
             <Accordion items={accountManagementMethods} />
             <Divider />
             <DividerTitle>Request Methods</DividerTitle>
             <Accordion items={requestMethods} />
             <Divider />
-            <DividerTitle>Utility Methods</DividerTitle>
-            <Accordion items={utilityMethods} />
           </Grid>
           <Grid item xs={4} sm={2} md={1}>
             <Divider />
-            <DividerTitle>Current Accounts</DividerTitle>
+            <DividerTitle>Accounts</DividerTitle>
             <AccountList accounts={snapState.accounts} />
           </Grid>
         </Grid>

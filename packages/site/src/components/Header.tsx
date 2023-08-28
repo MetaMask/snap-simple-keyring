@@ -12,7 +12,8 @@ const HeaderWrapper = styled.header`
   justify-content: space-between;
   align-items: center;
   padding: 2.4rem;
-  border-bottom: 1px solid ${(props) => props.theme.colors.border.default};
+  padding-left: 5%;
+  padding-right: 5%;
 `;
 
 const Title = styled.p`
@@ -62,14 +63,9 @@ export const Header = ({
   return (
     <HeaderWrapper>
       <LogoWrapper>
-        <SnapLogo color={theme.colors.icon.default} size={36} />
-        <Title>SSK - Snap Simple Keyring</Title>
+        <Title>🔑 Snap Simple Keyring</Title>
       </LogoWrapper>
       <RightContainer>
-        <Toggle
-          onToggle={handleToggleClick}
-          defaultChecked={getThemePreference()}
-        />
         <HeaderButtons state={state} onConnectClick={handleConnectClick} />
       </RightContainer>
     </HeaderWrapper>
