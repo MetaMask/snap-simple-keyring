@@ -199,22 +199,22 @@ export class SimpleKeyring implements Keyring {
     return walletMatch;
   }
 
-  #getKeyPair(pk?: string): {
+  #getKeyPair(privateKey?: string): {
     privateKey: string;
     address: string;
   } {
-    const pkBuffer = pk
-      ? toBuffer(addHexPrefix(pk))
+    const privateKeyBuffer = privateKey
+      ? toBuffer(addHexPrefix(privateKey))
       : Buffer.from(crypto.getRandomValues(new Uint8Array(32)));
 
-    if (!isValidPrivate(pkBuffer)) {
+    if (!isValidPrivate(privateKeyBuffer)) {
       throw new Error('Invalid private key');
     }
 
     const address = toChecksumAddress(
-      Address.fromPrivateKey(pkBuffer).toString(),
+      Address.fromPrivateKey(privateKeyBuffer).toString(),
     );
-    return { privateKey: pkBuffer.toString('hex'), address };
+    return { privateKey: privateKeyBuffer.toString('hex'), address };
   }
 
   #handleSigningRequest(method: string, params: Json): Json {
