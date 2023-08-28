@@ -86,6 +86,10 @@ const Index = () => {
   const [state, dispatch] = useContext(MetaMaskContext);
   const [snapState, setSnapState] = useState<KeyringState>(initialState);
   const [accountName, setAccountName] = useState<string | null>();
+  // Is not a good practice to store sensitive data in the state of
+  // a component but for this case it should be ok since this is an
+  // internal development and testing tool.
+  const [privateKey, setPrivateKey] = useState<string | null>();
   const [accountId, setAccountId] = useState<string | null>();
   const [requestId, setRequestId] = useState<string | null>(null);
   // const [accountPayload, setAccountPayload] =
