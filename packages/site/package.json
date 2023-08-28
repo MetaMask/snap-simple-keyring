@@ -33,7 +33,6 @@
     "@mui/material": "^5.14.0",
     "@types/uuid": "^9.0.1",
     "buffer": "^6.0.3",
-    "gatsby-omni-font-loader": "^2.0.2",
     "gatsby-plugin-react-helmet": "^6.11.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
