@@ -299,6 +299,7 @@ const Index = () => {
             return error;
           }
         },
+        label: 'Get Request',
       },
     },
     {
