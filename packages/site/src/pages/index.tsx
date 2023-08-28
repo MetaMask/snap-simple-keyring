@@ -129,6 +129,19 @@ const Index = () => {
     return newAccount;
   };
 
+  const importAccount = async () => {
+    const newAccount = await client.createAccount(accountName as string, {
+      privateKey: privateKey as string,
+    });
+    const accounts = await client.listAccounts();
+    setSnapState({
+      ...snapState,
+      accounts,
+    });
+    setPrivateKey(null);
+    return newAccount;
+  };
+
   const handleConnectClick = async () => {
     try {
       await connectSnap();
