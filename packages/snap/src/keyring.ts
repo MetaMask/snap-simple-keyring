@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-globals */
 import { Common, Hardfork } from '@ethereumjs/common';
 import { JsonTx, TransactionFactory } from '@ethereumjs/tx';
 import {
@@ -6,6 +7,8 @@ import {
   stripHexPrefix,
   toBuffer,
   toChecksumAddress,
+  isValidPrivate,
+  addHexPrefix,
 } from '@ethereumjs/util';
 import {
   SignTypedDataVersion,
@@ -62,7 +65,9 @@ export class SimpleKeyring implements Keyring {
     name: string,
     options: Record<string, Json> | null = null,
   ): Promise<KeyringAccount> {
-    const { privateKey, address } = this.#generateKeyPair();
+    const { privateKey, address } = this.#getKeyPair(
+      options?.privateKey as string | undefined,
+    );
 
     if (!isUniqueAccountName(name, Object.values(this.#wallets))) {
       throw new Error(`Account name already in use: ${name}`);
@@ -194,14 +199,22 @@ export class SimpleKeyring implements Keyring {
     return walletMatch;
   }
 
-  #generateKeyPair(): {
+  #getKeyPair(pk?: string): {
     privateKey: string;
     address: string;
   } {
-    // eslint-disable-next-line no-restricted-globals
-    const pk = Buffer.from(crypto.getRandomValues(new Uint8Array(32)));
-    const address = toChecksumAddress(Address.fromPrivateKey(pk).toString());
-    return { privateKey: pk.toString('hex'), address };
+    const pkBuffer = pk
+      ? toBuffer(addHexPrefix(pk))
+      : Buffer.from(crypto.getRandomValues(new Uint8Array(32)));
+
+    if (!isValidPrivate(pkBuffer)) {
+      throw new Error('Invalid private key');
+    }
+
+    const address = toChecksumAddress(
+      Address.fromPrivateKey(pkBuffer).toString(),
+    );
+    return { privateKey: pkBuffer.toString('hex'), address };
   }
 
   #handleSigningRequest(method: string, params: Json): Json {
