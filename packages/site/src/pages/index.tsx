@@ -123,14 +123,14 @@ const Index = () => {
     }
   };
 
-  const handleUseSyncToggle = async () => {
+  const handleUseSyncToggle = useCallback(async () => {
     console.log('Toggling synchronous approval');
     await toggleSynchronousApprovals();
     setSnapState({
       ...snapState,
       useSynchronousApprovals: !snapState.useSynchronousApprovals,
     });
-  };
+  }, [snapState]);
 
   const accountManagementMethods = [
     {
