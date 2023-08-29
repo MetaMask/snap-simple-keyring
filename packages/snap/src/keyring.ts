@@ -194,38 +194,38 @@ export class SimpleKeyring implements Keyring {
     return this.#handleAsyncSubmitRequest(request);
   }
 
-  async approveRequest(_id: string): Promise<void> {
+  async approveRequest(id: string): Promise<void> {
     if (this.#useSynchronousApprovals) {
       throw new Error(
         'The "approveRequest" method is not when synchronous approvals are enabled. Disable synchronous approvals by calling toggleSynchronousApprovals.',
       );
     } else {
-      const request: KeyringRequest = await this.getRequest(_id);
+      const request: KeyringRequest = await this.getRequest(id);
       const { method, params = '' } = request.request as JsonRpcRequest;
       const signature = this.#handleSigningRequest(method, params);
-      await this.#removePendingRequest(_id);
+      await this.#removePendingRequest(id);
       await snap.request({
         method: 'snap_manageAccounts',
         params: {
           method: 'submitResponse',
-          params: { id: _id, result: signature },
+          params: { id, result: signature },
         },
       });
     }
   }
 
-  async rejectRequest(_id: string): Promise<void> {
+  async rejectRequest(id: string): Promise<void> {
     if (this.#useSynchronousApprovals) {
       throw new Error(
         'The "rejectRequest" method is not when synchronous approvals are enabled. Disable synchronous approvals by calling toggleSynchronousApprovals.',
       );
     } else {
-      await this.#removePendingRequest(_id);
+      await this.#removePendingRequest(id);
       await snap.request({
         method: 'snap_manageAccounts',
         params: {
           method: 'submitResponse',
-          params: { id: _id, result: null },
+          params: { id, result: null },
         },
       });
     }
