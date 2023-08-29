@@ -41,6 +41,7 @@ import {
 export type KeyringState = {
   wallets: Record<string, Wallet>;
   requests: Record<string, KeyringRequest>;
+  useSynchronousApprovals: boolean;
 };
 
 export type Wallet = {
@@ -51,11 +52,14 @@ export type Wallet = {
 export class SimpleKeyring implements Keyring {
   #wallets: Record<string, Wallet>;
 
-  #requests: Record<string, KeyringRequest>;
+  #useSynchronousApprovals = false;
+
+  #pendingRequests: Record<string, KeyringRequest>;
 
   constructor(state: KeyringState) {
     this.#wallets = state.wallets;
-    this.#requests = state.requests;
+    this.#pendingRequests = state.requests;
+    this.#useSynchronousApprovals = state.useSynchronousApprovals || false;
   }
 
   async listAccounts(): Promise<KeyringAccount[]> {
@@ -114,6 +118,14 @@ export class SimpleKeyring implements Keyring {
     return account;
   }
 
+  toggleSynchronousApprovals(): void {
+    this.#useSynchronousApprovals = !this.#useSynchronousApprovals;
+  }
+
+  isSynchronousMode(): boolean {
+    return this.#useSynchronousApprovals;
+  }
+
   async filterAccountChains(_id: string, chains: string[]): Promise<string[]> {
     // The `id` argument is not used because all accounts created by this snap
     // are expected to be compatible with any EVM chain.
@@ -162,11 +174,14 @@ export class SimpleKeyring implements Keyring {
   }
 
   async listRequests(): Promise<KeyringRequest[]> {
-    return Object.values(this.#requests);
+    return Object.values(this.#pendingRequests);
   }
 
   async getRequest(id: string): Promise<KeyringRequest> {
-    return this.#requests[id];
+    if (this.#pendingRequests[id] === undefined) {
+      return this.#pendingRequests[id];
+    }
+    throw new Error(`No pending request found with id: ${id}`);
   }
 
   // This snap implements a synchronous keyring, which means that the request
@@ -176,24 +191,101 @@ export class SimpleKeyring implements Keyring {
   // In an asynchronous implementation, the request should be stored in queue
   // of pending requests to be approved or rejected by the user.
   async submitRequest(request: KeyringRequest): Promise<SubmitRequestResponse> {
+    if (this.#useSynchronousApprovals) {
+      return this.#handleSynchronousSubmitRequest(request);
+    }
+    return this.#handleAsyncSubmitRequest(request);
+  }
+
+  async approveRequest(id: string): Promise<void> {
+    if (this.#useSynchronousApprovals) {
+      throw new Error(
+        'The "approveRequest" method is not available when synchronous approvals are enabled. Disable synchronous approvals by calling toggleSynchronousApprovals.',
+      );
+    } else {
+      try {
+        const request: KeyringRequest = await this.getRequest(id);
+        const { method, params = '' } = request.request as JsonRpcRequest;
+        const signature = this.#handleSigningRequest(method, params);
+        await this.#removePendingRequest(id);
+        await snap.request({
+          method: 'snap_manageAccounts',
+          params: {
+            method: 'submitResponse',
+            params: { id, result: signature },
+          },
+        });
+      } catch (error) {
+        throw new Error(
+          `Cannot approve request with id: ${id}. Error: ${
+            (error as Error).message
+          }`,
+        );
+      }
+    }
+  }
+
+  async rejectRequest(id: string): Promise<void> {
+    if (this.#useSynchronousApprovals) {
+      throw new Error(
+        'The "rejectRequest" method is not available when synchronous approvals are enabled. Disable synchronous approvals by calling toggleSynchronousApprovals.',
+      );
+    } else {
+      try {
+        // Check if id is in pendingRequests list
+        if (this.#pendingRequests[id] === undefined) {
+          throw new Error(`No pending request found with id: ${id}`);
+        }
+        await this.#removePendingRequest(id);
+        await snap.request({
+          method: 'snap_manageAccounts',
+          params: {
+            method: 'submitResponse',
+            params: { id, result: null },
+          },
+        });
+      } catch (error) {
+        throw new Error(
+          `Cannot reject request with id: ${id}. Error: ${
+            (error as Error).message
+          }`,
+        );
+      }
+    }
+  }
+
+  async #removePendingRequest(id: string): Promise<void> {
+    try {
+      delete this.#pendingRequests[id];
+      await this.#saveState();
+    } catch (error) {
+      throw new Error(
+        `Cannot remove pending request with id: ${id}. Error: ${
+          (error as Error).message
+        }`,
+      );
+    }
+  }
+
+  async #handleAsyncSubmitRequest(
+    request: KeyringRequest,
+  ): Promise<SubmitRequestResponse> {
+    this.#pendingRequests[request.request.id] = request;
+    await this.#saveState();
+    return {
+      pending: true,
+    };
+  }
+
+  async #handleSynchronousSubmitRequest(
+    request: KeyringRequest,
+  ): Promise<SubmitRequestResponse> {
     const { method, params = '' } = request.request as JsonRpcRequest;
     const signature = this.#handleSigningRequest(method, params);
     return {
       pending: false,
       result: signature,
     };
-  }
-
-  async approveRequest(_id: string): Promise<void> {
-    throw new Error(
-      'The "approveRequest" method is not available on this snap.',
-    );
-  }
-
-  async rejectRequest(_id: string): Promise<void> {
-    throw new Error(
-      'The "rejectRequest" method is not available on this snap.',
-    );
   }
 
   #getWalletByAddress(address: string): Wallet {
@@ -340,7 +432,8 @@ export class SimpleKeyring implements Keyring {
   async #saveState(): Promise<void> {
     await saveState({
       wallets: this.#wallets,
-      requests: this.#requests,
+      requests: this.#pendingRequests,
+      useSynchronousApprovals: this.#useSynchronousApprovals,
     });
   }
 }

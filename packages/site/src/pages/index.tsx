@@ -1,85 +1,46 @@
-/* eslint-disable import/no-extraneous-dependencies */
-/* eslint-disable @typescript-eslint/no-misused-promises */
 import {
   KeyringAccount,
   KeyringRequest,
   KeyringSnapRpcClient,
 } from '@metamask/keyring-api';
 import Grid from '@mui/material/Grid';
-import { useContext, useState, useCallback, useEffect } from 'react';
-import { FiInfo, FiAlertTriangle } from 'react-icons/fi';
+import { useCallback, useContext, useEffect, useState } from 'react';
 
-import { Card, ConnectButton, AccountList, Accordion } from '../components';
 import {
-  QueryRequestForm,
-  QueryRequestFormType,
-} from '../components/QueryRequestForm';
+  Accordion,
+  AccountList,
+  Card,
+  ConnectButton,
+  Toggle,
+} from '../components';
 import {
-  Container,
   CardContainer,
+  Container,
   Divider,
   DividerTitle,
-  InformationBox,
   StyledBox,
 } from '../components/styledComponents';
 import { defaultSnapOrigin } from '../config';
-import { MetamaskActions, MetaMaskContext } from '../hooks';
+import { MetaMaskContext, MetamaskActions } from '../hooks';
 import { InputType } from '../types';
-import { KeyringState, connectSnap, getSnap } from '../utils';
+import {
+  KeyringState,
+  connectSnap,
+  getSnap,
+  isSynchronousMode,
+  toggleSynchronousApprovals,
+} from '../utils';
 
 const snapId = defaultSnapOrigin;
 
 const initialState: {
   pendingRequests: KeyringRequest[];
   accounts: KeyringAccount[];
+  useSynchronousApprovals: boolean;
 } = {
   pendingRequests: [],
   accounts: [],
-};
-
-const Action = ({
-  enabled = true,
-  callback,
-}: {
-  enabled: boolean;
-  callback: () => Promise<any>;
-}) => {
-  const [, dispatch] = useContext(MetaMaskContext);
-  const [response, setResponse] = useState<string | null>();
-  const [error, setError] = useState<string | null>();
-
-  const method = async (): Promise<void> => {
-    setResponse(null);
-    setError(null);
-
-    try {
-      const newResponse = await callback();
-      setResponse(JSON.stringify(newResponse));
-    } catch (newError: any) {
-      dispatch({ type: MetamaskActions.SetError, payload: newError });
-      setError(JSON.stringify(newError));
-    }
-  };
-
-  return (
-    <>
-      <button onClick={method} disabled={!enabled}>
-        Execute
-      </button>
-      {response && (
-        <InformationBox error={false}>
-          <FiInfo />
-          <p>{response}</p>
-        </InformationBox>
-      )}
-      {error && (
-        <InformationBox error={true}>
-          <FiAlertTriangle />
-          <p>{error}</p>
-        </InformationBox>
-      )}
-    </>
-  );
+  useSynchronousApprovals: false,
 };
 
 const Index = () => {
@@ -100,9 +61,11 @@ const Index = () => {
     async function getState() {
       const accounts = await client.listAccounts();
       const pendingRequests = await client.listRequests();
+      const isSynchronous = await isSynchronousMode();
       setSnapState({
         accounts,
         pendingRequests,
+        useSynchronousApprovals: isSynchronous,
       });
     }
 
@@ -159,6 +122,15 @@ const Index = () => {
       dispatch({ type: MetamaskActions.SetError, payload: error });
     }
   };
+
+  const handleUseSyncToggle = useCallback(async () => {
+    console.log('Toggling synchronous approval');
+    await toggleSynchronousApprovals();
+    setSnapState({
+      ...snapState,
+      useSynchronousApprovals: !snapState.useSynchronousApprovals,
+    });
+  }, [snapState]);
 
   const accountManagementMethods = [
     {
@@ -301,78 +273,102 @@ const Index = () => {
     {
       name: 'Get Request by Id',
       description: 'Get a request made by id',
-      inputUI: (
-        <QueryRequestForm
-          type={QueryRequestFormType.Request}
-          onChange={handleRequestIdChange}
-        />
-      ),
-      actionUI: (
-        <Action
-          enabled={Boolean(requestId)}
-          callback={async () => {
-            try {
-              const request = await client.getRequest(requestId as string);
-              console.log(request);
-              return request;
-            } catch (error) {
-              console.error(error);
-              return error;
-            }
-          }}
-        />
-      ),
+      inputs: [
+        {
+          title: 'Request ID',
+          type: InputType.TextField,
+          placeholder: 'E.g. Request ID',
+          onChange: (event: any) => {
+            handleRequestIdChange(event.currentTarget.value);
+          },
+        },
+      ],
+      action: {
+        enabled: Boolean(requestId),
+        callback: async () => {
+          try {
+            const request = await client.getRequest(requestId as string);
+            console.log(request);
+            return request;
+          } catch (error) {
+            console.error(error);
+            return error;
+          }
+        },
+        label: 'Get Request',
+      },
     },
     {
       name: 'Get all Requests',
       description: 'Get all requests',
-      actionUI: (
-        <Action
-          enabled
-          callback={async () => {
-            const requests = await client.listRequests();
-            return requests;
-          }}
-        />
-      ),
+      action: {
+        disabled: false,
+        callback: async () => {
+          const requests = await client.listRequests();
+          setSnapState({
+            ...snapState,
+            pendingRequests: requests,
+          });
+          return { requests };
+        },
+        label: 'List Pending Requests',
+      },
     },
     {
       name: 'Approve a request',
       description: 'Approve a request by their id',
-      inputUI: (
-        <QueryRequestForm
-          type={QueryRequestFormType.Request}
-          onChange={handleRequestIdChange}
-        />
-      ),
-      actionUI: (
-        <Action
-          enabled={Boolean(requestId)}
-          callback={async () => {
-            const request = await client.approveRequest(requestId as string);
-            return request;
-          }}
-        />
-      ),
+      inputs: [
+        {
+          title: 'Request ID',
+          type: InputType.TextField,
+          placeholder: 'E.g. Request ID',
+          onChange: (event: any) => {
+            handleRequestIdChange(event.currentTarget.value);
+          },
+        },
+      ],
+      action: {
+        disabled: !requestId,
+        callback: async () => {
+          try {
+            await client.approveRequest(requestId as string);
+            return 'Approved';
+          } catch (error) {
+            console.error(error);
+            throw error;
+          }
+        },
+        label: 'Approve Request',
+      },
+      successMessage: 'Request Approved',
     },
     {
       name: 'Reject a request',
-      description: 'Get a request made by id',
-      inputUI: (
-        <QueryRequestForm
-          type={QueryRequestFormType.Request}
-          onChange={handleRequestIdChange}
-        />
-      ),
-      actionUI: (
-        <Action
-          enabled={Boolean(requestId)}
-          callback={async () => {
-            const request = await client.rejectRequest(requestId as string);
-            return request;
-          }}
-        />
-      ),
+      description: 'Reject a request by id',
+      inputs: [
+        {
+          title: 'Request ID',
+          type: InputType.TextField,
+          placeholder: 'E.g. Request ID',
+          onChange: (event: any) => {
+            handleRequestIdChange(event.currentTarget.value);
+          },
+        },
+      ],
+      action: {
+        disabled: !requestId,
+        callback: async () => {
+          try {
+            await client.rejectRequest(requestId as string);
+            return 'Rejected';
+          } catch (error) {
+            console.error(error);
+            throw error;
+          }
+        },
+        label: 'Reject Request',
+      },
+      successMessage: 'Request Rejected',
     },
   ];
 
@@ -400,7 +396,15 @@ const Index = () => {
       <StyledBox sx={{ flexGrow: 1 }}>
         <Grid container spacing={4} columns={[1, 2, 3]}>
           <Grid item xs={8} sm={4} md={2}>
-            <Divider />
+            <DividerTitle>Options</DividerTitle>
+            <Toggle
+              title="Use Synchronous Approval"
+              checkedIcon="✅"
+              uncheckedIcon="❌"
+              defaultChecked={snapState.useSynchronousApprovals}
+              onToggle={handleUseSyncToggle}
+            />
+            <Divider>&nbsp;</Divider>
             <DividerTitle>Methods</DividerTitle>
             <Accordion items={accountManagementMethods} />
             <Divider />

@@ -22,6 +22,8 @@ export enum InternalMethod {
   GetState = 'snap.internal.getState',
   SetState = 'snap.internal.setState',
   ManageAccounts = 'snap.internal.manageAccounts',
+  ToggleSynchronousApprovals = 'snap.internal.toggleSynchronousApprovals',
+  IsSynchronousMode = 'snap.internal.isSynchronousMode',
 }
 
 export enum SigningMethods {
@@ -58,11 +60,14 @@ export const PERMISSIONS = new Map<string, string[]>([
       RequestMethods.ApproveRequest,
       RequestMethods.DeleteRequest,
       RequestMethods.RejectRequest,
+      RequestMethods.GetRequest,
       InternalMethod.AwaitEvent,
       InternalMethod.Hello,
       InternalMethod.GetState,
       InternalMethod.SetState,
       InternalMethod.ManageAccounts,
+      InternalMethod.ToggleSynchronousApprovals,
+      InternalMethod.IsSynchronousMode,
     ],
   ],
   [
@@ -78,11 +83,14 @@ export const PERMISSIONS = new Map<string, string[]>([
       RequestMethods.ApproveRequest,
       RequestMethods.DeleteRequest,
       RequestMethods.RejectRequest,
+      RequestMethods.GetRequest,
       InternalMethod.AwaitEvent,
       InternalMethod.Hello,
       InternalMethod.GetState,
       InternalMethod.SetState,
       InternalMethod.ManageAccounts,
+      InternalMethod.ToggleSynchronousApprovals,
+      InternalMethod.IsSynchronousMode,
     ],
   ],
 ]);

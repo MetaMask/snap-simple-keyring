@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 type CheckedProps = {
@@ -89,14 +89,32 @@ const ToggleCircle = styled.div<CheckedProps>`
   transition: all 0.25s ease;
 `;
 
+const Label = styled.span`
+  display: inline-block;
+  margin: 0;
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+`;
+
 export const Toggle = ({
   onToggle,
   defaultChecked = false,
+  title,
+  checkedIcon = '🌞',
+  uncheckedIcon = '🌜',
 }: {
   onToggle(): void;
   defaultChecked?: boolean;
+  title?: string;
+  checkedIcon?: string;
+  uncheckedIcon?: string;
 }) => {
   const [checked, setChecked] = useState(defaultChecked);
+
+  useEffect(() => {
+    setChecked(defaultChecked);
+  }, [defaultChecked]);
 
   const handleChange = () => {
     onToggle();
@@ -104,17 +122,20 @@ export const Toggle = ({
   };
 
   return (
-    <ToggleWrapper onClick={handleChange}>
-      <ToggleContainer>
-        <CheckedContainer checked={checked}>
-          <span>🌞</span>
-        </CheckedContainer>
-        <UncheckedContainer checked={checked}>
-          <span>🌜</span>
-        </UncheckedContainer>
-      </ToggleContainer>
-      <ToggleCircle checked={checked} />
-      <ToggleInput type="checkbox" aria-label="Toggle Button" />
-    </ToggleWrapper>
+    <div>
+      <ToggleWrapper onClick={handleChange}>
+        <ToggleContainer>
+          <CheckedContainer checked={checked}>
+            <span>{checkedIcon}</span>
+          </CheckedContainer>
+          <UncheckedContainer checked={checked}>
+            <span>{uncheckedIcon}</span>
+          </UncheckedContainer>
+        </ToggleContainer>
+        <ToggleCircle checked={checked} />
+        <ToggleInput type="checkbox" aria-label="Toggle Button" />
+      </ToggleWrapper>
+      <Label>{title}</Label>
+    </div>
   );
 };
