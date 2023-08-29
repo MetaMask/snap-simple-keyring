@@ -56,6 +56,17 @@ export function isUniqueAccountName(name: string, wallets: Wallet[]): boolean {
 }
 
 /**
+ * Validates whether there are no duplicate addresses in the provided array of wallets.
+ *
+ * @param address - The address to validate for duplication.
+ * @param wallets - The array of wallets to search for duplicate addresses.
+ * @returns Returns true if no duplicate addresses are found, otherwise false.
+ */
+export function isUniqueAddress(address: string, wallets: Wallet[]): boolean {
+  return !wallets.find((wallet) => wallet.account.address === address);
+}
+
+/**
  * Determines whether the given CAIP-2 chain ID represents an EVM-based chain.
  *
  * @param caip2ChainId - The CAIP-2 chain ID to check.

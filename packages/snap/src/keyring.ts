@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-globals */
 import { Common, Hardfork } from '@ethereumjs/common';
 import { JsonTx, TransactionFactory } from '@ethereumjs/tx';
 import {
@@ -6,6 +7,8 @@ import {
   stripHexPrefix,
   toBuffer,
   toChecksumAddress,
+  isValidPrivate,
+  addHexPrefix,
 } from '@ethereumjs/util';
 import {
   SignTypedDataVersion,
@@ -28,7 +31,12 @@ import { v4 as uuid } from 'uuid';
 
 import { SigningMethods } from './permissions';
 import { saveState } from './stateManagement';
-import { isEvmChain, serializeTransaction, isUniqueAccountName } from './util';
+import {
+  isEvmChain,
+  serializeTransaction,
+  isUniqueAccountName,
+  isUniqueAddress,
+} from './util';
 
 export type KeyringState = {
   wallets: Record<string, Wallet>;
@@ -62,10 +70,16 @@ export class SimpleKeyring implements Keyring {
     name: string,
     options: Record<string, Json> | null = null,
   ): Promise<KeyringAccount> {
-    const { privateKey, address } = this.#generateKeyPair();
+    const { privateKey, address } = this.#getKeyPair(
+      options?.privateKey as string | undefined,
+    );
 
     if (!isUniqueAccountName(name, Object.values(this.#wallets))) {
       throw new Error(`Account name already in use: ${name}`);
+    }
+
+    if (!isUniqueAddress(address, Object.values(this.#wallets))) {
+      throw new Error(`Account address already in use: ${address}`);
     }
 
     const account: KeyringAccount = {
@@ -194,14 +208,22 @@ export class SimpleKeyring implements Keyring {
     return walletMatch;
   }
 
-  #generateKeyPair(): {
+  #getKeyPair(privateKey?: string): {
     privateKey: string;
     address: string;
   } {
-    // eslint-disable-next-line no-restricted-globals
-    const pk = Buffer.from(crypto.getRandomValues(new Uint8Array(32)));
-    const address = toChecksumAddress(Address.fromPrivateKey(pk).toString());
-    return { privateKey: pk.toString('hex'), address };
+    const privateKeyBuffer = privateKey
+      ? toBuffer(addHexPrefix(privateKey))
+      : Buffer.from(crypto.getRandomValues(new Uint8Array(32)));
+
+    if (!isValidPrivate(privateKeyBuffer)) {
+      throw new Error('Invalid private key');
+    }
+
+    const address = toChecksumAddress(
+      Address.fromPrivateKey(privateKeyBuffer).toString(),
+    );
+    return { privateKey: privateKeyBuffer.toString('hex'), address };
   }
 
   #handleSigningRequest(method: string, params: Json): Json {
