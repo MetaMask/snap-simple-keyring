@@ -5,6 +5,7 @@ import {
 } from '@metamask/keyring-api';
 import Grid from '@mui/material/Grid';
 import { useCallback, useContext, useEffect, useState } from 'react';
+
 import {
   Accordion,
   AccountList,
@@ -122,14 +123,14 @@ const Index = () => {
     }
   };
 
-  const handleUseSyncToggle = useCallback(async () => {
+  const handleUseSyncToggle = async () => {
     console.log('Toggling synchronous approval');
     await toggleSynchronousApprovals();
     setSnapState({
       ...snapState,
       useSynchronousApprovals: !snapState.useSynchronousApprovals,
     });
-  }, []);
+  };
 
   const accountManagementMethods = [
     {
@@ -331,12 +332,15 @@ const Index = () => {
         callback: async () => {
           try {
             await client.approveRequest(requestId as string);
+            return 'Approved';
           } catch (error) {
             console.error(error);
+            throw error;
           }
         },
         label: 'Approve Request',
       },
+      successMessage: 'Request Approved',
     },
     {
       name: 'Reject a request',
@@ -356,12 +360,15 @@ const Index = () => {
         callback: async () => {
           try {
             await client.rejectRequest(requestId as string);
+            return 'Rejected';
           } catch (error) {
             console.error(error);
+            throw error;
           }
         },
         label: 'Reject Request',
       },
+      successMessage: 'Request Rejected',
     },
   ];
 
