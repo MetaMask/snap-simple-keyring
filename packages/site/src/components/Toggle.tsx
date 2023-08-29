@@ -1,8 +1,6 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
-import { DividerTitle } from './styledComponents';
-
 type CheckedProps = {
   readonly checked: boolean;
 };
@@ -91,6 +89,14 @@ const ToggleCircle = styled.div<CheckedProps>`
   transition: all 0.25s ease;
 `;
 
+const Label = styled.span`
+  display: inline-block;
+  margin: 0;
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+`;
+
 export const Toggle = ({
   onToggle,
   defaultChecked = false,
@@ -117,7 +123,6 @@ export const Toggle = ({
 
   return (
     <div>
-      {title ? <DividerTitle>{title}</DividerTitle> : null}
       <ToggleWrapper onClick={handleChange}>
         <ToggleContainer>
           <CheckedContainer checked={checked}>
@@ -130,6 +135,7 @@ export const Toggle = ({
         <ToggleCircle checked={checked} />
         <ToggleInput type="checkbox" aria-label="Toggle Button" />
       </ToggleWrapper>
+      <Label>{title}</Label>
     </div>
   );
 };

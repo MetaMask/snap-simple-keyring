@@ -29,6 +29,10 @@ const StyledSelect = styled.select`
 
 const StyledSelectItem = styled.option`
   margin-left: 16px;
+
+  :disabled {
+    font-style: italic;
+  }
 `;
 
 const TextField = styled.input`
@@ -83,16 +87,17 @@ export const Method = ({
             id="outlined-basic"
             placeholder={props.placeholder}
             variant="no-outlined"
-            onChange={props.onChange} />
+            onChange={props.onChange}
+          />
         );
       case InputType.Dropdown:
         return (
           <StyledSelect onChange={props.onChange}>
             <StyledSelectItem disabled value="">
-              <em>{props.placeholder}</em>
+              {props.placeholder}
             </StyledSelectItem>
             {props.options.map((option: { value: string | number }) => (
-              <StyledSelectItem value={option.value}>
+              <StyledSelectItem value={option.value} key={option.value}>
                 {option.value}
               </StyledSelectItem>
             ))}
@@ -115,23 +120,21 @@ export const Method = ({
       <StyledDescription item xs={1}>
         {description}
       </StyledDescription>
-      {inputs
-        ? inputs.map(
-            (input: {
-              title: string;
-              placeholder: string;
-              onChange: () => null;
-              type: InputType;
-            }) => (
-              <Grid>
-                <InputTitle>{input.title}</InputTitle>
-                {inputSwitch(input)}
-              </Grid>
-            ),
-          )
-        : null}
+      {inputs?.map(
+        (input: {
+          title: string;
+          placeholder: string;
+          onChange: () => null;
+          type: InputType;
+        }) => (
+          <Grid key={input.title}>
+            <InputTitle>{input.title}</InputTitle>
+            {inputSwitch(input)}
+          </Grid>
+        ),
+      )}
 
-      {action ? (
+      {action && (
         <MethodButton
           onClick={async () => {
             setResponse(null);
@@ -147,10 +150,10 @@ export const Method = ({
           disable={action.disabled}
           label={action.label}
         />
-      ) : null}
+      )}
 
       <CopyableContainer>
-        {response ? (
+        {response && (
           <>
             <AlertBanner
               title={successMessage ?? 'Successful Request'}
@@ -158,8 +161,8 @@ export const Method = ({
             />
             <CopyableItem value={JSON.stringify(response, null, 3)} />
           </>
-        ) : null}
-        {error ? (
+        )}
+        {error && (
           <>
             <AlertBanner
               title={failureMessage ?? 'Error Request'}
@@ -167,7 +170,7 @@ export const Method = ({
             />
             <CopyableItem value={JSON.stringify(error)} />
           </>
-        ) : null}
+        )}
       </CopyableContainer>
     </Grid>
   );

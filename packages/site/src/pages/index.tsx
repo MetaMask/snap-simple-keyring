@@ -1,38 +1,33 @@
-/* eslint-disable import/no-extraneous-dependencies */
-/* eslint-disable @typescript-eslint/no-misused-promises */
 import {
   KeyringAccount,
   KeyringRequest,
   KeyringSnapRpcClient,
 } from '@metamask/keyring-api';
 import Grid from '@mui/material/Grid';
-import { useContext, useState, useCallback, useEffect } from 'react';
-import { FiInfo, FiAlertTriangle } from 'react-icons/fi';
-
+import { useCallback, useContext, useEffect, useState } from 'react';
 import {
+  Accordion,
+  AccountList,
   Card,
   ConnectButton,
-  AccountList,
-  Accordion,
   Toggle,
 } from '../components';
 import {
-  Container,
   CardContainer,
+  Container,
   Divider,
   DividerTitle,
-  InformationBox,
   StyledBox,
 } from '../components/styledComponents';
 import { defaultSnapOrigin } from '../config';
-import { MetamaskActions, MetaMaskContext } from '../hooks';
+import { MetaMaskContext, MetamaskActions } from '../hooks';
 import { InputType } from '../types';
 import {
   KeyringState,
   connectSnap,
   getSnap,
-  toggleSynchronousApprovals,
   isSynchronousMode,
+  toggleSynchronousApprovals,
 } from '../utils';
 
 const snapId = defaultSnapOrigin;
@@ -394,6 +389,7 @@ const Index = () => {
       <StyledBox sx={{ flexGrow: 1 }}>
         <Grid container spacing={4} columns={[1, 2, 3]}>
           <Grid item xs={8} sm={4} md={2}>
+            <DividerTitle>Options</DividerTitle>
             <Toggle
               title="Use Synchronous Approval"
               checkedIcon="✅"
@@ -401,7 +397,7 @@ const Index = () => {
               defaultChecked={snapState.useSynchronousApprovals}
               onToggle={handleUseSyncToggle}
             />
-            <Divider />
+            <Divider>&nbsp;</Divider>
             <DividerTitle>Methods</DividerTitle>
             <Accordion items={accountManagementMethods} />
             <Divider />
