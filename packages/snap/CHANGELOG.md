@@ -7,9 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ## [0.2.0]
-### Uncategorized
-- feat: support the async approval flow ([#50](https://github.com/MetaMask/snap-simple-keyring/pull/50))
-- feat: import account ([#58](https://github.com/MetaMask/snap-simple-keyring/pull/58))
+### Added
+- Support the async approval flow ([#50](https://github.com/MetaMask/snap-simple-keyring/pull/50))
+- Import account ([#58](https://github.com/MetaMask/snap-simple-keyring/pull/58))
 
 ## [0.1.4]
 ### Changed

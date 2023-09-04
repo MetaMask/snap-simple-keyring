@@ -7,11 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ## [0.2.0]
-### Uncategorized
-- feat: support the async approval flow ([#50](https://github.com/MetaMask/snap-simple-keyring/pull/50))
-- fix: now you don't have to change your defaultSnapOrigin ([#59](https://github.com/MetaMask/snap-simple-keyring/pull/59))
-- feat: import account ([#58](https://github.com/MetaMask/snap-simple-keyring/pull/58))
-- feat: improve UI/UX ([#54](https://github.com/MetaMask/snap-simple-keyring/pull/54))
+### Added
+- Support the async approval flow ([#50](https://github.com/MetaMask/snap-simple-keyring/pull/50))
+- Import account ([#58](https://github.com/MetaMask/snap-simple-keyring/pull/58))
+
+### Changed
+- Improve UI/UX ([#54](https://github.com/MetaMask/snap-simple-keyring/pull/54))
+
+### Fixed
+- Now you don't have to change your `defaultSnapOrigin` ([#59](https://github.com/MetaMask/snap-simple-keyring/pull/59))
 
 ## [0.1.4]
 ### Fixed
