@@ -1,6 +1,6 @@
 {
   "name": "@metamask/snap-simple-keyring-site",
-  "version": "0.2.0",
+  "version": "0.1.4",
   "private": true,
   "license": "(MIT-0 OR Apache-2.0)",
   "scripts": {
@@ -33,6 +33,7 @@
     "@mui/material": "^5.14.0",
     "@types/uuid": "^9.0.1",
     "buffer": "^6.0.3",
+    "crypto-browserify": "^3.12.0",
     "gatsby-plugin-react-helmet": "^6.11.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -74,6 +75,7 @@
     "prettier": "^2.8.4",
     "prettier-plugin-packagejson": "^2.4.3",
     "rimraf": "^4.4.0",
-    "typescript": "^4.9.5"
+    "typescript": "^4.9.5",
+    "webpack": "^5.88.2"
   }
 }
