@@ -143,12 +143,6 @@ export class SimpleKeyring implements Keyring {
     return this.#pendingRequests[id];
   }
 
-  // This snap implements a synchronous keyring, which means that the request
-  // doesn't need to be approved and the execution result will be returned to
-  // the caller by the `submitRequest` method.
-  //
-  // In an asynchronous implementation, the request should be stored in queue
-  // of pending requests to be approved or rejected by the user.
   async submitRequest(request: KeyringRequest): Promise<SubmitRequestResponse> {
     return this.#useSyncApprovals
       ? this.#syncSubmitRequest(request)
