@@ -50,7 +50,7 @@ export type Wallet = {
 export class SimpleKeyring implements Keyring {
   #wallets: Record<string, Wallet>;
 
-  #useSyncApprovals = false;
+  #useSyncApprovals = true;
 
   #pendingRequests: Record<string, KeyringRequest>;
 
