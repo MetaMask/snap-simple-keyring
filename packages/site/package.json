@@ -27,7 +27,7 @@
   "dependencies": {
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
-    "@metamask/keyring-api": "^0.1.3",
+    "@metamask/keyring-api": "github:MetaMask/keyring-api#54fdcb1e44d197ffee3f61e1e89b9fbd47b98726",
     "@metamask/providers": "^11.0.0",
     "@mui/icons-material": "^5.14.0",
     "@mui/material": "^5.14.0",
