@@ -20,7 +20,7 @@ export const Account = ({ account }: { account: KeyringAccount }) => {
   return (
     <AccountContainer>
       <AccountTitleContainer>
-        <AccountTitle>{account.name}</AccountTitle>
+        <AccountTitle>{account.address}</AccountTitle>
         <AccountTitleIconContainer>
           {isCollapsed ? (
             <ExpandMoreIcon
@@ -52,7 +52,7 @@ export const Account = ({ account }: { account: KeyringAccount }) => {
           <AccountRow>
             <AccountRowTitle>Account Supported Methods</AccountRowTitle>
             <ul style={{ padding: '0px 0px 0px 16px' }}>
-              {account.supportedMethods.map((method, methodIndex) => (
+              {account.methods.map((method, methodIndex) => (
                 <AccountRowValue
                   key={`account-${account.id}-method-${methodIndex}`}
                 >

@@ -39,7 +39,7 @@ import { isEvmChain, serializeTransaction, isUniqueAddress } from './util';
 export type KeyringState = {
   wallets: Record<string, Wallet>;
   requests: Record<string, KeyringRequest>;
-  useSynchronousApprovals: boolean;
+  useSyncApprovals: boolean;
 };
 
 export type Wallet = {
@@ -57,7 +57,7 @@ export class SimpleKeyring implements Keyring {
   constructor(state: KeyringState) {
     this.#wallets = state.wallets;
     this.#pendingRequests = state.requests;
-    this.#useSyncApprovals = state.useSynchronousApprovals || false;
+    this.#useSyncApprovals = state.useSyncApprovals || false;
   }
 
   async listAccounts(): Promise<KeyringAccount[]> {
@@ -184,14 +184,14 @@ export class SimpleKeyring implements Keyring {
     await this.#saveState();
     return {
       pending: true,
-      redirect: null,
+      redirect: {},
     };
   }
 
   async #syncSubmitRequest(
     request: KeyringRequest,
   ): Promise<SubmitRequestResponse> {
-    const { method, params = '' } = request.request as JsonRpcRequest;
+    const { method, params = [] } = request.request as JsonRpcRequest;
     const signature = this.#handleSigningRequest(method, params);
     return {
       pending: false,
@@ -200,15 +200,15 @@ export class SimpleKeyring implements Keyring {
   }
 
   #getWalletByAddress(address: string): Wallet {
-    const walletMatch = Object.values(this.#wallets).find(
+    const match = Object.values(this.#wallets).find(
       (wallet) =>
         wallet.account.address.toLowerCase() === address.toLowerCase(),
     );
 
-    if (walletMatch === undefined) {
-      throw new Error(`Cannot find wallet for address: ${address}`);
+    if (match === undefined) {
+      throw new Error(`Account '${address}' not found`);
     }
-    return walletMatch;
+    return match;
   }
 
   #getKeyPair(privateKey?: string): {
@@ -232,7 +232,7 @@ export class SimpleKeyring implements Keyring {
   #handleSigningRequest(method: string, params: Json): Json {
     switch (method) {
       case EthMethod.PersonalSign: {
-        const [from, message] = params as [string, string];
+        const [message, from] = params as [string, string];
         return this.#signPersonalMessage(from, message);
       }
 
@@ -351,7 +351,7 @@ export class SimpleKeyring implements Keyring {
     await saveState({
       wallets: this.#wallets,
       requests: this.#pendingRequests,
-      useSynchronousApprovals: this.#useSyncApprovals,
+      useSyncApprovals: this.#useSyncApprovals,
     });
   }
 
@@ -364,6 +364,7 @@ export class SimpleKeyring implements Keyring {
 
   toggleSynchronousApprovals(): void {
     this.#useSyncApprovals = !this.#useSyncApprovals;
+    console.log(`[SNAP] Synchronous approvals: ${this.#useSyncApprovals}`);
   }
 
   isSynchronousMode(): boolean {

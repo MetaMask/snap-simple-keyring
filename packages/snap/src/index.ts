@@ -5,6 +5,7 @@ import {
 } from '@metamask/keyring-api';
 import type { OnRpcRequestHandler } from '@metamask/snaps-types';
 import { panel, heading, text } from '@metamask/snaps-ui';
+import { Json } from '@metamask/utils';
 
 import { SimpleKeyring } from './keyring';
 import { InternalMethod, PERMISSIONS } from './permissions';
@@ -66,7 +67,9 @@ const permissionsHandler: OnRpcRequestHandler = async ({
  * @param args.request - Request to execute.
  * @returns The execution result.
  */
-const keyringHandler: OnRpcRequestHandler = async ({ request }) => {
+const keyringHandler: OnRpcRequestHandler<
+  Json[] | Record<string, Json>
+> = async ({ request }) => {
   if (!keyring) {
     const keyringState = await getState();
     if (!keyring) {

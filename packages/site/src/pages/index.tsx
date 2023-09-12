@@ -87,7 +87,7 @@ const Index = () => {
   // );
 
   const sendCreateAccount = async () => {
-    const newAccount = await client.createAccount(accountName as string);
+    const newAccount = await client.createAccount();
     const accounts = await client.listAccounts();
     setSnapState({
       ...snapState,
@@ -97,7 +97,7 @@ const Index = () => {
   };
 
   const importAccount = async () => {
-    const newAccount = await client.createAccount(accountName as string, {
+    const newAccount = await client.createAccount({
       privateKey: privateKey as string,
     });
     const accounts = await client.listAccounts();
