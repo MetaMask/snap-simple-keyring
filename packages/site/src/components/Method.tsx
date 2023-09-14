@@ -47,9 +47,7 @@ const TextField = styled.input`
 
 const CopyableContainer = styled.div`
   width: 95%;
-  margin-left: 2.5%;
-  margin-right: 2.5%;
-  margin-top: 20px;
+  margin: 8px 2.5% 8px 16px;
 `;
 
 export type MethodProps = {
@@ -137,11 +135,12 @@ export const Method = ({
       {action && (
         <MethodButton
           onClick={async () => {
-            setResponse(null);
-            setError(null);
+            setResponse(undefined);
+            setError(undefined);
             try {
-              const res = await action.callback();
-              setResponse(res);
+              // eslint-disable-next-line id-length
+              const r = await action.callback();
+              setResponse(r === undefined ? null : r);
               // eslint-disable-next-line id-length
             } catch (e: any) {
               setError(e);
@@ -153,22 +152,22 @@ export const Method = ({
       )}
 
       <CopyableContainer>
-        {response && (
+        {response !== undefined && (
           <>
             <AlertBanner
-              title={successMessage ?? 'Successful Request'}
+              title={successMessage ?? 'Successful request'}
               alertType={AlertType.Success}
             />
-            <CopyableItem value={JSON.stringify(response, null, 3)} />
+            <CopyableItem value={JSON.stringify(response, null, 2)} />
           </>
         )}
-        {error && (
+        {error !== undefined && (
           <>
             <AlertBanner
-              title={failureMessage ?? 'Error Request'}
+              title={failureMessage ?? 'Error request'}
               alertType={AlertType.Failure}
             />
-            <CopyableItem value={JSON.stringify(error)} />
+            <CopyableItem value={JSON.stringify(error, null, 2)} />
           </>
         )}
       </CopyableContainer>
