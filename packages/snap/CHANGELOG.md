@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.2.1]
 ### Changed
 - Migrate to new `keyring-api` version (0.2.x) ([#64](https://github.com/MetaMask/snap-simple-keyring/pull/64)).
-- Polyfill crypto dependency introduced in `metamask-utils`` 6.2.0 ([#62](https://github.com/MetaMask/snap-simple-keyring/pull/62)).
+- Polyfill crypto dependency introduced in `metamask-utils` 6.2.0 ([#62](https://github.com/MetaMask/snap-simple-keyring/pull/62)).
 
 ## [0.2.0]
 ### Added
