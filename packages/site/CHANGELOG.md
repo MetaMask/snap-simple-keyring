@@ -6,20 +6,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.1]
+### Changed
+- Align button and request result with action name ([#66](https://github.com/MetaMask/snap-simple-keyring/pull/66)).
+- Remove account name and improve some UI components ([#65](https://github.com/MetaMask/snap-simple-keyring/pull/65)).
+- Migrate to new `keyring-api` version (0.2.x) ([#64](https://github.com/MetaMask/snap-simple-keyring/pull/64)).
+- Polyfill crypto dependency introduced in `metamask-utils` 6.2.0 ([#62](https://github.com/MetaMask/snap-simple-keyring/pull/62)).
+
 ## [0.2.0]
 ### Added
-- Support the async approval flow ([#50](https://github.com/MetaMask/snap-simple-keyring/pull/50))
-- Import account ([#58](https://github.com/MetaMask/snap-simple-keyring/pull/58))
+- Support the async approval flow ([#50](https://github.com/MetaMask/snap-simple-keyring/pull/50)).
+- Import account ([#58](https://github.com/MetaMask/snap-simple-keyring/pull/58)).
 
 ### Changed
-- Improve UI/UX ([#54](https://github.com/MetaMask/snap-simple-keyring/pull/54))
+- Improve UI/UX ([#54](https://github.com/MetaMask/snap-simple-keyring/pull/54)).
 
 ### Fixed
-- Now you don't have to change your `defaultSnapOrigin` ([#59](https://github.com/MetaMask/snap-simple-keyring/pull/59))
+- Now you don't have to change your `defaultSnapOrigin` ([#59](https://github.com/MetaMask/snap-simple-keyring/pull/59)).
 
 ## [0.1.4]
 ### Fixed
-- Fix `rejectRequest` call in site package ([#53](https://github.com/MetaMask/snap-simple-keyring/pull/53))
+- Fix `rejectRequest` call in site package ([#53](https://github.com/MetaMask/snap-simple-keyring/pull/53)).
 
 ## [0.1.3]
 ### Changed
@@ -27,8 +34,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.1.2]
 ### Changed
-- Update snaps and API dependencies. ([#41](https://github.com/MetaMask/snap-simple-keyring/pull/41))
-- Add IDs for e2e tests. ([#40](https://github.com/MetaMask/snap-simple-keyring/pull/40))
+- Update snaps and API dependencies. ([#41](https://github.com/MetaMask/snap-simple-keyring/pull/41)).
+- Add IDs for e2e tests. ([#40](https://github.com/MetaMask/snap-simple-keyring/pull/40)).
 
 ## [0.1.1] - 2023-06-23
 ### Changed
@@ -38,7 +45,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Initial release.
 
-[Unreleased]: https://github.com/MetaMask/snap-simple-keyring/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/MetaMask/snap-simple-keyring/compare/v0.2.1...HEAD
+[0.2.1]: https://github.com/MetaMask/snap-simple-keyring/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/MetaMask/snap-simple-keyring/compare/v0.1.4...v0.2.0
 [0.1.4]: https://github.com/MetaMask/snap-simple-keyring/compare/v0.1.3...v0.1.4
 [0.1.3]: https://github.com/MetaMask/snap-simple-keyring/compare/v0.1.2...v0.1.3
