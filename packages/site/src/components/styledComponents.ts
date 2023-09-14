@@ -155,6 +155,7 @@ export const CopyableItemValue = styled.div`
   color: #0376c9;
   text-align: left;
   max-width: 80%;
+  word-break: break-all;
   white-space: pre-wrap;
   margin: 0px;
 
