@@ -104,7 +104,7 @@ export const Toggle = ({
   checkedIcon = '🌞',
   uncheckedIcon = '🌜',
 }: {
-  onToggle(): void;
+  onToggle(): Promise<void>;
   defaultChecked?: boolean;
   title?: string;
   checkedIcon?: string;
@@ -116,8 +116,8 @@ export const Toggle = ({
     setChecked(defaultChecked);
   }, [defaultChecked]);
 
-  const handleChange = () => {
-    onToggle();
+  const handleChange = async () => {
+    await onToggle();
     setChecked(!checked);
   };
 

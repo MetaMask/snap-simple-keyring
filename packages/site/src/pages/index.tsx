@@ -183,10 +183,10 @@ const Index = () => {
         disabled: Boolean(accountId),
         callback: async () => {
           try {
-            const account = await client.getAccount(accountId as string);
-            return account;
+            return await client.getAccount(accountId as string);
           } catch (error) {
             dispatch({ type: MetamaskActions.SetError, payload: error });
+            return undefined;
           }
         },
         label: 'Get data',
