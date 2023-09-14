@@ -14,11 +14,12 @@ const AccordionItem = styled.div`
   border: 1px solid #eaeaea;
   border-radius: 4px;
   margin-bottom: 20px;
+  padding: 8px;
   width: 100%;
 `;
 
 const AccordionHeader = styled.div`
-  margin: 16px;
+  margin: 8px;
   font-weight: bold;
   cursor: pointer;
   display: flex;

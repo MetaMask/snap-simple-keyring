@@ -9,8 +9,8 @@ import { InputType } from '../types';
 
 const StyledDescription = styled.p`
   font-size: 14px;
-  padding-top: 16px;
-  padding-left: 16px;
+  margin: 8px;
+  padding-top: 24px;
 `;
 
 const InputTitle = styled.p`
@@ -21,9 +21,9 @@ const InputTitle = styled.p`
 
 const StyledSelect = styled.select`
   width: 95%;
-  padding: 10px;
-  margin-top: 8px;
-  margin-left: 16px;
+  padding-top: 8px;
+  padding-bottom: 10px;
+  margin: 8px 2.5% 8px 16px;
   border-radius: 5px;
 `;
 
@@ -47,7 +47,7 @@ const TextField = styled.input`
 
 const CopyableContainer = styled.div`
   width: 95%;
-  margin: 8px 2.5% 8px 16px;
+  margin: 0px 2.5% 8px 16px;
 `;
 
 export type MethodProps = {
@@ -151,26 +151,25 @@ export const Method = ({
         />
       )}
 
-      <CopyableContainer>
-        {response !== undefined && (
-          <>
-            <AlertBanner
-              title={successMessage ?? 'Successful request'}
-              alertType={AlertType.Success}
-            />
-            <CopyableItem value={JSON.stringify(response, null, 2)} />
-          </>
-        )}
-        {error !== undefined && (
-          <>
-            <AlertBanner
-              title={failureMessage ?? 'Error request'}
-              alertType={AlertType.Failure}
-            />
-            <CopyableItem value={JSON.stringify(error, null, 2)} />
-          </>
-        )}
-      </CopyableContainer>
+      {response !== undefined && (
+        <CopyableContainer>
+          <AlertBanner
+            title={successMessage ?? 'Successful request'}
+            alertType={AlertType.Success}
+          />
+          <CopyableItem value={JSON.stringify(response, null, 2)} />
+        </CopyableContainer>
+      )}
+
+      {error !== undefined && (
+        <CopyableContainer>
+          <AlertBanner
+            title={failureMessage ?? 'Error request'}
+            alertType={AlertType.Failure}
+          />
+          <CopyableItem value={JSON.stringify(error, null, 2)} />
+        </CopyableContainer>
+      )}
     </Grid>
   );
 };
