@@ -79,13 +79,6 @@ const Index = () => {
     [requestId],
   );
 
-  // const handleAccountPayloadChange = useCallback(
-  //   (newAccountPayload: KeyringAccount) => {
-  //     setAccountPayload(newAccountPayload);
-  //   },
-  //   [accountPayload],
-  // );
-
   const sendCreateAccount = async () => {
     const newAccount = await client.createAccount();
     const accounts = await client.listAccounts();
