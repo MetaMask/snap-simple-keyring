@@ -21,9 +21,8 @@ export const EditAccountForm = ({
   }
   const [account, setAccount] = useState<KeyringAccount>(accounts[0]);
   const [updateAccountPayload, setUpdateAccountPayload] = useState<
-    Pick<KeyringAccount, 'name' | 'options'>
+    Pick<KeyringAccount, 'options'>
   >({
-    name: '',
     options: {},
   });
 
@@ -54,18 +53,6 @@ export const EditAccountForm = ({
             );
           })}
         </Select>
-      </FormGroup>
-      <FormGroup row>
-        <FormLabel>Account Name</FormLabel>
-        <TextField
-          fullWidth
-          type="text"
-          variant="outlined"
-          value={updateAccountPayload.name}
-          onChange={(event) =>
-            handleEditAccountChange({ name: event.target.value })
-          }
-        />
       </FormGroup>
       <FormGroup row>
         <FormLabel>Account Options</FormLabel>

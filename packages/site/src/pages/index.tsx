@@ -46,7 +46,6 @@ const initialState: {
 const Index = () => {
   const [state, dispatch] = useContext(MetaMaskContext);
   const [snapState, setSnapState] = useState<KeyringState>(initialState);
-  const [accountName, setAccountName] = useState<string | null>();
   // Is not a good practice to store sensitive data in the state of
   // a component but for this case it should be ok since this is an
   // internal development and testing tool.
@@ -129,18 +128,8 @@ const Index = () => {
     {
       name: 'Create Account',
       description: 'Method to create a new account',
-      inputs: [
-        {
-          title: 'Account Name',
-          type: InputType.TextField,
-          placeholder: 'E.g. My new account',
-          onChange: (event: any) => {
-            setAccountName(event.currentTarget.value);
-          },
-        },
-      ],
+      inputs: [],
       action: {
-        disabled: Boolean(accountName),
         callback: async () => {
           return await sendCreateAccount();
         },
@@ -153,14 +142,6 @@ const Index = () => {
       description: 'Method to import an account',
       inputs: [
         {
-          title: 'Account Name',
-          type: InputType.TextField,
-          placeholder: 'E.g. My new account',
-          onChange: (event: any) => {
-            setAccountName(event.currentTarget.value);
-          },
-        },
-        {
           title: 'Private Key',
           value: privateKey,
           type: InputType.TextField,
@@ -171,7 +152,6 @@ const Index = () => {
         },
       ],
       action: {
-        disabled: Boolean(accountName),
         callback: async () => {
           return await importAccount();
         },
