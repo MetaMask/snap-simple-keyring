@@ -153,13 +153,15 @@ export const CopyableContainer = styled.div<{ active: boolean }>`
 
 export const CopyableItemValue = styled.div`
   color: #0376c9;
-  text-align: center;
+  text-align: left;
   max-width: 80%;
-  word-wrap: break-word;
+  word-break: break-all;
+  white-space: pre-wrap;
   margin: 0px;
 
   /* Body-SM-Medium */
-  font-family: Euclid Circular B;
+  font-family: SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono,
+    Inconsolata, monospace;
   font-size: 12px;
   font-style: normal;
   font-weight: 500;

@@ -9,8 +9,8 @@ import { InputType } from '../types';
 
 const StyledDescription = styled.p`
   font-size: 14px;
-  padding-top: 16px;
-  padding-left: 16px;
+  margin: 8px;
+  padding-top: 24px;
 `;
 
 const InputTitle = styled.p`
@@ -21,9 +21,9 @@ const InputTitle = styled.p`
 
 const StyledSelect = styled.select`
   width: 95%;
-  padding: 10px;
-  margin-top: 8px;
-  margin-left: 16px;
+  padding-top: 8px;
+  padding-bottom: 10px;
+  margin: 8px 2.5% 8px 16px;
   border-radius: 5px;
 `;
 
@@ -47,9 +47,7 @@ const TextField = styled.input`
 
 const CopyableContainer = styled.div`
   width: 95%;
-  margin-left: 2.5%;
-  margin-right: 2.5%;
-  margin-top: 20px;
+  margin: 0px 2.5% 8px 16px;
 `;
 
 export type MethodProps = {
@@ -137,11 +135,12 @@ export const Method = ({
       {action && (
         <MethodButton
           onClick={async () => {
-            setResponse(null);
-            setError(null);
+            setResponse(undefined);
+            setError(undefined);
             try {
-              const res = await action.callback();
-              setResponse(res);
+              // eslint-disable-next-line id-length
+              const r = await action.callback();
+              setResponse(r === undefined ? null : r);
               // eslint-disable-next-line id-length
             } catch (e: any) {
               setError(e);
@@ -152,26 +151,25 @@ export const Method = ({
         />
       )}
 
-      <CopyableContainer>
-        {response && (
-          <>
-            <AlertBanner
-              title={successMessage ?? 'Successful Request'}
-              alertType={AlertType.Success}
-            />
-            <CopyableItem value={JSON.stringify(response, null, 3)} />
-          </>
-        )}
-        {error && (
-          <>
-            <AlertBanner
-              title={failureMessage ?? 'Error Request'}
-              alertType={AlertType.Failure}
-            />
-            <CopyableItem value={JSON.stringify(error)} />
-          </>
-        )}
-      </CopyableContainer>
+      {response !== undefined && (
+        <CopyableContainer>
+          <AlertBanner
+            title={successMessage ?? 'Successful request'}
+            alertType={AlertType.Success}
+          />
+          <CopyableItem value={JSON.stringify(response, null, 2)} />
+        </CopyableContainer>
+      )}
+
+      {error !== undefined && (
+        <CopyableContainer>
+          <AlertBanner
+            title={failureMessage ?? 'Error request'}
+            alertType={AlertType.Failure}
+          />
+          <CopyableItem value={JSON.stringify(error, null, 2)} />
+        </CopyableContainer>
+      )}
     </Grid>
   );
 };

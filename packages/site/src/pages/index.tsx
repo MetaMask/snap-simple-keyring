@@ -46,7 +46,6 @@ const initialState: {
 const Index = () => {
   const [state, dispatch] = useContext(MetaMaskContext);
   const [snapState, setSnapState] = useState<KeyringState>(initialState);
-  const [accountName, setAccountName] = useState<string | null>();
   // Is not a good practice to store sensitive data in the state of
   // a component but for this case it should be ok since this is an
   // internal development and testing tool.
@@ -79,14 +78,7 @@ const Index = () => {
     [requestId],
   );
 
-  // const handleAccountPayloadChange = useCallback(
-  //   (newAccountPayload: KeyringAccount) => {
-  //     setAccountPayload(newAccountPayload);
-  //   },
-  //   [accountPayload],
-  // );
-
-  const sendCreateAccount = async () => {
+  const createAccount = async () => {
     const newAccount = await client.createAccount();
     const accounts = await client.listAccounts();
     setSnapState({
@@ -106,6 +98,15 @@ const Index = () => {
       accounts,
     });
     return newAccount;
+  };
+
+  const deleteAccount = async () => {
+    await client.deleteAccount(accountId as string);
+    const accounts = await client.listAccounts();
+    setSnapState({
+      ...snapState,
+      accounts,
+    });
   };
 
   const handleConnectClick = async () => {
@@ -134,66 +135,44 @@ const Index = () => {
 
   const accountManagementMethods = [
     {
-      name: 'Create Account',
-      description: 'Method to create a new account',
-      inputs: [
-        {
-          title: 'Account Name',
-          type: InputType.TextField,
-          placeholder: 'E.g. My new account',
-          onChange: (event: any) => {
-            setAccountName(event.currentTarget.value);
-          },
-        },
-      ],
+      name: 'Create account',
+      description: 'Create a new account',
+      inputs: [],
       action: {
-        disabled: Boolean(accountName),
-        callback: async () => {
-          return await sendCreateAccount();
-        },
+        callback: async () => await createAccount(),
         label: 'Create Account',
       },
-      successMessage: 'Account Created',
+      successMessage: 'Account created',
     },
     {
-      name: 'Import Account (Private Key)',
-      description: 'Method to import an account',
+      name: 'Import account',
+      description: 'Import an account using a private key',
       inputs: [
         {
-          title: 'Account Name',
-          type: InputType.TextField,
-          placeholder: 'E.g. My new account',
-          onChange: (event: any) => {
-            setAccountName(event.currentTarget.value);
-          },
-        },
-        {
-          title: 'Private Key',
+          title: 'Private key',
           value: privateKey,
           type: InputType.TextField,
-          placeholder: 'Private key',
+          placeholder:
+            '0x0000000000000000000000000000000000000000000000000000000000000000',
           onChange: (event: any) => {
             setPrivateKey(event.currentTarget.value);
           },
         },
       ],
       action: {
-        disabled: Boolean(accountName),
-        callback: async () => {
-          return await importAccount();
-        },
+        callback: async () => await importAccount(),
         label: 'Import Account',
       },
-      successMessage: 'Account Imported',
+      successMessage: 'Account imported',
     },
     {
-      name: 'Get Account',
-      description: 'Get the data about a select account',
+      name: 'Get account',
+      description: 'Get data of the selected account',
       inputs: [
         {
           title: 'Account ID',
           type: InputType.Dropdown,
-          placeholder: 'Select Account ID',
+          placeholder: 'Select account ID',
           options: snapState.accounts.map((account) => {
             return { value: account.address };
           }),
@@ -208,44 +187,35 @@ const Index = () => {
       ],
       action: {
         disabled: Boolean(accountId),
-        callback: async () => {
-          try {
-            const account = await client.getAccount(accountId as string);
-            return account;
-          } catch (error) {
-            dispatch({ type: MetamaskActions.SetError, payload: error });
-          }
-        },
-        label: 'Get data',
+        callback: async () => await client.getAccount(accountId as string),
+        label: 'Get Account',
       },
-      successMessage: 'Data Fetched',
+      successMessage: 'Account fetched',
     },
     {
-      name: 'List Accounts',
-      description: 'Method to list all account that the SSK manages',
+      name: 'List accounts',
+      description: 'List all account managed by the SSK',
       action: {
         disabled: false,
         callback: async () => {
           const accounts = await client.listAccounts();
-          const addresses = accounts.map((a: { address: string }) => a.address);
-          console.log(addresses);
           setSnapState({
             ...snapState,
             accounts,
           });
-          return { accounts };
+          return accounts;
         },
         label: 'List Accounts',
       },
     },
     {
-      name: 'Remove Account',
-      description: 'Remove a select account',
+      name: 'Remove account',
+      description: 'Remove an account',
       inputs: [
         {
           title: 'Account ID',
           type: InputType.Dropdown,
-          placeholder: 'Select Account ID',
+          placeholder: 'Select account ID',
           options: snapState.accounts.map((account) => {
             return { value: account.address };
           }),
@@ -260,10 +230,8 @@ const Index = () => {
       ],
       action: {
         disabled: Boolean(accountId),
-        callback: async () => {
-          await client.deleteAccount(accountId as string);
-        },
-        label: 'Remove account',
+        callback: async () => await deleteAccount(),
+        label: 'Remove Account',
       },
       successMessage: 'Account Removed',
     },
@@ -271,13 +239,13 @@ const Index = () => {
 
   const requestMethods = [
     {
-      name: 'Get Request by Id',
-      description: 'Get a request made by id',
+      name: 'Get request',
+      description: 'Get a pending request by ID',
       inputs: [
         {
           title: 'Request ID',
           type: InputType.TextField,
-          placeholder: 'E.g. Request ID',
+          placeholder: '6fcbe1b5-f250-452c-8114-683dfa5ea74d',
           onChange: (event: any) => {
             handleRequestIdChange(event.currentTarget.value);
           },
@@ -285,22 +253,13 @@ const Index = () => {
       ],
       action: {
         enabled: Boolean(requestId),
-        callback: async () => {
-          try {
-            const request = await client.getRequest(requestId as string);
-            console.log(request);
-            return request;
-          } catch (error) {
-            console.error(error);
-            return error;
-          }
-        },
+        callback: async () => await client.getRequest(requestId as string),
         label: 'Get Request',
       },
     },
     {
-      name: 'Get all Requests',
-      description: 'Get all requests',
+      name: 'List requests',
+      description: 'List pending requests',
       action: {
         disabled: false,
         callback: async () => {
@@ -309,19 +268,19 @@ const Index = () => {
             ...snapState,
             pendingRequests: requests,
           });
-          return { requests };
+          return requests;
         },
-        label: 'List Pending Requests',
+        label: 'List Requests',
       },
     },
     {
-      name: 'Approve a request',
-      description: 'Approve a request by their id',
+      name: 'Approve request',
+      description: 'Approve a pending request by ID',
       inputs: [
         {
           title: 'Request ID',
           type: InputType.TextField,
-          placeholder: 'E.g. Request ID',
+          placeholder: '6fcbe1b5-f250-452c-8114-683dfa5ea74d',
           onChange: (event: any) => {
             handleRequestIdChange(event.currentTarget.value);
           },
@@ -329,22 +288,14 @@ const Index = () => {
       ],
       action: {
         disabled: !requestId,
-        callback: async () => {
-          try {
-            await client.approveRequest(requestId as string);
-            return 'Approved';
-          } catch (error) {
-            console.error(error);
-            throw error;
-          }
-        },
+        callback: async () => await client.approveRequest(requestId as string),
         label: 'Approve Request',
       },
-      successMessage: 'Request Approved',
+      successMessage: 'Request approved',
     },
     {
-      name: 'Reject a request',
-      description: 'Reject a request by id',
+      name: 'Reject request',
+      description: 'Reject a pending request by ID',
       inputs: [
         {
           title: 'Request ID',
@@ -357,15 +308,7 @@ const Index = () => {
       ],
       action: {
         disabled: !requestId,
-        callback: async () => {
-          try {
-            await client.rejectRequest(requestId as string);
-            return 'Rejected';
-          } catch (error) {
-            console.error(error);
-            throw error;
-          }
-        },
+        callback: async () => await client.rejectRequest(requestId as string),
         label: 'Reject Request',
       },
       successMessage: 'Request Rejected',
