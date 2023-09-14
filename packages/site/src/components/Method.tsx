@@ -20,7 +20,7 @@ const InputTitle = styled.p`
 `;
 
 const StyledSelect = styled.select`
-  width: 95%;
+  width: calc(95% - 16px);
   padding-top: 8px;
   padding-bottom: 10px;
   margin: 8px 2.5% 8px 16px;
@@ -36,7 +36,7 @@ const StyledSelectItem = styled.option`
 `;
 
 const TextField = styled.input`
-  width: 95%;
+  width: calc(95% - 16px);
   padding: 10px;
   margin: 8px 2.5% 8px 16px;
   background: transparent;
@@ -47,7 +47,7 @@ const TextField = styled.input`
 
 const CopyableContainer = styled.div`
   width: 95%;
-  margin: 0px 2.5% 8px 16px;
+  margin: 0px 2.5% 8px 8px;
 `;
 
 export type MethodProps = {

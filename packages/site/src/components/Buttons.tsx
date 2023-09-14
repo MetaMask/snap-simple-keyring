@@ -74,8 +74,9 @@ const ActionButton = styled.button`
   width: 95%;
   background-color: #0376c9;
   border-radius: 999px;
+  border: none;
   padding: 5px 20px;
-  margin: 8px 2.5% 8px 16px;
+  margin: 8px 2.5% 8px 8px;
 
   &:hover {
     background-color: #0376ff;
