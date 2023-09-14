@@ -78,7 +78,7 @@ const Index = () => {
     [requestId],
   );
 
-  const sendCreateAccount = async () => {
+  const createAccount = async () => {
     const newAccount = await client.createAccount();
     const accounts = await client.listAccounts();
     setSnapState({
@@ -98,6 +98,15 @@ const Index = () => {
       accounts,
     });
     return newAccount;
+  };
+
+  const deleteAccount = async () => {
+    await client.deleteAccount(accountId as string);
+    const accounts = await client.listAccounts();
+    setSnapState({
+      ...snapState,
+      accounts,
+    });
   };
 
   const handleConnectClick = async () => {
@@ -130,7 +139,7 @@ const Index = () => {
       description: 'Create a new account',
       inputs: [],
       action: {
-        callback: async () => await sendCreateAccount(),
+        callback: async () => await createAccount(),
         label: 'Create Account',
       },
       successMessage: 'Account created',
@@ -221,7 +230,7 @@ const Index = () => {
       ],
       action: {
         disabled: Boolean(accountId),
-        callback: async () => await client.deleteAccount(accountId as string),
+        callback: async () => await deleteAccount(),
         label: 'Remove Account',
       },
       successMessage: 'Account Removed',
