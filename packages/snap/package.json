@@ -17,7 +17,7 @@
     "url": "git+https://github.com/MetaMask/snap-simple-keyring.git"
   },
   "license": "(MIT-0 OR Apache-2.0)",
-  "main": "src/index.ts",
+  "main": "dist/bundle.js",
   "files": [
     "dist/",
     "images/",
