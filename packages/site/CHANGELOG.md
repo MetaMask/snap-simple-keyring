@@ -6,6 +6,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.1]
+### Uncategorized
+- ui: align button and request result with action name ([#66](https://github.com/MetaMask/snap-simple-keyring/pull/66))
+- ui: remove account name and improve some UI components ([#65](https://github.com/MetaMask/snap-simple-keyring/pull/65))
+- feat: migrate to new `keyring-api` version (`0.2.x`) ([#64](https://github.com/MetaMask/snap-simple-keyring/pull/64))
+- fix: crypto dependency introduced in metamask-utils 6.2.0 ([#62](https://github.com/MetaMask/snap-simple-keyring/pull/62))
+
 ## [0.2.0]
 ### Added
 - Support the async approval flow ([#50](https://github.com/MetaMask/snap-simple-keyring/pull/50))
@@ -38,7 +45,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Initial release.
 
-[Unreleased]: https://github.com/MetaMask/snap-simple-keyring/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/MetaMask/snap-simple-keyring/compare/v0.2.1...HEAD
+[0.2.1]: https://github.com/MetaMask/snap-simple-keyring/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/MetaMask/snap-simple-keyring/compare/v0.1.4...v0.2.0
 [0.1.4]: https://github.com/MetaMask/snap-simple-keyring/compare/v0.1.3...v0.1.4
 [0.1.3]: https://github.com/MetaMask/snap-simple-keyring/compare/v0.1.2...v0.1.3
