@@ -1,11 +1,10 @@
 import { useContext } from 'react';
 import styled, { useTheme } from 'styled-components';
-import { MetamaskActions, MetaMaskContext } from '../hooks';
-import { connectSnap, getThemePreference, getSnap } from '../utils';
-import { HeaderButtons } from './Buttons';
-import { SnapLogo } from './SnapLogo';
-import { Toggle } from './Toggle';
 import packageInfo from '../../package.json';
+import { MetamaskActions, MetaMaskContext } from '../hooks';
+import { connectSnap, getSnap } from '../utils';
+import { HeaderButtons } from './Buttons';
+import { defaultSnapOrigin } from '../config';
 
 const HeaderWrapper = styled.header`
   display: flex;
@@ -39,7 +38,7 @@ const RightContainer = styled.div`
   align-items: center;
 `;
 
-const Version = styled.p`
+const VersionStyle = styled.p`
   margin-top: 1.2rem;
   font-size: 1.6rem;
   margin: auto;
@@ -69,13 +68,38 @@ export const Header = ({
       dispatch({ type: MetamaskActions.SetError, payload: e });
     }
   };
+
+  function Version() {
+    return (
+      <VersionStyle>
+        <div>
+          <b>Dapp version: </b>
+          {packageInfo.version}
+        </div>
+
+        {state.installedSnap ? (
+          <div>
+            <b>Snap version installed: </b> {state.installedSnap?.version}
+          </div>
+        ) : (
+          <div>
+            <b>Snap version to install: </b> {packageInfo.version}
+          </div>
+        )}
+
+        {defaultSnapOrigin.startsWith('local') &&
+          '(from ' + defaultSnapOrigin + ')'}
+      </VersionStyle>
+    );
+  }
+
   return (
     <HeaderWrapper>
       <LogoWrapper>
         <Title>🔑 Snap Simple Keyring</Title>
       </LogoWrapper>
       <RightContainer>
-        <Version>Version {packageInfo.version}</Version>
+        <Version />
         <HeaderButtons state={state} onConnectClick={handleConnectClick} />
       </RightContainer>
     </HeaderWrapper>
