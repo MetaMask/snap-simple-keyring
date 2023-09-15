@@ -3,17 +3,14 @@ module.exports = {
 
   overrides: [
     {
-      globals: {
-        window: true,
-      },
-      files: ['**/*.{ts,tsx}'],
+      files: ['**/*.ts'],
       rules: {
-        'jsdoc/require-jsdoc': 0,
-        'no-alert': 'off',
-        'no-restricted-globals': 0,
+        // This prevents using Node.js and/or browser specific globals. We
+        // currently use both in our codebase, so this rule is disabled.
+        'no-restricted-globals': 'off',
       },
     },
   ],
 
-  ignorePatterns: ['!.eslintrc.js', 'build/'],
+  ignorePatterns: ['!.eslintrc.js', '.cache/', 'public/'],
 };
