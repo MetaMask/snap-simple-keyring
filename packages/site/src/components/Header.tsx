@@ -5,7 +5,7 @@ import { connectSnap, getThemePreference, getSnap } from '../utils';
 import { HeaderButtons } from './Buttons';
 import { SnapLogo } from './SnapLogo';
 import { Toggle } from './Toggle';
-import { version } from '../../package.json';
+import packageInfo from '../../package.json';
 
 const HeaderWrapper = styled.header`
   display: flex;
@@ -75,7 +75,7 @@ export const Header = ({
         <Title>🔑 Snap Simple Keyring</Title>
       </LogoWrapper>
       <RightContainer>
-        <Version>Version {version}</Version>
+        <Version>Version {packageInfo.version}</Version>
         <HeaderButtons state={state} onConnectClick={handleConnectClick} />
       </RightContainer>
     </HeaderWrapper>
