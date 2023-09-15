@@ -5,7 +5,7 @@ import {
 } from '@metamask/keyring-api';
 import type { OnRpcRequestHandler } from '@metamask/snaps-types';
 import { panel, heading, text } from '@metamask/snaps-ui';
-import { Json } from '@metamask/utils';
+import type { Json } from '@metamask/utils';
 
 import { SimpleKeyring } from './keyring';
 import { InternalMethod, PERMISSIONS } from './permissions';

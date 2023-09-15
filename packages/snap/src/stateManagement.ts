@@ -1,4 +1,4 @@
-import { KeyringState } from './keyring';
+import type { KeyringState } from './keyring';
 
 /**
  * Retrieves the current state of the keyring.
