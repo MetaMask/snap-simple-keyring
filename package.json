@@ -27,9 +27,9 @@
     "build:dapp": "yarn workspace @metamask/snap-simple-keyring-site build",
     "build:snap": "yarn workspace @metamask/snap-simple-keyring-snap build",
     "lint": "yarn lint:eslint && yarn lint:misc",
-    "lint:eslint": "yarn run eslint . --cache --ext js,ts",
+    "lint:eslint": "eslint . --cache --ext js,ts",
     "lint:fix": "yarn lint:eslint --fix && yarn lint:misc --write",
-    "lint:misc": "yarn run prettier '**/*.json' '**/*.md' '!**/CHANGELOG.md' '**/*.yml' '**/*.html' --ignore-path .gitignore --check",
+    "lint:misc": "prettier '**/*.json' '**/*.md' '!**/CHANGELOG.md' '**/*.yml' '**/*.html' --ignore-path .gitignore --check",
     "start": "yarn workspaces foreach --parallel --interlaced --verbose run start",
     "test": "yarn workspaces foreach --parallel --verbose run test"
   },
