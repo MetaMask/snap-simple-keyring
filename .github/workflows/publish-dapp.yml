@@ -1,4 +1,4 @@
-name: Publish docs to GitHub Pages
+name: Publish dapp to GitHub Pages
 
 on:
   workflow_call:
@@ -11,8 +11,8 @@ on:
         required: true
 
 jobs:
-  publish-docs-to-gh-pages:
-    name: Publish docs to GitHub Pages
+  publish-dapp-to-gh-pages:
+    name: Publish dapp to GitHub Pages
     runs-on: ubuntu-latest
     environment: github-pages
     permissions:
