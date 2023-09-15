@@ -67,12 +67,12 @@ const UncheckedContainer = styled(IconContainer)<CheckedProps>`
   right: 10px;
 `;
 
-const ToggleContainer = styled.div`
+const ToggleContainer = styled.div<CheckedProps>`
   width: 68px;
   height: 36px;
   padding: 0;
   border-radius: 36px;
-  background-color: ${({ theme }) => theme.colors.background.alternative};
+  background-color: ${({ checked }) => (checked ? '#0ba6ff' : '#d3d3d3')};
   transition: all 0.2s ease;
 `;
 const ToggleCircle = styled.div<CheckedProps>`
@@ -101,8 +101,8 @@ export const Toggle = ({
   onToggle,
   defaultChecked = false,
   title,
-  checkedIcon = '🌞',
-  uncheckedIcon = '🌜',
+  checkedIcon = '',
+  uncheckedIcon = '',
 }: {
   onToggle(): Promise<void>;
   defaultChecked?: boolean;
@@ -124,7 +124,7 @@ export const Toggle = ({
   return (
     <div>
       <ToggleWrapper onClick={handleChange}>
-        <ToggleContainer>
+        <ToggleContainer checked={checked}>
           <CheckedContainer checked={checked}>
             <span>{checkedIcon}</span>
           </CheckedContainer>

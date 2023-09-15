@@ -342,8 +342,6 @@ const Index = () => {
             <DividerTitle>Options</DividerTitle>
             <Toggle
               title="Use Synchronous Approval"
-              checkedIcon="✅"
-              uncheckedIcon="❌"
               defaultChecked={snapState.useSynchronousApprovals}
               onToggle={handleUseSyncToggle}
             />
