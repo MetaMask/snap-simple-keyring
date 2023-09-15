@@ -10,22 +10,23 @@ import {
   isValidPrivate,
   addHexPrefix,
 } from '@ethereumjs/util';
+import type { TypedDataV1, TypedMessage } from '@metamask/eth-sig-util';
 import {
   SignTypedDataVersion,
-  TypedDataV1,
-  TypedMessage,
   concatSig,
   personalSign,
   recoverPersonalSignature,
   signTypedData,
 } from '@metamask/eth-sig-util';
-import {
-  EthAccountType,
-  EthMethod,
+import type {
   Keyring,
   KeyringAccount,
   KeyringRequest,
   SubmitRequestResponse,
+} from '@metamask/keyring-api';
+import {
+  EthAccountType,
+  EthMethod,
   emitSnapKeyringEvent,
 } from '@metamask/keyring-api';
 import { KeyringEvent } from '@metamask/keyring-api/dist/events';
