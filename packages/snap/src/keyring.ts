@@ -39,7 +39,7 @@ import { isEvmChain, serializeTransaction, isUniqueAddress } from './util';
 
 export type KeyringState = {
   wallets: Record<string, Wallet>;
-  requests: Record<string, KeyringRequest>;
+  pendingRequests: Record<string, KeyringRequest>;
   useSyncApprovals: boolean;
 };
 
@@ -49,24 +49,18 @@ export type Wallet = {
 };
 
 export class SimpleKeyring implements Keyring {
-  #wallets: Record<string, Wallet>;
-
-  #useSyncApprovals = true;
-
-  #pendingRequests: Record<string, KeyringRequest>;
+  #state: KeyringState;
 
   constructor(state: KeyringState) {
-    this.#wallets = state.wallets;
-    this.#pendingRequests = state.requests;
-    this.#useSyncApprovals = state.useSyncApprovals || false;
+    this.#state = state;
   }
 
   async listAccounts(): Promise<KeyringAccount[]> {
-    return Object.values(this.#wallets).map((wallet) => wallet.account);
+    return Object.values(this.#state.wallets).map((wallet) => wallet.account);
   }
 
   async getAccount(id: string): Promise<KeyringAccount | undefined> {
-    return this.#wallets[id].account;
+    return this.#state.wallets[id].account;
   }
 
   async createAccount(
@@ -76,7 +70,7 @@ export class SimpleKeyring implements Keyring {
       options?.privateKey as string | undefined,
     );
 
-    if (!isUniqueAddress(address, Object.values(this.#wallets))) {
+    if (!isUniqueAddress(address, Object.values(this.#state.wallets))) {
       throw new Error(`Account address already in use: ${address}`);
     }
 
@@ -96,7 +90,7 @@ export class SimpleKeyring implements Keyring {
       type: EthAccountType.Eoa,
     };
 
-    this.#wallets[account.id] = { account, privateKey };
+    this.#state.wallets[account.id] = { account, privateKey };
     await this.#saveState();
     await this.#emitEvent(KeyringEvent.AccountCreated, { account });
 
@@ -110,7 +104,7 @@ export class SimpleKeyring implements Keyring {
   }
 
   async updateAccount(account: KeyringAccount): Promise<void> {
-    const currentAccount = this.#wallets[account.id].account;
+    const currentAccount = this.#state.wallets[account.id].account;
     const newAccount: KeyringAccount = {
       ...currentAccount,
       ...account,
@@ -121,37 +115,37 @@ export class SimpleKeyring implements Keyring {
       options: currentAccount.options,
     };
 
-    this.#wallets[account.id].account = newAccount;
+    this.#state.wallets[account.id].account = newAccount;
     await this.#saveState();
     await this.#emitEvent(KeyringEvent.AccountUpdated, { account });
   }
 
   async deleteAccount(id: string): Promise<void> {
-    delete this.#wallets[id];
+    delete this.#state.wallets[id];
     await this.#saveState();
     await this.#emitEvent(KeyringEvent.AccountDeleted, { id });
   }
 
   async listRequests(): Promise<KeyringRequest[]> {
-    return Object.values(this.#pendingRequests);
+    return Object.values(this.#state.pendingRequests);
   }
 
   async getRequest(id: string): Promise<KeyringRequest> {
-    if (this.#pendingRequests[id] === undefined) {
+    if (this.#state.pendingRequests[id] === undefined) {
       throw new Error(`No pending request found with id: ${id}`);
     }
 
-    return this.#pendingRequests[id];
+    return this.#state.pendingRequests[id];
   }
 
   async submitRequest(request: KeyringRequest): Promise<SubmitRequestResponse> {
-    return this.#useSyncApprovals
+    return this.#state.useSyncApprovals
       ? this.#syncSubmitRequest(request)
       : this.#asyncSubmitRequest(request);
   }
 
   async approveRequest(id: string): Promise<void> {
-    if (this.#pendingRequests[id] === undefined) {
+    if (this.#state.pendingRequests[id] === undefined) {
       throw new Error(`No pending request found with id: ${id}`);
     }
 
@@ -165,7 +159,7 @@ export class SimpleKeyring implements Keyring {
   }
 
   async rejectRequest(id: string): Promise<void> {
-    if (this.#pendingRequests[id] === undefined) {
+    if (this.#state.pendingRequests[id] === undefined) {
       throw new Error(`No pending request found with id: ${id}`);
     }
 
@@ -174,14 +168,14 @@ export class SimpleKeyring implements Keyring {
   }
 
   async #removePendingRequest(id: string): Promise<void> {
-    delete this.#pendingRequests[id];
+    delete this.#state.pendingRequests[id];
     await this.#saveState();
   }
 
   async #asyncSubmitRequest(
     request: KeyringRequest,
   ): Promise<SubmitRequestResponse> {
-    this.#pendingRequests[request.id] = request;
+    this.#state.pendingRequests[request.id] = request;
     await this.#saveState();
     return {
       pending: true,
@@ -201,7 +195,7 @@ export class SimpleKeyring implements Keyring {
   }
 
   #getWalletByAddress(address: string): Wallet {
-    const match = Object.values(this.#wallets).find(
+    const match = Object.values(this.#state.wallets).find(
       (wallet) =>
         wallet.account.address.toLowerCase() === address.toLowerCase(),
     );
@@ -349,11 +343,7 @@ export class SimpleKeyring implements Keyring {
   }
 
   async #saveState(): Promise<void> {
-    await saveState({
-      wallets: this.#wallets,
-      requests: this.#pendingRequests,
-      useSyncApprovals: this.#useSyncApprovals,
-    });
+    await saveState(this.#state);
   }
 
   async #emitEvent(
@@ -363,12 +353,15 @@ export class SimpleKeyring implements Keyring {
     await emitSnapKeyringEvent(snap, event, data);
   }
 
-  toggleSynchronousApprovals(): void {
-    this.#useSyncApprovals = !this.#useSyncApprovals;
-    console.log(`[SNAP] Synchronous approvals: ${this.#useSyncApprovals}`);
+  async toggleSynchronousApprovals(): Promise<void> {
+    this.#state.useSyncApprovals = !this.#state.useSyncApprovals;
+    await this.#saveState();
+    console.log(
+      `[SNAP] Synchronous approvals: ${this.#state.useSyncApprovals}`,
+    );
   }
 
   isSynchronousMode(): boolean {
-    return this.#useSyncApprovals;
+    return this.#state.useSyncApprovals;
   }
 }
