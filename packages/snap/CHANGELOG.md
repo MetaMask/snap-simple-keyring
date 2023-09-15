@@ -7,11 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ## [0.2.2]
-### Uncategorized
-- fix: persist snap state after switching between sync <-> async ([#76](https://github.com/MetaMask/snap-simple-keyring/pull/76))
-- build: update configs from `metamask-module-template` ([#75](https://github.com/MetaMask/snap-simple-keyring/pull/75))
-- build: update main file (`src/index.ts` -> `dist/bundle.js`) ([#69](https://github.com/MetaMask/snap-simple-keyring/pull/69))
-- chore: fix typo in changelog ([#68](https://github.com/MetaMask/snap-simple-keyring/pull/68))
+### Fixed
+- Persist snap state after switching between sync <-> async ([#76](https://github.com/MetaMask/snap-simple-keyring/pull/76))
 
 ## [0.2.1]
 ### Changed

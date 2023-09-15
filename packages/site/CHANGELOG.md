@@ -7,12 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ## [0.2.2]
-### Uncategorized
-- fix: disable async-sync toggle if snap is not installed ([#77](https://github.com/MetaMask/snap-simple-keyring/pull/77))
-- build: update configs from `metamask-module-template` ([#75](https://github.com/MetaMask/snap-simple-keyring/pull/75))
-- chore: update toggle style ([#73](https://github.com/MetaMask/snap-simple-keyring/pull/73))
-- feat: the dApp specifies the Snap version to install ([#72](https://github.com/MetaMask/snap-simple-keyring/pull/72))
-- feat: add dapp version to header ([#71](https://github.com/MetaMask/snap-simple-keyring/pull/71))
+### Added
+- Let the dapp specifies the Snap version to install ([#72](https://github.com/MetaMask/snap-simple-keyring/pull/72))
+- Add dapp version to header ([#71](https://github.com/MetaMask/snap-simple-keyring/pull/71))
+
+### Fixed
+- Disable async-sync toggle if snap is not installed ([#77](https://github.com/MetaMask/snap-simple-keyring/pull/77))
 
 ## [0.2.1]
 ### Changed
