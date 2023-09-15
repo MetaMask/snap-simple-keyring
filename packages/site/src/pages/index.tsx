@@ -40,7 +40,7 @@ const initialState: {
 } = {
   pendingRequests: [],
   accounts: [],
-  useSynchronousApprovals: false,
+  useSynchronousApprovals: true,
 };
 
 const Index = () => {
