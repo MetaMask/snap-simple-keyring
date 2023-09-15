@@ -344,6 +344,7 @@ const Index = () => {
               title="Use Synchronous Approval"
               defaultChecked={snapState.useSynchronousApprovals}
               onToggle={handleUseSyncToggle}
+              enabled={Boolean(state.installedSnap)}
             />
             <Divider>&nbsp;</Divider>
             <DividerTitle>Methods</DividerTitle>
