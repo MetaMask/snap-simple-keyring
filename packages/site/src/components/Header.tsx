@@ -73,7 +73,7 @@ export const Header = ({
     return (
       <VersionStyle>
         <div>
-          <b>dApp version: </b>
+          <b>Dapp version: </b>
           {packageInfo.version}
         </div>
 
