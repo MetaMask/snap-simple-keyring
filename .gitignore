@@ -3,6 +3,11 @@ dist/
 build/
 coverage/
 
+# We have to ignore files in the root .gitignore file because it's also used by
+# prettier, which doesn't support nested .gitignore files.
+/packages/site/.cache/
+/packages/site/public/
+
 # Logs
 logs
 *.log
