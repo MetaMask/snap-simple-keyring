@@ -1,12 +1,11 @@
 import styled, { useTheme } from 'styled-components';
-
+import { ReactComponent as MetaMaskFox } from '../assets/metamask_fox.svg';
 import { MetaMask } from './MetaMask';
 import { PoweredBy } from './PoweredBy';
-import { ReactComponent as MetaMaskFox } from '../assets/metamask_fox.svg';
 
 const FooterWrapper = styled.footer`
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
   justify-content: center;
   padding-top: 2.4rem;
@@ -30,8 +29,6 @@ const PoweredByContainer = styled.div`
   flex-direction: column;
   margin-left: 1rem;
 `;
-
-
 
 export const Footer = () => {
   const theme = useTheme();
