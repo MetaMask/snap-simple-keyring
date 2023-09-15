@@ -5,6 +5,7 @@ import { connectSnap, getThemePreference, getSnap } from '../utils';
 import { HeaderButtons } from './Buttons';
 import { SnapLogo } from './SnapLogo';
 import { Toggle } from './Toggle';
+import { version } from '../../package.json';
 
 const HeaderWrapper = styled.header`
   display: flex;
@@ -38,6 +39,14 @@ const RightContainer = styled.div`
   align-items: center;
 `;
 
+const Version = styled.p`
+  margin-top: 1.2rem;
+  font-size: 1.6rem;
+  margin: auto;
+  padding-right: 2rem;
+  color: ${({ theme }) => theme.colors.text.muted};
+`;
+
 export const Header = ({
   handleToggleClick,
 }: {
@@ -66,6 +75,7 @@ export const Header = ({
         <Title>🔑 Snap Simple Keyring</Title>
       </LogoWrapper>
       <RightContainer>
+        <Version>Version {version}</Version>
         <HeaderButtons state={state} onConnectClick={handleConnectClick} />
       </RightContainer>
     </HeaderWrapper>

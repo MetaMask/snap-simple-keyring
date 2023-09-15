@@ -2,7 +2,6 @@ import styled, { useTheme } from 'styled-components';
 
 import { MetaMask } from './MetaMask';
 import { PoweredBy } from './PoweredBy';
-import { version } from '../../package.json';
 import { ReactComponent as MetaMaskFox } from '../assets/metamask_fox.svg';
 
 const FooterWrapper = styled.footer`
@@ -32,11 +31,7 @@ const PoweredByContainer = styled.div`
   margin-left: 1rem;
 `;
 
-const Version = styled.p`
-  margin-top: 1.2rem;
-  font-size: 1.4rem;
-  color: ${({ theme }) => theme.colors.text.muted};
-`;
+
 
 export const Footer = () => {
   const theme = useTheme();
@@ -50,7 +45,6 @@ export const Footer = () => {
           <MetaMask color={theme.colors.text.default} />
         </PoweredByContainer>
       </PoweredByButton>
-      <Version>Version {version}</Version>
     </FooterWrapper>
   );
 };
