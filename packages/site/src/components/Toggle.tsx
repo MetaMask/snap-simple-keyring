@@ -3,6 +3,7 @@ import styled from 'styled-components';
 
 type CheckedProps = {
   readonly checked: boolean;
+  readonly enabled?: boolean;
 };
 
 const ToggleWrapper = styled.div`
@@ -72,7 +73,14 @@ const ToggleContainer = styled.div<CheckedProps>`
   height: 36px;
   padding: 0;
   border-radius: 36px;
-  background-color: ${({ checked }) => (checked ? '#0ba6ff' : '#d3d3d3')};
+  background-color: ${({ checked, enabled }) => {
+    if (!enabled) {
+      return '#ddd';
+    } else if (checked) {
+      return '#0ba6ff';
+    }
+    return '#d3d3d3';
+  }};
   transition: all 0.2s ease;
 `;
 const ToggleCircle = styled.div<CheckedProps>`
@@ -84,7 +92,7 @@ const ToggleCircle = styled.div<CheckedProps>`
   height: 28px;
   box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.14);
   border-radius: 50%;
-  background-color: #ffffff;
+  background-color: ${({ enabled }) => (enabled ? '#ffffff' : '#eee')};
   box-sizing: border-box;
   transition: all 0.25s ease;
 `;
@@ -100,12 +108,14 @@ const Label = styled.span`
 export const Toggle = ({
   onToggle,
   defaultChecked = false,
+  enabled = true,
   title,
   checkedIcon = '',
   uncheckedIcon = '',
 }: {
   onToggle(): Promise<void>;
   defaultChecked?: boolean;
+  enabled?: boolean;
   title?: string;
   checkedIcon?: string;
   uncheckedIcon?: string;
@@ -117,6 +127,9 @@ export const Toggle = ({
   }, [defaultChecked]);
 
   const handleChange = async () => {
+    if (!enabled) {
+      return;
+    }
     await onToggle();
     setChecked(!checked);
   };
@@ -124,7 +137,7 @@ export const Toggle = ({
   return (
     <div>
       <ToggleWrapper onClick={handleChange}>
-        <ToggleContainer checked={checked}>
+        <ToggleContainer checked={checked} enabled={enabled}>
           <CheckedContainer checked={checked}>
             <span>{checkedIcon}</span>
           </CheckedContainer>
@@ -132,7 +145,7 @@ export const Toggle = ({
             <span>{uncheckedIcon}</span>
           </UncheckedContainer>
         </ToggleContainer>
-        <ToggleCircle checked={checked} />
+        <ToggleCircle checked={checked} enabled={enabled} />
         <ToggleInput type="checkbox" aria-label="Toggle Button" />
       </ToggleWrapper>
       <Label>{title}</Label>
