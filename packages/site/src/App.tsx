@@ -1,6 +1,7 @@
-import { FunctionComponent, ReactNode, useContext } from 'react';
-import styled from 'styled-components';
+import type { FunctionComponent, ReactNode } from 'react';
+import { useContext } from 'react';
 import { Helmet } from 'react-helmet';
+import styled from 'styled-components';
 
 import { Footer, Header } from './components';
 import { GlobalStyle } from './config/theme';

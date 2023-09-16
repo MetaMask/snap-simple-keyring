@@ -84,7 +84,6 @@ export const Method = ({
           <TextField
             id="outlined-basic"
             placeholder={props.placeholder}
-            variant="no-outlined"
             onChange={props.onChange}
           />
         );
@@ -115,9 +114,7 @@ export const Method = ({
         overflowX: 'hidden',
       }}
     >
-      <StyledDescription item xs={1}>
-        {description}
-      </StyledDescription>
+      <StyledDescription>{description}</StyledDescription>
       {inputs?.map(
         (input: {
           title: string;

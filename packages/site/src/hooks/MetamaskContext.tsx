@@ -1,12 +1,7 @@
-import {
-  createContext,
-  Dispatch,
-  ReactNode,
-  Reducer,
-  useEffect,
-  useReducer,
-} from 'react';
-import { Snap } from '../types';
+import type { Dispatch, ReactNode, Reducer } from 'react';
+import { createContext, useEffect, useReducer } from 'react';
+
+import type { Snap } from '../types';
 import { isFlask, getSnap } from '../utils';
 
 export type MetamaskState = {
@@ -17,7 +12,6 @@ export type MetamaskState = {
 
 const initialState: MetamaskState = {
   isFlask: false,
-  error: undefined,
 };
 
 type MetamaskDispatch = { type: MetamaskActions; payload: any };
@@ -77,28 +71,38 @@ export const MetaMaskProvider = ({ children }: { children: ReactNode }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
-    async function detectFlask() {
-      const isFlaskDetected = await isFlask();
+    const detectInstallation = async () => {
+      /**
+       * Detect if MetaMask Flask is installed.
+       */
+      async function detectFlask() {
+        const isFlaskDetected = await isFlask();
 
-      dispatch({
-        type: MetamaskActions.SetFlaskDetected,
-        payload: isFlaskDetected,
-      });
-    }
+        dispatch({
+          type: MetamaskActions.SetFlaskDetected,
+          payload: isFlaskDetected,
+        });
+      }
 
-    async function detectSnapInstalled() {
-      const installedSnap = await getSnap();
-      dispatch({
-        type: MetamaskActions.SetInstalled,
-        payload: installedSnap,
-      });
-    }
+      /**
+       * Detect if the snap is installed.
+       */
+      async function detectSnapInstalled() {
+        const installedSnap = await getSnap();
+        dispatch({
+          type: MetamaskActions.SetInstalled,
+          payload: installedSnap,
+        });
+      }
 
-    detectFlask();
+      await detectFlask();
 
-    if (state.isFlask) {
-      detectSnapInstalled();
-    }
+      if (state.isFlask) {
+        await detectSnapInstalled();
+      }
+    };
+
+    detectInstallation().catch(console.error);
   }, [state.isFlask, window.ethereum]);
 
   useEffect(() => {

@@ -1,4 +1,5 @@
-import { createContext, FunctionComponent, ReactNode, useState } from 'react';
+import type { FunctionComponent, ReactNode } from 'react';
+import { createContext, useState } from 'react';
 import { ThemeProvider } from 'styled-components';
 
 import { dark, light } from './config/theme';

@@ -1,8 +1,5 @@
-import {
-  KeyringAccount,
-  KeyringRequest,
-  KeyringSnapRpcClient,
-} from '@metamask/keyring-api';
+import type { KeyringAccount, KeyringRequest } from '@metamask/keyring-api';
+import { KeyringSnapRpcClient } from '@metamask/keyring-api';
 import Grid from '@mui/material/Grid';
 import { useCallback, useContext, useEffect, useState } from 'react';
 
@@ -23,8 +20,8 @@ import {
 import { defaultSnapOrigin } from '../config';
 import { MetaMaskContext, MetamaskActions } from '../hooks';
 import { InputType } from '../types';
+import type { KeyringState } from '../utils';
 import {
-  KeyringState,
   connectSnap,
   getSnap,
   isSynchronousMode,
@@ -57,6 +54,11 @@ const Index = () => {
   const client = new KeyringSnapRpcClient(snapId, window.ethereum);
 
   useEffect(() => {
+    /**
+     * Return the current state of the snap.
+     *
+     * @returns The current state of the snap.
+     */
     async function getState() {
       const accounts = await client.listAccounts();
       const pendingRequests = await client.listRequests();
@@ -70,13 +72,6 @@ const Index = () => {
 
     getState().catch((error) => console.error(error));
   }, []);
-
-  const handleRequestIdChange = useCallback(
-    (newRequestId: string) => {
-      setRequestId(newRequestId);
-    },
-    [requestId],
-  );
 
   const createAccount = async () => {
     const newAccount = await client.createAccount();
@@ -247,7 +242,7 @@ const Index = () => {
           type: InputType.TextField,
           placeholder: '6fcbe1b5-f250-452c-8114-683dfa5ea74d',
           onChange: (event: any) => {
-            handleRequestIdChange(event.currentTarget.value);
+            setRequestId(event.currentTarget.value);
           },
         },
       ],
@@ -282,7 +277,7 @@ const Index = () => {
           type: InputType.TextField,
           placeholder: '6fcbe1b5-f250-452c-8114-683dfa5ea74d',
           onChange: (event: any) => {
-            handleRequestIdChange(event.currentTarget.value);
+            setRequestId(event.currentTarget.value);
           },
         },
       ],
@@ -300,9 +295,9 @@ const Index = () => {
         {
           title: 'Request ID',
           type: InputType.TextField,
-          placeholder: 'E.g. Request ID',
+          placeholder: '6fcbe1b5-f250-452c-8114-683dfa5ea74d',
           onChange: (event: any) => {
-            handleRequestIdChange(event.currentTarget.value);
+            setRequestId(event.currentTarget.value);
           },
         },
       ],
