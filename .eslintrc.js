@@ -5,15 +5,12 @@ module.exports = {
 
   overrides: [
     {
-      files: ['*.ts'],
+      files: ['*.ts', '*.tsx'],
       extends: ['@metamask/eslint-config-typescript'],
     },
 
     {
-      files: ['*.js'],
-      parserOptions: {
-        sourceType: 'script',
-      },
+      files: ['*.js', '*.jsx'],
       extends: ['@metamask/eslint-config-nodejs'],
     },
 

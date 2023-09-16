@@ -28,7 +28,7 @@
     "build:snap": "yarn workspace @metamask/snap-simple-keyring-snap build",
     "lint": "yarn lint:eslint && yarn lint:misc --check && yarn lint:deps",
     "lint:deps": "yarn workspaces foreach --parallel --verbose run depcheck",
-    "lint:eslint": "eslint . --cache --ext js,ts",
+    "lint:eslint": "eslint . --cache --ext js,jsx,ts,tsx",
     "lint:fix": "yarn lint:eslint --fix && yarn lint:misc --write",
     "lint:misc": "prettier '**/*.json' '**/*.md' '!**/CHANGELOG.md' '**/*.yml' --ignore-path .gitignore",
     "start": "yarn workspaces foreach --parallel --interlaced --verbose run start",
