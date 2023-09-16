@@ -111,7 +111,7 @@ const config: GatsbyConfig = {
               urls: {
                 woff2: `fonts/EuclidCircularB-MediumItalic.woff2`,
                 woff: `fonts/EuclidCircularB-MediumItalic.woff`,
-                ttf: `fonts/Euclid Circular B MediumItalic.ttf`,
+                ttf: `fonts/Euclid Circular B Medium Italic.ttf`,
               },
               fontStyle: 'italic',
               fontWeight: 500,
