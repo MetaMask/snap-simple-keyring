@@ -26,6 +26,12 @@ const config: GatsbyConfig = {
       resolve: `gatsby-plugin-webfonts`,
       options: {
         fonts: {
+          google: [
+            {
+              family: 'Roboto Mono',
+              variants: ['300', '400', '500', '600', '700'],
+            },
+          ],
           selfHosted: [
             // Common weight name mapping
             //
