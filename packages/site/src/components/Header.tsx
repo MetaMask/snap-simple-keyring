@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import React, { useContext } from 'react';
 import styled from 'styled-components';
 
 import { HeaderButtons } from './Buttons';
@@ -44,7 +44,7 @@ const VersionStyle = styled.p`
   font-size: 1.6rem;
   margin: auto;
   padding-right: 2rem;
-  color: ${({ theme }) => theme.colors.text.muted};
+  color: ${({ theme }) => theme.colors.text?.muted};
 `;
 
 export const Header = () => {

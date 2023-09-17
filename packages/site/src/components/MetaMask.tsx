@@ -1,3 +1,5 @@
+import React from 'react';
+
 export const MetaMask = ({ color }: { color: string }) => (
   <svg
     width="98"

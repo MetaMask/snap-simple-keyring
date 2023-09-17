@@ -1,5 +1,5 @@
 import type { GatsbyBrowser } from 'gatsby';
-import { StrictMode } from 'react';
+import React, { StrictMode } from 'react';
 
 import { App } from './src/App';
 import { Root } from './src/Root';

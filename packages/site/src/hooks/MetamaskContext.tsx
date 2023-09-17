@@ -1,5 +1,5 @@
 import type { Dispatch, ReactNode, Reducer } from 'react';
-import { createContext, useEffect, useReducer } from 'react';
+import React, { createContext, useEffect, useReducer } from 'react';
 
 import type { Snap } from '../types';
 import { isFlask, getSnap } from '../utils';

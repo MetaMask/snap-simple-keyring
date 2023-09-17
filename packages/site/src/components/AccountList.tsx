@@ -1,5 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import type { KeyringAccount } from '@metamask/keyring-api';
+import React from 'react';
 import styled from 'styled-components';
 
 import { Account } from './Account';

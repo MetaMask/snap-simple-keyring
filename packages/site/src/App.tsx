@@ -1,5 +1,5 @@
 import type { FunctionComponent, ReactNode } from 'react';
-import { useContext } from 'react';
+import React, { useContext } from 'react';
 import { Helmet } from 'react-helmet';
 import styled from 'styled-components';
 
@@ -25,6 +25,7 @@ export const App: FunctionComponent<AppProps> = ({ children }) => {
   if (typeof window === 'undefined') {
     return null;
   }
+
   return (
     <>
       <Helmet>

@@ -3,7 +3,7 @@
 import 'styled-components';
 
 /**
- * styled-component default theme extension
+ * Styled-component default theme extension
  */
 declare module 'styled-components' {
   /* eslint-disable @typescript-eslint/consistent-type-definitions */

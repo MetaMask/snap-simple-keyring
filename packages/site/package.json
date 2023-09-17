@@ -11,6 +11,7 @@
     "lint:eslint": "eslint . --cache --ext js,ts",
     "lint:fix": "yarn lint:eslint --fix && yarn lint:misc --write",
     "lint:misc": "prettier '**/*.json' '**/*.md' '!CHANGELOG.md' --ignore-path .gitignore",
+    "lint:types": "tsc --noEmit",
     "start": "cross-env GATSBY_TELEMETRY_DISABLED=1 gatsby develop"
   },
   "browserslist": {
@@ -32,8 +33,10 @@
     "@metamask/providers": "^12.0.0",
     "@mui/icons-material": "^5.14.0",
     "@mui/material": "^5.14.0",
+    "@types/react-helmet": "^6.1.6",
     "crypto-browserify": "^3.12.0",
     "gatsby-plugin-react-helmet": "^6.11.0",
+    "gatsby-plugin-react-svg": "^3.3.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-helmet": "^6.1.0",

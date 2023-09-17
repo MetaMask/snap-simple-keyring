@@ -127,8 +127,8 @@ export const GlobalStyle = createGlobalStyle`
   }
 
   body {
-    background-color: ${(props) => props.theme.colors.background.default};
-    color: ${(props) => props.theme.colors.text.default};
+    background-color: ${(props) => props.theme.colors.background?.default};
+    color: ${(props) => props.theme.colors.text?.default};
     font-family: ${(props) => props.theme.fonts.default};
     font-size: ${(props) => props.theme.fontSizes.text};
     margin: 0;
@@ -146,7 +146,7 @@ export const GlobalStyle = createGlobalStyle`
   }
 
   code {
-    background-color: ${(props) => props.theme.colors.background.alternative};
+    background-color: ${(props) => props.theme.colors.background?.alternative};
     font-family: ${(props) => props.theme.fonts.code};
     padding: 1.2rem;
     font-weight: normal;
@@ -156,9 +156,9 @@ export const GlobalStyle = createGlobalStyle`
   button {
     font-size: ${(props) => props.theme.fontSizes.small};
     border-radius: ${(props) => props.theme.radii.button};
-    background-color: ${(props) => props.theme.colors.background.inverse};
-    color: ${(props) => props.theme.colors.text.inverse};
-    border: 1px solid ${(props) => props.theme.colors.background.inverse};
+    background-color: ${(props) => props.theme.colors.background?.inverse};
+    color: ${(props) => props.theme.colors.text?.inverse};
+    border: 1px solid ${(props) => props.theme.colors.background?.inverse};
     font-weight: bold;
     padding: 1rem;
     min-height: 4.2rem;
@@ -167,21 +167,21 @@ export const GlobalStyle = createGlobalStyle`
 
     &:hover {
       background-color: transparent;
-      border: 1px solid ${(props) => props.theme.colors.background.inverse};
-      color: ${(props) => props.theme.colors.text.default};
+      border: 1px solid ${(props) => props.theme.colors.background?.inverse};
+      color: ${(props) => props.theme.colors.text?.default};
     }
 
     &:disabled,
     &[disabled] {
-      border: 1px solid ${(props) => props.theme.colors.background.inverse};
+      border: 1px solid ${(props) => props.theme.colors.background?.inverse};
       cursor: not-allowed;
     }
 
     &:disabled:hover,
     &[disabled]:hover {
-      background-color: ${(props) => props.theme.colors.background.inverse};
-      color: ${(props) => props.theme.colors.text.inverse};
-      border: 1px solid ${(props) => props.theme.colors.background.inverse};
+      background-color: ${(props) => props.theme.colors.background?.inverse};
+      color: ${(props) => props.theme.colors.text?.inverse};
+      border: 1px solid ${(props) => props.theme.colors.background?.inverse};
     }
   }
 `;

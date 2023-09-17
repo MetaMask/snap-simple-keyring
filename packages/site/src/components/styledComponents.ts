@@ -51,9 +51,9 @@ export const CardContainer = styled.div`
 `;
 
 export const ErrorMessage = styled.div`
-  background-color: ${({ theme }) => theme.colors.error.muted};
-  border: 1px solid ${({ theme }) => theme.colors.error.default};
-  color: ${({ theme }) => theme.colors.error.alternative};
+  background-color: ${({ theme }) => theme.colors.error?.muted};
+  border: 1px solid ${({ theme }) => theme.colors.error?.default};
+  color: ${({ theme }) => theme.colors.error?.alternative};
   border-radius: ${({ theme }) => theme.radii.default};
   padding: 2.4rem;
   margin-bottom: 2.4rem;
