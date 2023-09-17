@@ -41,9 +41,8 @@
     "@ethereumjs/tx": "^4.1.2",
     "@ethereumjs/util": "^8.0.5",
     "@metamask/eth-sig-util": "^5.0.2",
-    "@metamask/keyring-api": "^0.2.3",
+    "@metamask/keyring-api": "github:MetaMask/keyring-api#16c40244a3d0701b96ed6635f1835c036367237d",
     "@metamask/snaps-types": "^0.38.2-flask.1",
-    "@metamask/snaps-ui": "^0.37.4-flask.1",
     "@metamask/utils": "^5.0.2",
     "uuid": "^9.0.0"
   },

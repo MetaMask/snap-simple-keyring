@@ -2,24 +2,6 @@ import type { JsonTx } from '@ethereumjs/tx';
 import type { Json } from '@metamask/utils';
 
 import type { Wallet } from './keyring';
-import type {
-  InternalMethod,
-  RequestMethods,
-  SnapKeyringMethod,
-} from './permissions';
-
-/**
- * Logs a request with the specified request method and payload.
- *
- * @param requestMethod - The request method.
- * @param payload - The payload of the request.
- */
-export function logRequest(
-  requestMethod: SnapKeyringMethod | RequestMethods | InternalMethod,
-  payload: any,
-): void {
-  console.log(`[Snap] ${requestMethod} Payload: ${JSON.stringify(payload)}`);
-}
 
 /**
  * Serializes a transaction by removing undefined properties and converting them to null.
@@ -58,11 +40,11 @@ export function isUniqueAddress(address: string, wallets: Wallet[]): boolean {
 /**
  * Determines whether the given CAIP-2 chain ID represents an EVM-based chain.
  *
- * @param caip2ChainId - The CAIP-2 chain ID to check.
+ * @param chain - The CAIP-2 chain ID to check.
  * @returns Returns true if the chain is EVM-based, otherwise false.
  */
-export function isEvmChain(caip2ChainId: string): boolean {
-  return caip2ChainId.startsWith('eip155:');
+export function isEvmChain(chain: string): boolean {
+  return chain.startsWith('eip155:');
 }
 
 /**
