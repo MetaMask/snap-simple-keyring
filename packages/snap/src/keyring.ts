@@ -149,7 +149,8 @@ export class SimpleKeyring implements Keyring {
 
   async approveRequest(id: string): Promise<void> {
     const { request } =
-      this.#state.pendingRequests[id] ?? throwError(`Request ${id} not found`);
+      this.#state.pendingRequests[id] ??
+      throwError(`Request '${id}' not found`);
 
     const result = this.#handleSigningRequest(
       request.method,
