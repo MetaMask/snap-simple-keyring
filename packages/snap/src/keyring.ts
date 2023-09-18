@@ -31,7 +31,6 @@ import {
 import { KeyringEvent } from '@metamask/keyring-api/dist/events';
 import { type Json, type JsonRpcRequest } from '@metamask/utils';
 import { Buffer } from 'buffer';
-import * as crypto from 'crypto';
 import { v4 as uuid } from 'uuid';
 
 import { saveState } from './stateManagement';
