@@ -36,7 +36,6 @@
     "@types/react-helmet": "^6.1.6",
     "crypto-browserify": "^3.12.0",
     "gatsby-plugin-react-helmet": "^6.11.0",
-    "gatsby-plugin-react-svg": "^3.3.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-helmet": "^6.1.0",
