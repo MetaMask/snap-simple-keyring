@@ -1,4 +1,3 @@
-/* eslint-disable no-restricted-globals */
 import { Common, Hardfork } from '@ethereumjs/common';
 import { TransactionFactory } from '@ethereumjs/tx';
 import {
@@ -32,10 +31,16 @@ import {
 import { KeyringEvent } from '@metamask/keyring-api/dist/events';
 import { type Json, type JsonRpcRequest } from '@metamask/utils';
 import { Buffer } from 'buffer';
+import * as crypto from 'crypto';
 import { v4 as uuid } from 'uuid';
 
 import { saveState } from './stateManagement';
-import { isEvmChain, serializeTransaction, isUniqueAddress } from './util';
+import {
+  isEvmChain,
+  serializeTransaction,
+  isUniqueAddress,
+  throwError,
+} from './util';
 
 export type KeyringState = {
   wallets: Record<string, Wallet>;
@@ -60,7 +65,7 @@ export class SimpleKeyring implements Keyring {
   }
 
   async getAccount(id: string): Promise<KeyringAccount | undefined> {
-    return this.#state.wallets[id].account;
+    return this.#state.wallets[id]?.account;
   }
 
   async createAccount(
@@ -104,20 +109,24 @@ export class SimpleKeyring implements Keyring {
   }
 
   async updateAccount(account: KeyringAccount): Promise<void> {
-    const currentAccount = this.#state.wallets[account.id].account;
-    const newAccount: KeyringAccount = {
-      ...currentAccount,
+    const wallet =
+      this.#state.wallets[account.id] ??
+      throwError(`Account '${account.id}' not found`);
+
+    wallet.account = {
+      ...wallet.account,
       ...account,
       // Restore read-only properties.
-      address: currentAccount.address,
-      methods: currentAccount.methods,
-      type: currentAccount.type,
-      options: currentAccount.options,
+      address: wallet.account.address,
+      methods: wallet.account.methods,
+      type: wallet.account.type,
+      options: wallet.account.options,
     };
 
-    this.#state.wallets[account.id].account = newAccount;
     await this.#saveState();
-    await this.#emitEvent(KeyringEvent.AccountUpdated, { account });
+    await this.#emitEvent(KeyringEvent.AccountUpdated, {
+      account: wallet.account,
+    });
   }
 
   async deleteAccount(id: string): Promise<void> {
@@ -130,11 +139,7 @@ export class SimpleKeyring implements Keyring {
     return Object.values(this.#state.pendingRequests);
   }
 
-  async getRequest(id: string): Promise<KeyringRequest> {
-    if (this.#state.pendingRequests[id] === undefined) {
-      throw new Error(`No pending request found with id: ${id}`);
-    }
-
+  async getRequest(id: string): Promise<KeyringRequest | undefined> {
     return this.#state.pendingRequests[id];
   }
 
@@ -145,22 +150,21 @@ export class SimpleKeyring implements Keyring {
   }
 
   async approveRequest(id: string): Promise<void> {
-    if (this.#state.pendingRequests[id] === undefined) {
-      throw new Error(`No pending request found with id: ${id}`);
-    }
+    const { request } =
+      this.#state.pendingRequests[id] ?? throwError(`Request ${id} not found`);
 
-    const { request } = await this.getRequest(id);
     const result = this.#handleSigningRequest(
       request.method,
       request.params ?? [],
     );
+
     await this.#removePendingRequest(id);
     await this.#emitEvent(KeyringEvent.RequestApproved, { id, result });
   }
 
   async rejectRequest(id: string): Promise<void> {
     if (this.#state.pendingRequests[id] === undefined) {
-      throw new Error(`No pending request found with id: ${id}`);
+      throw new Error(`Request ${id} not found`);
     }
 
     await this.#removePendingRequest(id);

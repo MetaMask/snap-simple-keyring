@@ -45,17 +45,6 @@ export function serializeTransaction(tx: JsonTx, type: number): Json {
 }
 
 /**
- * Validates whether there are no duplicate names in the provided array of wallets.
- *
- * @param name - The name to validate for duplication.
- * @param wallets - The array of wallets to search for duplicate names.
- * @returns Returns true if no duplicate names are found, otherwise false.
- */
-export function isUniqueAccountName(name: string, wallets: Wallet[]): boolean {
-  return !wallets.find((wallet) => wallet.account.name === name);
-}
-
-/**
  * Validates whether there are no duplicate addresses in the provided array of wallets.
  *
  * @param address - The address to validate for duplication.
@@ -74,4 +63,13 @@ export function isUniqueAddress(address: string, wallets: Wallet[]): boolean {
  */
 export function isEvmChain(caip2ChainId: string): boolean {
   return caip2ChainId.startsWith('eip155:');
+}
+
+/**
+ * Throws an error with the specified message.
+ *
+ * @param message - The error message.
+ */
+export function throwError(message: string): never {
+  throw new Error(message);
 }

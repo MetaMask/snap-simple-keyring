@@ -6,5 +6,5 @@
     "skipLibCheck": true,
     "jsx": "react"
   },
-  "include": ["src/**/*", "gatsby-*.ts", "gatsby-*.tsx"]
+  "include": ["src/", "gatsby-*.ts", "gatsby-*.tsx"]
 }
