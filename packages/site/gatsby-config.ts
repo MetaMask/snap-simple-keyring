@@ -21,6 +21,75 @@ const config: GatsbyConfig = {
       },
     },
     `gatsby-plugin-react-helmet`,
+    {
+      // See: <https://www.gatsbyjs.com/plugins/gatsby-plugin-webfonts/>
+      resolve: `gatsby-plugin-webfonts`,
+      options: {
+        fonts: {
+          google: [
+            {
+              family: 'Roboto Mono',
+              variants: ['400'],
+            },
+          ],
+          selfHosted: [
+            // Common weight name mapping
+            //
+            // 100 - Thin (Hairline)
+            // 200 - Extra Light (Ultra Light)
+            // 300 - Light
+            // 400 - Normal (Regular)
+            // 500 - Medium
+            // 600 - Semi Bold (Demi Bold)
+            // 700 - Bold
+            // 800 - Extra Bold (Ultra Bold)
+            // 900 - Black (Heavy)
+            // 950 - Extra Black (Ultra Black)
+            //
+            // See: <https://developer.mozilla.org/en-US/docs/Web/CSS/font-weight#common_weight_name_mapping>
+
+            // ----------------------------------------------------------------
+            // Regular
+            {
+              family: 'Euclid Circular B',
+              urls: {
+                woff2: `fonts/EuclidCircularB-Regular.woff2`,
+                woff: `fonts/EuclidCircularB-Regular.woff`,
+                ttf: `fonts/Euclid Circular B Regular.ttf`,
+              },
+              fontStyle: 'normal',
+              fontWeight: 400,
+            },
+
+            // ----------------------------------------------------------------
+            // Medium
+            {
+              family: 'Euclid Circular B',
+              urls: {
+                woff2: `fonts/EuclidCircularB-Medium.woff2`,
+                woff: `fonts/EuclidCircularB-Medium.woff`,
+                ttf: `fonts/Euclid Circular B Medium.ttf`,
+              },
+              fontStyle: 'normal',
+              fontWeight: 500,
+            },
+
+            // ----------------------------------------------------------------
+            // Bold
+            {
+              family: 'Euclid Circular B',
+              urls: {
+                woff2: `fonts/EuclidCircularB-Bold.woff2`,
+                woff: `fonts/EuclidCircularB-Bold.woff`,
+                ttf: `fonts/Euclid Circular B Bold.ttf`,
+              },
+              fontStyle: 'normal',
+              fontWeight: 700,
+            },
+          ],
+        },
+      },
+    },
   ],
 };
 

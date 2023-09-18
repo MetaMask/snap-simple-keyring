@@ -27,7 +27,7 @@ export const Divider = styled.div`
   color: #24272a;
 
   /* Heading-MD */
-  font-family: Euclid Circular B;
+  font-family: Euclid Circular B, ui-sans-serif;
   font-size: 24px;
   font-style: normal;
   font-weight: 700;
@@ -88,7 +88,7 @@ export const AccountTitle = styled.p`
   display: flex;
   margin: 0px;
   color: #000;
-  font-family: Euclid Circular B;
+  font-family: Euclid Circular B, ui-sans-serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 500;
@@ -160,11 +160,10 @@ export const CopyableItemValue = styled.div`
   margin: 0px;
 
   /* Body-SM-Medium */
-  font-family: SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono,
-    Inconsolata, monospace;
+  font-family: Roboto Mono, ui-monospace;
   font-size: 12px;
   font-style: normal;
-  font-weight: 500;
+  font-weight: 400;
   line-height: 20px; /* 166.667% */
   letter-spacing: 0.25px;
 `;
@@ -173,7 +172,7 @@ export const AccountRowTitle = styled.p`
   color: #000;
 
   /* H6 - Bold 14px */
-  font-family: Euclid Circular B;
+  font-family: Euclid Circular B, ui-sans-serif;
   font-size: 14px;
   font-style: normal;
   font-weight: 700;
@@ -186,7 +185,7 @@ export const AccountRowValue = styled.p`
   color: #6a737d;
 
   /* H6 - Normal 14px */
-  font-family: Euclid Circular B;
+  font-family: Euclid Circular B, ui-sans-serif;
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
