@@ -168,7 +168,7 @@ export class SimpleKeyring implements Keyring {
 
   async rejectRequest(id: string): Promise<void> {
     if (this.#state.pendingRequests[id] === undefined) {
-      throw new Error(`Request ${id} not found`);
+      throw new Error(`Request '${id}' not found`);
     }
 
     await this.#removePendingRequest(id);
@@ -268,7 +268,7 @@ export class SimpleKeyring implements Keyring {
       }
 
       default: {
-        throw new Error(`EVM method not supported: ${method}`);
+        throw new Error(`EVM method '${method}' not supported`);
       }
     }
   }
@@ -331,7 +331,7 @@ export class SimpleKeyring implements Keyring {
     });
     if (recoveredAddress !== from) {
       throw new Error(
-        `Signature verification failed for account "${from}" (got "${recoveredAddress}")`,
+        `Signature verification failed for account '${from}' (got '${recoveredAddress}')`,
       );
     }
 
