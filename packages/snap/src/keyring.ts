@@ -63,8 +63,11 @@ export class SimpleKeyring implements Keyring {
     return Object.values(this.#state.wallets).map((wallet) => wallet.account);
   }
 
-  async getAccount(id: string): Promise<KeyringAccount | undefined> {
-    return this.#state.wallets[id]?.account;
+  async getAccount(id: string): Promise<KeyringAccount> {
+    return (
+      this.#state.wallets[id]?.account ??
+      throwError(`Account '${id}' not found`)
+    );
   }
 
   async createAccount(
@@ -137,8 +140,10 @@ export class SimpleKeyring implements Keyring {
     return Object.values(this.#state.pendingRequests);
   }
 
-  async getRequest(id: string): Promise<KeyringRequest | undefined> {
-    return this.#state.pendingRequests[id];
+  async getRequest(id: string): Promise<KeyringRequest> {
+    return (
+      this.#state.pendingRequests[id] ?? throwError(`Request '${id}' not found`)
+    );
   }
 
   async submitRequest(request: KeyringRequest): Promise<SubmitRequestResponse> {
@@ -203,10 +208,7 @@ export class SimpleKeyring implements Keyring {
         wallet.account.address.toLowerCase() === address.toLowerCase(),
     );
 
-    if (match === undefined) {
-      throw new Error(`Account '${address}' not found`);
-    }
-    return match;
+    return match ?? throwError(`Account '${address}' not found`);
   }
 
   #getKeyPair(privateKey?: string): {
