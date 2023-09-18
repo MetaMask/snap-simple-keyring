@@ -29,7 +29,7 @@ const config: GatsbyConfig = {
           google: [
             {
               family: 'Roboto Mono',
-              variants: ['300', '400', '500', '600', '700'],
+              variants: ['400'],
             },
           ],
           selfHosted: [
@@ -49,29 +49,6 @@ const config: GatsbyConfig = {
             // See: <https://developer.mozilla.org/en-US/docs/Web/CSS/font-weight#common_weight_name_mapping>
 
             // ----------------------------------------------------------------
-            // Light
-            {
-              family: 'Euclid Circular B',
-              urls: {
-                woff2: `fonts/EuclidCircularB-Light.woff2`,
-                woff: `fonts/EuclidCircularB-Light.woff`,
-                ttf: `fonts/Euclid Circular B Light.ttf`,
-              },
-              fontStyle: 'normal',
-              fontWeight: 300,
-            },
-            {
-              family: 'Euclid Circular B',
-              urls: {
-                woff2: `fonts/EuclidCircularB-LightItalic.woff2`,
-                woff: `fonts/EuclidCircularB-LightItalic.woff`,
-                ttf: `fonts/Euclid Circular B Light Italic.ttf`,
-              },
-              fontStyle: 'italic',
-              fontWeight: 300,
-            },
-
-            // ----------------------------------------------------------------
             // Regular
             {
               family: 'Euclid Circular B',
@@ -81,16 +58,6 @@ const config: GatsbyConfig = {
                 ttf: `fonts/Euclid Circular B Regular.ttf`,
               },
               fontStyle: 'normal',
-              fontWeight: 400,
-            },
-            {
-              family: 'Euclid Circular B',
-              urls: {
-                woff2: `fonts/EuclidCircularB-Italic.woff2`,
-                woff: `fonts/EuclidCircularB-Italic.woff`,
-                ttf: `fonts/Euclid Circular B Italic.ttf`,
-              },
-              fontStyle: 'italic',
               fontWeight: 400,
             },
 
@@ -106,39 +73,6 @@ const config: GatsbyConfig = {
               fontStyle: 'normal',
               fontWeight: 500,
             },
-            {
-              family: 'Euclid Circular B',
-              urls: {
-                woff2: `fonts/EuclidCircularB-MediumItalic.woff2`,
-                woff: `fonts/EuclidCircularB-MediumItalic.woff`,
-                ttf: `fonts/Euclid Circular B Medium Italic.ttf`,
-              },
-              fontStyle: 'italic',
-              fontWeight: 500,
-            },
-
-            // ----------------------------------------------------------------
-            // Semi bold
-            {
-              family: 'Euclid Circular B',
-              urls: {
-                woff2: `fonts/EuclidCircularB-SemiBold.woff2`,
-                woff: `fonts/EuclidCircularB-SemiBold.woff`,
-                ttf: `fonts/Euclid Circular B SemiBold.ttf`,
-              },
-              fontStyle: 'normal',
-              fontWeight: 600,
-            },
-            {
-              family: 'Euclid Circular B',
-              urls: {
-                woff2: `fonts/EuclidCircularB-SemiBoldItalic.woff2`,
-                woff: `fonts/EuclidCircularB-SemiBoldItalic.woff`,
-                ttf: `fonts/Euclid Circular B SemiBold Italic.ttf`,
-              },
-              fontStyle: 'italic',
-              fontWeight: 600,
-            },
 
             // ----------------------------------------------------------------
             // Bold
@@ -150,16 +84,6 @@ const config: GatsbyConfig = {
                 ttf: `fonts/Euclid Circular B Bold.ttf`,
               },
               fontStyle: 'normal',
-              fontWeight: 700,
-            },
-            {
-              family: 'Euclid Circular B',
-              urls: {
-                woff2: `fonts/EuclidCircularB-BoldItalic.woff2`,
-                woff: `fonts/EuclidCircularB-BoldItalic.woff`,
-                ttf: `fonts/Euclid Circular B Bold Italic.ttf`,
-              },
-              fontStyle: 'italic',
               fontWeight: 700,
             },
           ],
