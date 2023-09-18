@@ -10,7 +10,7 @@ module.exports = {
     },
 
     {
-      files: ['*.js', '*.jsx'],
+      files: ['*.js', '*.jsx', '*.cjs'],
       extends: ['@metamask/eslint-config-nodejs'],
     },
 

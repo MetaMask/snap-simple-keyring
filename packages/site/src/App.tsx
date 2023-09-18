@@ -1,11 +1,10 @@
 import type { FunctionComponent, ReactNode } from 'react';
-import React, { useContext } from 'react';
+import React from 'react';
 import { Helmet } from 'react-helmet';
 import styled from 'styled-components';
 
 import { Footer, Header } from './components';
 import { GlobalStyle } from './config/theme';
-import { ToggleThemeContext } from './Root';
 
 const Wrapper = styled.div`
   display: flex;
@@ -20,7 +19,6 @@ export type AppProps = {
 };
 
 export const App: FunctionComponent<AppProps> = ({ children }) => {
-  const toggleTheme = useContext(ToggleThemeContext);
   // Make sure we are on a browser, otherwise we can't use window.ethereum.
   if (typeof window === 'undefined') {
     return null;
@@ -34,7 +32,7 @@ export const App: FunctionComponent<AppProps> = ({ children }) => {
       </Helmet>
       <GlobalStyle />
       <Wrapper>
-        <Header handleToggleClick={toggleTheme} />
+        <Header />
         {children}
         <Footer />
       </Wrapper>
