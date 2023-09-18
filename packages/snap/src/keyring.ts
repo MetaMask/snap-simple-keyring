@@ -87,7 +87,6 @@ export class SimpleKeyring implements Keyring {
         EthMethod.PersonalSign,
         EthMethod.Sign,
         EthMethod.SignTransaction,
-        EthMethod.SignTypedData,
         EthMethod.SignTypedDataV1,
         EthMethod.SignTypedDataV3,
         EthMethod.SignTypedDataV4,
@@ -240,7 +239,6 @@ export class SimpleKeyring implements Keyring {
         return this.#signTransaction(tx);
       }
 
-      case EthMethod.SignTypedData:
       case EthMethod.SignTypedDataV1: {
         const [from, data] = params as [string, Json];
         return this.#signTypedData(from, data, {
