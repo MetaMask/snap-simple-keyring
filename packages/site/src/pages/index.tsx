@@ -60,6 +60,10 @@ const Index = () => {
      * @returns The current state of the snap.
      */
     async function getState() {
+      if (!state.installedSnap) {
+        console.log('Snap not installed');
+        return;
+      }
       const accounts = await client.listAccounts();
       const pendingRequests = await client.listRequests();
       const isSynchronous = await isSynchronousMode();
