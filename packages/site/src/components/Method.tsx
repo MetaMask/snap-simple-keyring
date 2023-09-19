@@ -53,6 +53,7 @@ const CopyableContainer = styled.div`
 export type MethodProps = {
   description: string;
   inputs: {
+    id: string;
     title: string;
     placeholder: string;
     onChange: () => null;
@@ -82,7 +83,7 @@ export const Method = ({
       case InputType.TextField:
         return (
           <TextField
-            id="outlined-basic"
+            id={props.id}
             placeholder={props.placeholder}
             onChange={props.onChange}
           />
