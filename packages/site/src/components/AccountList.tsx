@@ -1,14 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
-import { KeyringAccount } from '@metamask/keyring-api';
-import {
-  GiAbstract019,
-  GiAbstract095,
-  GiAnubis,
-  GiAstronautHelmet,
-  GiBaobab,
-  GiBatMask,
-  GiFox,
-} from 'react-icons/gi';
+import type { KeyringAccount } from '@metamask/keyring-api';
+import React from 'react';
 import styled from 'styled-components';
 
 import { Account } from './Account';

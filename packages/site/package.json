@@ -6,11 +6,12 @@
   "scripts": {
     "build": "cross-env GATSBY_TELEMETRY_DISABLED=1 gatsby build --prefix-paths",
     "clean": "rimraf public",
-    "lint": "yarn lint:eslint && yarn lint:misc --check",
+    "lint": "yarn lint:eslint && yarn lint:misc --check && yarn lint:deps && yarn lint:types",
     "lint:deps": "depcheck",
-    "lint:eslint": "eslint . --cache --ext js,ts",
+    "lint:eslint": "eslint . --cache --ext js,jsx,ts,tsx",
     "lint:fix": "yarn lint:eslint --fix && yarn lint:misc --write",
-    "lint:misc": "prettier '**/*.json' '**/*.md' '!CHANGELOG.md' --ignore-path .gitignore",
+    "lint:misc": "prettier '**/*.json' '**/*.md' '!CHANGELOG.md' --check",
+    "lint:types": "tsc --noEmit",
     "start": "cross-env GATSBY_TELEMETRY_DISABLED=1 gatsby develop"
   },
   "browserslist": {
@@ -28,12 +29,12 @@
   "dependencies": {
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
-    "@metamask/keyring-api": "^0.2.3",
-    "@metamask/providers": "^12.0.0",
+    "@metamask/keyring-api": "^0.2.5",
+    "@metamask/providers": "^13.0.0",
     "@mui/icons-material": "^5.14.0",
     "@mui/material": "^5.14.0",
+    "@types/react-helmet": "^6.1.6",
     "crypto-browserify": "^3.12.0",
-    "gatsby-plugin-react-helmet": "^6.11.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-helmet": "^6.1.0",
@@ -69,6 +70,7 @@
     "gatsby-plugin-svgr": "^3.0.0-beta.0",
     "gatsby-plugin-webfonts": "^2.3.2",
     "prettier": "^2.8.4",
+    "react-scripts": "^5.0.1",
     "rimraf": "^4.4.0",
     "typescript": "^4.9.5"
   }

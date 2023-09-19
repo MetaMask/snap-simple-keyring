@@ -1,7 +1,7 @@
-import { KeyringAccount } from '@metamask/keyring-api';
+import type { KeyringAccount } from '@metamask/keyring-api';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { useState } from 'react';
+import React, { useState } from 'react';
 
 import { CopyableItem } from './CopyableItem';
 import {

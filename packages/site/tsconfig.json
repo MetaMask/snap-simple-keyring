@@ -1,11 +1,9 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "module": "esnext",
     "resolveJsonModule": true,
-    "isolatedModules": true,
-    "noEmit": true,
-    "jsx": "preserve"
+    "skipLibCheck": true,
+    "jsx": "react"
   },
-  "include": ["src"]
+  "include": ["src/", "gatsby-*.ts", "gatsby-*.tsx"]
 }

@@ -1,10 +1,10 @@
-import { FunctionComponent, ReactNode, useContext } from 'react';
-import styled from 'styled-components';
+import type { FunctionComponent, ReactNode } from 'react';
+import React from 'react';
 import { Helmet } from 'react-helmet';
+import styled from 'styled-components';
 
 import { Footer, Header } from './components';
 import { GlobalStyle } from './config/theme';
-import { ToggleThemeContext } from './Root';
 
 const Wrapper = styled.div`
   display: flex;
@@ -19,20 +19,20 @@ export type AppProps = {
 };
 
 export const App: FunctionComponent<AppProps> = ({ children }) => {
-  const toggleTheme = useContext(ToggleThemeContext);
   // Make sure we are on a browser, otherwise we can't use window.ethereum.
   if (typeof window === 'undefined') {
     return null;
   }
+
   return (
     <>
       <Helmet>
         <meta charSet="utf-8" />
-        <title>SSK - Snap Simple Keyring</title>
+        <title>SSK - Simple Snap Keyring</title>
       </Helmet>
       <GlobalStyle />
       <Wrapper>
-        <Header handleToggleClick={toggleTheme} />
+        <Header />
         {children}
         <Footer />
       </Wrapper>

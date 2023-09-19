@@ -1,13 +1,12 @@
-/* eslint-disable*/
-
 /// <reference types="react-scripts" />
 
-import { MetaMaskInpageProvider } from '@metamask/providers';
-/*
+import type { MetaMaskInpageProvider } from '@metamask/providers';
+
+/**
  * Window type extension to support ethereum
  */
-
 declare global {
+  // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
   interface Window {
     ethereum: MetaMaskInpageProvider;
   }

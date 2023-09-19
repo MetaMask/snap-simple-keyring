@@ -1,3 +1,5 @@
+import React from 'react';
+
 export const PoweredBy = ({ color }: { color: string }) => (
   <svg
     width="60"

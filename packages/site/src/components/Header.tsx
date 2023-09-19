@@ -1,10 +1,11 @@
-import { useContext } from 'react';
-import styled, { useTheme } from 'styled-components';
+import React, { useContext } from 'react';
+import styled from 'styled-components';
+
+import { HeaderButtons } from './Buttons';
 import packageInfo from '../../package.json';
+import { defaultSnapOrigin } from '../config';
 import { MetamaskActions, MetaMaskContext } from '../hooks';
 import { connectSnap, getSnap } from '../utils';
-import { HeaderButtons } from './Buttons';
-import { defaultSnapOrigin } from '../config';
 
 const HeaderWrapper = styled.header`
   display: flex;
@@ -43,15 +44,10 @@ const VersionStyle = styled.p`
   font-size: 1.6rem;
   margin: auto;
   padding-right: 2rem;
-  color: ${({ theme }) => theme.colors.text.muted};
+  color: ${({ theme }) => theme.colors.text?.muted};
 `;
 
-export const Header = ({
-  handleToggleClick,
-}: {
-  handleToggleClick(): void;
-}) => {
-  const theme = useTheme();
+export const Header = () => {
   const [state, dispatch] = useContext(MetaMaskContext);
 
   const handleConnectClick = async () => {
@@ -63,13 +59,18 @@ export const Header = ({
         type: MetamaskActions.SetInstalled,
         payload: installedSnap,
       });
-    } catch (e) {
-      console.error(e);
-      dispatch({ type: MetamaskActions.SetError, payload: e });
+    } catch (error) {
+      console.error(error);
+      dispatch({ type: MetamaskActions.SetError, payload: error });
     }
   };
 
-  function Version() {
+  /**
+   * Component that displays the dapp and snap versions.
+   *
+   * @returns A component that displays the dapp and snap versions.
+   */
+  const Version = () => {
     return (
       <VersionStyle>
         <div>
@@ -87,11 +88,10 @@ export const Header = ({
           </div>
         )}
 
-        {defaultSnapOrigin.startsWith('local') &&
-          '(from ' + defaultSnapOrigin + ')'}
+        {defaultSnapOrigin.startsWith('local') && `(from ${defaultSnapOrigin})`}
       </VersionStyle>
     );
-  }
+  };
 
   return (
     <HeaderWrapper>

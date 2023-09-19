@@ -20,7 +20,6 @@ const config: GatsbyConfig = {
         display: 'standalone',
       },
     },
-    `gatsby-plugin-react-helmet`,
     {
       // See: <https://www.gatsbyjs.com/plugins/gatsby-plugin-webfonts/>
       resolve: `gatsby-plugin-webfonts`,

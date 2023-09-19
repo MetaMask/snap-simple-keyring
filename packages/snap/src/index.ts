@@ -1,18 +1,28 @@
 import {
   MethodNotSupportedError,
-  buildHandlersChain,
   handleKeyringRequest,
+  isKeyringRpcMethod,
 } from '@metamask/keyring-api';
 import type { OnRpcRequestHandler } from '@metamask/snaps-types';
-import { panel, heading, text } from '@metamask/snaps-ui';
-import type { Json } from '@metamask/utils';
 
 import { SimpleKeyring } from './keyring';
-import { InternalMethod, PERMISSIONS } from './permissions';
+import { InternalMethod, originPermissions } from './permissions';
 import { getState } from './stateManagement';
-import { logRequest } from './util';
 
 let keyring: SimpleKeyring;
+
+/**
+ * Return the keyring instance. If it doesn't exist, create it.
+ */
+async function getKeyring(): Promise<SimpleKeyring> {
+  if (!keyring) {
+    const state = await getState();
+    if (!keyring) {
+      keyring = new SimpleKeyring(state);
+    }
+  }
+  return keyring;
+}
 
 /**
  * Verify if the caller can call the requested method.
@@ -22,111 +32,39 @@ let keyring: SimpleKeyring;
  * @returns True if the caller is allowed to call the method, false otherwise.
  */
 function hasPermission(origin: string, method: string): boolean {
-  return Boolean(PERMISSIONS.get(origin)?.includes(method));
+  return originPermissions.get(origin)?.includes(method) ?? false;
 }
 
-/**
- * Log the requests.
- *
- * @param args - Request arguments.
- * @param args.origin - Caller origin.
- * @param args.request - Request to execute.
- * @returns Nothing, always throws `MethodNotSupportedError`.
- */
-const loggerHandler: OnRpcRequestHandler = async ({ origin, request }) => {
+export const onRpcRequest: OnRpcRequestHandler = async ({
+  request,
+  origin,
+}) => {
+  // Log request.
   console.log(
-    `[Snap] request (id=${request.id ?? 'null'}, origin=${origin}):`,
+    `Snap request (id=${request.id ?? 'null'}, origin=${origin}):`,
     request,
   );
-  throw new MethodNotSupportedError(request.method);
-};
 
-/**
- * Handle execution permissions.
- *
- * @param args - Request arguments.
- * @param args.origin - Caller origin.
- * @param args.request - Request to execute.
- * @returns Nothing, throws `MethodNotSupportedError` if the caller IS allowed
- * to call the method, throws an `Error` otherwise.
- */
-const permissionsHandler: OnRpcRequestHandler = async ({
-  origin,
-  request,
-}): Promise<never> => {
+  // Check if origin is allowed to call method.
   if (!hasPermission(origin, request.method)) {
-    throw new Error(`origin ${origin} cannot call method ${request.method}`);
+    throw new Error(
+      `Origin '${origin}' is not allowed to call '${request.method}'`,
+    );
   }
-  throw new MethodNotSupportedError(request.method);
-};
 
-/**
- * Handle keyring requests.
- *
- * @param args - Request arguments.
- * @param args.request - Request to execute.
- * @returns The execution result.
- */
-const keyringHandler: OnRpcRequestHandler<
-  Json[] | Record<string, Json>
-> = async ({ request }) => {
-  if (!keyring) {
-    const keyringState = await getState();
-    if (!keyring) {
-      keyring = new SimpleKeyring(keyringState);
-    }
+  // Handle keyring methods.
+  if (isKeyringRpcMethod(request.method)) {
+    return handleKeyringRequest(await getKeyring(), request as any);
   }
-  return await handleKeyringRequest(keyring, request);
-};
 
-/**
- * Execute a custom snap request.
- *
- * @param args - Request arguments.
- * @param args.request - Request to execute.
- * @returns The execution result.
- */
-const customHandler: OnRpcRequestHandler = async ({
-  request,
-}): Promise<any> => {
+  // Handle custom methods.
   switch (request.method) {
-    // internal methods
-    case InternalMethod.Hello: {
-      return snap.request({
-        method: 'snap_dialog',
-        params: {
-          type: 'alert',
-          content: panel([
-            heading('Something happened in the system'),
-            text('The thing that happened is...'),
-          ]),
-        },
-      });
-    }
-
-    case InternalMethod.GetState: {
-      logRequest(InternalMethod.GetState, request);
-      return await getState();
-    }
-
-    case InternalMethod.ToggleSynchronousApprovals: {
-      if (!keyring) {
-        const keyringState = await getState();
-        if (!keyring) {
-          keyring = new SimpleKeyring(keyringState);
-        }
-      }
-      return keyring.toggleSynchronousApprovals();
+    case InternalMethod.ToggleSyncApprovals: {
+      return (await getKeyring()).toggleSyncApprovals();
     }
 
     case InternalMethod.IsSynchronousMode: {
-      if (!keyring) {
-        const keyringState = await getState();
-        if (!keyring) {
-          keyring = new SimpleKeyring(keyringState);
-        }
-      }
-      return keyring.isSynchronousMode();
+      return (await getKeyring()).isSynchronousMode();
     }
 
     default: {
@@ -134,10 +72,3 @@ const customHandler: OnRpcRequestHandler = async ({
     }
   }
 };
-
-export const onRpcRequest: OnRpcRequestHandler = buildHandlersChain(
-  loggerHandler,
-  permissionsHandler,
-  keyringHandler,
-  customHandler,
-);

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 type CheckedProps = {
@@ -136,7 +136,11 @@ export const Toggle = ({
 
   return (
     <div>
-      <ToggleWrapper onClick={handleChange}>
+      <ToggleWrapper
+        onClick={() => {
+          handleChange().catch(console.error);
+        }}
+      >
         <ToggleContainer checked={checked} enabled={enabled}>
           <CheckedContainer checked={checked}>
             <span>{checkedIcon}</span>
