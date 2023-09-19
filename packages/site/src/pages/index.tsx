@@ -144,14 +144,13 @@ const Index = () => {
       description: 'Import an account using a private key',
       inputs: [
         {
+          id: 'import-account-private-key',
           title: 'Private key',
           value: privateKey,
           type: InputType.TextField,
           placeholder:
-            '0x0000000000000000000000000000000000000000000000000000000000000000',
-          onChange: (event: any) => {
-            setPrivateKey(event.currentTarget.value);
-          },
+            'E.g. 0x0000000000000000000000000000000000000000000000000000000000000000',
+          onChange: (event: any) => setPrivateKey(event.currentTarget.value),
         },
       ],
       action: {
@@ -165,19 +164,14 @@ const Index = () => {
       description: 'Get data of the selected account',
       inputs: [
         {
+          id: 'get-account-account-id',
           title: 'Account ID',
-          type: InputType.Dropdown,
-          placeholder: 'Select account ID',
+          type: InputType.TextField,
+          placeholder: 'E.g. f59a9562-96de-4e75-9229-079e82c7822a',
           options: snapState.accounts.map((account) => {
             return { value: account.address };
           }),
-          onChange: (event: any) => {
-            snapState.accounts.forEach((account) => {
-              if (account.address === event.currentTarget.value) {
-                setAccountId(account.id);
-              }
-            });
-          },
+          onChange: (event: any) => setAccountId(event.currentTarget.value),
         },
       ],
       action: {
@@ -208,19 +202,14 @@ const Index = () => {
       description: 'Remove an account',
       inputs: [
         {
+          id: 'delete-account-account-id',
           title: 'Account ID',
-          type: InputType.Dropdown,
-          placeholder: 'Select account ID',
+          type: InputType.TextField,
+          placeholder: 'E.g. 394bd587-7be4-4ffb-a113-198c6a7764c2',
           options: snapState.accounts.map((account) => {
             return { value: account.address };
           }),
-          onChange: (event: any) => {
-            snapState.accounts.forEach((account) => {
-              if (account.address === event.currentTarget.value) {
-                setAccountId(account.id);
-              }
-            });
-          },
+          onChange: (event: any) => setAccountId(event.currentTarget.value),
         },
       ],
       action: {
@@ -238,12 +227,11 @@ const Index = () => {
       description: 'Get a pending request by ID',
       inputs: [
         {
+          id: 'get-request-request-id',
           title: 'Request ID',
           type: InputType.TextField,
-          placeholder: '6fcbe1b5-f250-452c-8114-683dfa5ea74d',
-          onChange: (event: any) => {
-            setRequestId(event.currentTarget.value);
-          },
+          placeholder: 'E.g. e5156958-16ad-4d5d-9dcd-6a8ba1d34906',
+          onChange: (event: any) => setRequestId(event.currentTarget.value),
         },
       ],
       action: {
@@ -273,9 +261,10 @@ const Index = () => {
       description: 'Approve a pending request by ID',
       inputs: [
         {
+          id: 'approve-request-request-id',
           title: 'Request ID',
           type: InputType.TextField,
-          placeholder: '6fcbe1b5-f250-452c-8114-683dfa5ea74d',
+          placeholder: 'E.g. 6fcbe1b5-f250-452c-8114-683dfa5ea74d',
           onChange: (event: any) => {
             setRequestId(event.currentTarget.value);
           },
@@ -293,9 +282,10 @@ const Index = () => {
       description: 'Reject a pending request by ID',
       inputs: [
         {
+          id: 'reject-request-request-id',
           title: 'Request ID',
           type: InputType.TextField,
-          placeholder: '6fcbe1b5-f250-452c-8114-683dfa5ea74d',
+          placeholder: 'E.g. 424ad2ee-56cf-493e-af82-cee79c591117',
           onChange: (event: any) => {
             setRequestId(event.currentTarget.value);
           },
