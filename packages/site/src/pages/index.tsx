@@ -61,7 +61,6 @@ const Index = () => {
      */
     async function getState() {
       if (!state.installedSnap) {
-        console.log('Snap not installed');
         return;
       }
       const accounts = await client.listAccounts();
