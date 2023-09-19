@@ -7,14 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ## [0.2.3]
-### Uncategorized
-- build: update linting targets ([#85](https://github.com/MetaMask/snap-simple-keyring/pull/85))
-- chore: update Gatsby to version 5 ([#83](https://github.com/MetaMask/snap-simple-keyring/pull/83))
-- feat: enable linters and fix errors ([#81](https://github.com/MetaMask/snap-simple-keyring/pull/81))
+### Changed
+- Update linting targets ([#85](https://github.com/MetaMask/snap-simple-keyring/pull/85)).
+- Update Gatsby to version 5 ([#83](https://github.com/MetaMask/snap-simple-keyring/pull/83)).
+- Enable linters and fix errors ([#81](https://github.com/MetaMask/snap-simple-keyring/pull/81)).
 
 ## [0.2.2]
 ### Fixed
-- Persist snap state after switching between sync <-> async ([#76](https://github.com/MetaMask/snap-simple-keyring/pull/76))
+- Persist snap state after switching between sync <-> async ([#76](https://github.com/MetaMask/snap-simple-keyring/pull/76)).
 
 ## [0.2.1]
 ### Changed
