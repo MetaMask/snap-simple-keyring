@@ -152,7 +152,7 @@ const Index = () => {
           value: privateKey,
           type: InputType.TextField,
           placeholder:
-            'E.g. 0x0000000000000000000000000000000000000000000000000000000000000000',
+            'E.g. 0000000000000000000000000000000000000000000000000000000000000000',
           onChange: (event: any) => setPrivateKey(event.currentTarget.value),
         },
       ],
