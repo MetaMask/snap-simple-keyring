@@ -31,7 +31,7 @@
     "lint:deps": "depcheck",
     "lint:eslint": "eslint . --cache --ext js,ts",
     "lint:fix": "yarn lint:eslint --fix && yarn lint:misc --write",
-    "lint:misc": "prettier '**/*.json' '**/*.md' '!CHANGELOG.md' --ignore-path .gitignore",
+    "lint:misc": "prettier '**/*.json' '**/*.md' '!CHANGELOG.md' --check",
     "lint:types": "tsc --noEmit",
     "serve": "mm-snap serve",
     "start": "mm-snap watch"

@@ -23,16 +23,16 @@
     "packages/*"
   ],
   "scripts": {
-    "build": "yarn workspaces foreach --parallel --topological --verbose run build",
+    "build": "yarn workspaces foreach --parallel --verbose --topological run build",
     "build:dapp": "yarn workspace @metamask/snap-simple-keyring-site build",
     "build:snap": "yarn workspace @metamask/snap-simple-keyring-snap build",
-    "lint": "yarn lint:eslint && yarn lint:misc --check && yarn lint:deps && yarn lint:types",
+    "lint": "yarn workspaces foreach --parallel --verbose run lint",
     "lint:deps": "yarn workspaces foreach --parallel --verbose run depcheck",
-    "lint:eslint": "eslint . --cache --ext js,jsx,ts,tsx",
-    "lint:fix": "yarn lint:eslint --fix && yarn lint:misc --write",
-    "lint:misc": "prettier '**/*.json' '**/*.md' '!**/CHANGELOG.md' '**/*.yml' --ignore-path .gitignore",
+    "lint:eslint": "yarn workspaces foreach --parallel --verbose run lint:eslint",
+    "lint:fix": "yarn workspaces foreach --parallel --verbose run lint:fix",
+    "lint:misc": "yarn workspaces foreach --parallel --verbose run lint:misc",
     "lint:types": "yarn workspaces foreach --parallel --verbose run lint:types",
-    "start": "yarn workspaces foreach --parallel --interlaced --verbose run start",
+    "start": "yarn workspaces foreach --parallel --verbose --interlaced run start",
     "test": "yarn workspaces foreach --parallel --verbose run test"
   },
   "devDependencies": {
