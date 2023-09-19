@@ -150,7 +150,11 @@ export const Toggle = ({
           </UncheckedContainer>
         </ToggleContainer>
         <ToggleCircle checked={checked} enabled={enabled} />
-        <ToggleInput type="checkbox" aria-label="Toggle Button" />
+        <ToggleInput
+          id="use-sync-flow-toggle"
+          type="checkbox"
+          aria-label="Toggle Button"
+        />
       </ToggleWrapper>
       <Label>{title}</Label>
     </div>
