@@ -7,14 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ## [0.2.3]
-### Fixed
-- Serve self-hosted fonts ([#80](https://github.com/MetaMask/snap-simple-keyring/pull/80)).
-
 ### Changed
 - Use text fields in account methods inputs ([#82](https://github.com/MetaMask/snap-simple-keyring/pull/82)).
 - Update linting targets ([#85](https://github.com/MetaMask/snap-simple-keyring/pull/85)).
 - Update Gatsby to version 5 ([#83](https://github.com/MetaMask/snap-simple-keyring/pull/83)).
 - Enable linters and fix errors ([#81](https://github.com/MetaMask/snap-simple-keyring/pull/81)).
+
+### Fixed
+- Serve self-hosted fonts ([#80](https://github.com/MetaMask/snap-simple-keyring/pull/80)).
 
 ## [0.2.2]
 ### Added
