@@ -1,4 +1,3 @@
-// eslint-disable-next-line spaced-comment
 /// <reference types="react-scripts" />
 
 import type { MetaMaskInpageProvider } from '@metamask/providers';
