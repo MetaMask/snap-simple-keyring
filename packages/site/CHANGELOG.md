@@ -6,13 +6,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.2.2]
-### Added
-- Let the dapp specifies the Snap version to install ([#72](https://github.com/MetaMask/snap-simple-keyring/pull/72))
-- Add dapp version to header ([#71](https://github.com/MetaMask/snap-simple-keyring/pull/71))
+## [0.2.3]
+### Changed
+- Use text fields in account methods inputs ([#82](https://github.com/MetaMask/snap-simple-keyring/pull/82)).
+- Update linting targets ([#85](https://github.com/MetaMask/snap-simple-keyring/pull/85)).
+- Update Gatsby to version 5 ([#83](https://github.com/MetaMask/snap-simple-keyring/pull/83)).
+- Enable linters and fix errors ([#81](https://github.com/MetaMask/snap-simple-keyring/pull/81)).
 
 ### Fixed
-- Disable async-sync toggle if snap is not installed ([#77](https://github.com/MetaMask/snap-simple-keyring/pull/77))
+- Serve self-hosted fonts ([#80](https://github.com/MetaMask/snap-simple-keyring/pull/80)).
+
+## [0.2.2]
+### Added
+- Let the dapp specifies the Snap version to install ([#72](https://github.com/MetaMask/snap-simple-keyring/pull/72)).
+- Add dapp version to header ([#71](https://github.com/MetaMask/snap-simple-keyring/pull/71)).
+
+### Fixed
+- Disable async-sync toggle if snap is not installed ([#77](https://github.com/MetaMask/snap-simple-keyring/pull/77)).
 
 ## [0.2.1]
 ### Changed
@@ -53,7 +63,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Initial release.
 
-[Unreleased]: https://github.com/MetaMask/snap-simple-keyring/compare/v0.2.2...HEAD
+[Unreleased]: https://github.com/MetaMask/snap-simple-keyring/compare/v0.2.3...HEAD
+[0.2.3]: https://github.com/MetaMask/snap-simple-keyring/compare/v0.2.2...v0.2.3
 [0.2.2]: https://github.com/MetaMask/snap-simple-keyring/compare/v0.2.1...v0.2.2
 [0.2.1]: https://github.com/MetaMask/snap-simple-keyring/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/MetaMask/snap-simple-keyring/compare/v0.1.4...v0.2.0
