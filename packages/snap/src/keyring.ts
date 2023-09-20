@@ -81,6 +81,13 @@ export class SimpleKeyring implements Keyring {
       throw new Error(`Account address already in use: ${address}`);
     }
 
+    // The private key should not be stored in the account options since the
+    // account object is exposed to external components, such as MetaMask and
+    // the snap UI.
+    if (options?.privateKey) {
+      delete options.privateKey;
+    }
+
     const account: KeyringAccount = {
       id: uuid(),
       options,
