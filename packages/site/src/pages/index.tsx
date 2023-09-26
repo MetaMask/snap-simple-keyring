@@ -74,7 +74,7 @@ const Index = () => {
     }
 
     getState().catch((error) => console.error(error));
-  }, []);
+  }, [state.installedSnap]);
 
   const createAccount = async () => {
     const newAccount = await client.createAccount();
