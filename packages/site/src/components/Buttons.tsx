@@ -110,15 +110,26 @@ export const ReconnectButton = (props: ComponentProps<typeof Button>) => {
   );
 };
 
+export const UpdateButton = (props: ComponentProps<typeof Button>) => {
+  return (
+    <Button id="updateButton" {...props}>
+      <FlaskFox />
+      <ButtonText>Update</ButtonText>
+    </Button>
+  );
+};
+
 export const SendHelloButton = (props: ComponentProps<typeof Button>) => {
   return <Button {...props}>Send message</Button>;
 };
 
 export const HeaderButtons = ({
   state,
+  updateAvailable,
   onConnectClick,
 }: {
   state: MetamaskState;
+  updateAvailable: boolean;
   onConnectClick(): unknown;
 }) => {
   if (!state.isFlask && !state.installedSnap) {
@@ -127,6 +138,10 @@ export const HeaderButtons = ({
 
   if (!state.installedSnap) {
     return <ConnectButton onClick={onConnectClick} />;
+  }
+
+  if (updateAvailable) {
+    return <UpdateButton onClick={onConnectClick} />;
   }
 
   if (shouldDisplayReconnectButton(state.installedSnap)) {
