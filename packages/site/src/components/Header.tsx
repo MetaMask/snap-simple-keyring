@@ -1,4 +1,5 @@
 import React, { useContext } from 'react';
+import semver from 'semver';
 import styled from 'styled-components';
 
 import { HeaderButtons } from './Buttons';
@@ -50,6 +51,10 @@ const VersionStyle = styled.p`
 export const Header = () => {
   const [state, dispatch] = useContext(MetaMaskContext);
 
+  const updateAvailable =
+    state?.installedSnap &&
+    semver.gt(packageInfo.version, state.installedSnap?.version);
+
   const handleConnectClick = async () => {
     try {
       await connectSnap();
@@ -100,7 +105,11 @@ export const Header = () => {
       </LogoWrapper>
       <RightContainer>
         <Version />
-        <HeaderButtons state={state} onConnectClick={handleConnectClick} />
+        <HeaderButtons
+          state={state}
+          onConnectClick={handleConnectClick}
+          updateAvailable={updateAvailable}
+        />
       </RightContainer>
     </HeaderWrapper>
   );
