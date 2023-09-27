@@ -51,9 +51,10 @@ const VersionStyle = styled.p`
 export const Header = () => {
   const [state, dispatch] = useContext(MetaMaskContext);
 
-  const updateAvailable =
+  const updateAvailable = Boolean(
     state?.installedSnap &&
-    semver.gt(packageInfo.version, state.installedSnap?.version);
+      semver.gt(packageInfo.version, state.installedSnap?.version),
+  );
 
   const handleConnectClick = async () => {
     try {
