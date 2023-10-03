@@ -138,10 +138,10 @@ export class SimpleKeyring implements Keyring {
   }
 
   async deleteAccount(id: string): Promise<void> {
-    await this.#saveState();
     try {
       await this.#emitEvent(KeyringEvent.AccountDeleted, { id });
       delete this.#state.wallets[id];
+      await this.#saveState();
     } catch (error) {
       throwError((error as Error).message);
     }
