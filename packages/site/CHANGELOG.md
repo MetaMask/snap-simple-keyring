@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add update button ([#93](https://github.com/MetaMask/snap-simple-keyring/pull/93)).
 
 ### Fixed
-- Add state.installSnap into dep array ([#92](https://github.com/MetaMask/snap-simple-keyring/pull/92)).
+- Fix the list of accounts not being displayed on the first load ([#92](https://github.com/MetaMask/snap-simple-keyring/pull/92)).
 - Fix the private key format in the import account placeholder ([#89](https://github.com/MetaMask/snap-simple-keyring/pull/89)).
 - Check if the snap is installed before trying to get its state ([#87](https://github.com/MetaMask/snap-simple-keyring/pull/87)).
 - Remove `console.log` if snap is not installed ([#88](https://github.com/MetaMask/snap-simple-keyring/pull/88)).
