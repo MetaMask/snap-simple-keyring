@@ -80,7 +80,6 @@ export class SimpleKeyring implements Keyring {
     if (!isUniqueAddress(address, Object.values(this.#state.wallets))) {
       throw new Error(`Account address already in use: ${address}`);
     }
-
     // The private key should not be stored in the account options since the
     // account object is exposed to external components, such as MetaMask and
     // the snap UI.
@@ -88,26 +87,28 @@ export class SimpleKeyring implements Keyring {
       delete options.privateKey;
     }
 
-    const account: KeyringAccount = {
-      id: uuid(),
-      options,
-      address,
-      methods: [
-        EthMethod.PersonalSign,
-        EthMethod.Sign,
-        EthMethod.SignTransaction,
-        EthMethod.SignTypedDataV1,
-        EthMethod.SignTypedDataV3,
-        EthMethod.SignTypedDataV4,
-      ],
-      type: EthAccountType.Eoa,
-    };
-
-    this.#state.wallets[account.id] = { account, privateKey };
-    await this.#saveState();
-    await this.#emitEvent(KeyringEvent.AccountCreated, { account });
-
-    return account;
+    try {
+      const account: KeyringAccount = {
+        id: uuid(),
+        options,
+        address,
+        methods: [
+          EthMethod.PersonalSign,
+          EthMethod.Sign,
+          EthMethod.SignTransaction,
+          EthMethod.SignTypedDataV1,
+          EthMethod.SignTypedDataV3,
+          EthMethod.SignTypedDataV4,
+        ],
+        type: EthAccountType.Eoa,
+      };
+      await this.#emitEvent(KeyringEvent.AccountCreated, { account });
+      this.#state.wallets[account.id] = { account, privateKey };
+      await this.#saveState();
+      return account;
+    } catch (error) {
+      throw new Error((error as Error).message);
+    }
   }
 
   async filterAccountChains(_id: string, chains: string[]): Promise<string[]> {
@@ -138,9 +139,13 @@ export class SimpleKeyring implements Keyring {
   }
 
   async deleteAccount(id: string): Promise<void> {
-    delete this.#state.wallets[id];
-    await this.#saveState();
-    await this.#emitEvent(KeyringEvent.AccountDeleted, { id });
+    try {
+      await this.#emitEvent(KeyringEvent.AccountDeleted, { id });
+      delete this.#state.wallets[id];
+      await this.#saveState();
+    } catch (error) {
+      throwError((error as Error).message);
+    }
   }
 
   async listRequests(): Promise<KeyringRequest[]> {
