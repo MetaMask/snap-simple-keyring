@@ -6,6 +6,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.4]
+### Uncategorized
+- feat: add update button ([#93](https://github.com/MetaMask/snap-simple-keyring/pull/93))
+- fix: add state.installSnap into dep array ([#92](https://github.com/MetaMask/snap-simple-keyring/pull/92))
+- ui: fix the private key format in the import account placeholder ([#89](https://github.com/MetaMask/snap-simple-keyring/pull/89))
+- chore: remove `console.log` if snap is not installed ([#88](https://github.com/MetaMask/snap-simple-keyring/pull/88))
+- fix: check if the snap is installed before trying to get its state ([#87](https://github.com/MetaMask/snap-simple-keyring/pull/87))
+
 ## [0.2.3]
 ### Changed
 - Use text fields in account methods inputs ([#82](https://github.com/MetaMask/snap-simple-keyring/pull/82)).
@@ -63,7 +71,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Initial release.
 
-[Unreleased]: https://github.com/MetaMask/snap-simple-keyring/compare/v0.2.3...HEAD
+[Unreleased]: https://github.com/MetaMask/snap-simple-keyring/compare/v0.2.4...HEAD
+[0.2.4]: https://github.com/MetaMask/snap-simple-keyring/compare/v0.2.3...v0.2.4
 [0.2.3]: https://github.com/MetaMask/snap-simple-keyring/compare/v0.2.2...v0.2.3
 [0.2.2]: https://github.com/MetaMask/snap-simple-keyring/compare/v0.2.1...v0.2.2
 [0.2.1]: https://github.com/MetaMask/snap-simple-keyring/compare/v0.2.0...v0.2.1

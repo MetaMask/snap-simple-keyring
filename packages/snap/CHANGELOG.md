@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.4]
+### Uncategorized
+- fix: snap and extension are out of sync ([#95](https://github.com/MetaMask/snap-simple-keyring/pull/95))
+- fix: remove private key from options after generating key pair ([#90](https://github.com/MetaMask/snap-simple-keyring/pull/90))
+
 ## [0.2.3]
 ### Changed
 - Update linting targets ([#85](https://github.com/MetaMask/snap-simple-keyring/pull/85)).
@@ -51,7 +56,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Initial release.
 
-[Unreleased]: https://github.com/MetaMask/snap-simple-keyring/compare/v0.2.3...HEAD
+[Unreleased]: https://github.com/MetaMask/snap-simple-keyring/compare/v0.2.4...HEAD
+[0.2.4]: https://github.com/MetaMask/snap-simple-keyring/compare/v0.2.3...v0.2.4
 [0.2.3]: https://github.com/MetaMask/snap-simple-keyring/compare/v0.2.2...v0.2.3
 [0.2.2]: https://github.com/MetaMask/snap-simple-keyring/compare/v0.2.1...v0.2.2
 [0.2.1]: https://github.com/MetaMask/snap-simple-keyring/compare/v0.2.0...v0.2.1
