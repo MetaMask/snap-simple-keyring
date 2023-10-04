@@ -7,9 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ## [0.2.4]
-### Uncategorized
-- fix: snap and extension are out of sync ([#95](https://github.com/MetaMask/snap-simple-keyring/pull/95))
-- fix: remove private key from options after generating key pair ([#90](https://github.com/MetaMask/snap-simple-keyring/pull/90))
+### Fixed
+- Fix Snap and Extension are out of sync when creating/removing account ([#95](https://github.com/MetaMask/snap-simple-keyring/pull/95)).
+- Remove private key from options after generating key pair ([#90](https://github.com/MetaMask/snap-simple-keyring/pull/90)).
 
 ## [0.2.3]
 ### Changed
