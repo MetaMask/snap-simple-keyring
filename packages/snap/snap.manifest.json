@@ -26,8 +26,7 @@
       ]
     },
     "endowment:rpc": {
-      "dapps": true,
-      "snaps": false
+      "dapps": true
     },
     "snap_manageAccounts": {},
     "snap_manageState": {}
