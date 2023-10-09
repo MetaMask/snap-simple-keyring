@@ -3297,20 +3297,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@metamask/rpc-methods@github:danroc/snaps#workspace=@metamask/rpc-methods&commit=9eb4df2dc23852d7751f2109c4a36cfa440352a3":
-  version: 2.0.0
-  resolution: "@metamask/rpc-methods@https://github.com/danroc/snaps.git#workspace=%40metamask%2Frpc-methods&commit=9eb4df2dc23852d7751f2109c4a36cfa440352a3"
+"@metamask/rpc-methods@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "@metamask/rpc-methods@npm:3.0.0"
   dependencies:
     "@metamask/key-tree": ^9.0.0
     "@metamask/permission-controller": ^4.1.2
-    "@metamask/snaps-ui": ^2.0.0
-    "@metamask/snaps-utils": ^2.0.1
+    "@metamask/snaps-ui": ^3.0.0
+    "@metamask/snaps-utils": ^3.0.0
     "@metamask/types": ^1.1.0
     "@metamask/utils": ^8.1.0
     "@noble/hashes": ^1.3.1
     eth-rpc-errors: ^4.0.3
     superstruct: ^1.0.3
-  checksum: 97f911769507bde17c6e83fb24c6569d00b1808f63a85442bc330527c87707690bf5c2efc7385e573a2ebe0a1999bb12121c763a0139d7bd4e5fbaa3c6eb85ca
+  checksum: c74ed1d320c2ac579a95137a361e721f0e750d10353f8a0613507762b77904b8a206739d81b9629187810d9b3875cc8105a8f45171f2917a225474306f257dd0
   languageName: node
   linkType: hard
 
@@ -3508,19 +3508,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@metamask/snaps-controllers@github:danroc/snaps#workspace=@metamask/snaps-controllers&commit=9eb4df2dc23852d7751f2109c4a36cfa440352a3":
-  version: 2.0.2
-  resolution: "@metamask/snaps-controllers@https://github.com/danroc/snaps.git#workspace=%40metamask%2Fsnaps-controllers&commit=9eb4df2dc23852d7751f2109c4a36cfa440352a3"
+"@metamask/snaps-controllers@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "@metamask/snaps-controllers@npm:3.0.0"
   dependencies:
     "@metamask/approval-controller": ^3.5.0
     "@metamask/base-controller": ^3.2.0
     "@metamask/object-multiplex": ^1.2.0
     "@metamask/permission-controller": ^4.1.2
     "@metamask/post-message-stream": ^7.0.0
-    "@metamask/rpc-methods": ^2.0.0
-    "@metamask/snaps-execution-environments": ^2.0.1
+    "@metamask/rpc-methods": ^3.0.0
+    "@metamask/snaps-execution-environments": ^3.0.0
     "@metamask/snaps-registry": ^2.0.0
-    "@metamask/snaps-utils": ^2.0.1
+    "@metamask/snaps-utils": ^3.0.0
     "@metamask/utils": ^8.1.0
     "@xstate/fsm": ^2.0.0
     concat-stream: ^2.0.0
@@ -3532,25 +3532,25 @@ __metadata:
     nanoid: ^3.1.31
     readable-web-to-node-stream: ^3.0.2
     tar-stream: ^2.2.0
-  checksum: 6a1c3b3454852cf070b01ccea6529e52c4cc7600cdff6f38fbee1f646d9e23769081e8b92e59eae88e0b1aa7f2c966dc261ff7113677f076cb9cd5f40952e05b
+  checksum: 4a2fc877beca85bcf787ae00badb2bfaa154f961b11db8d84973f90c1a815410c5ce6460f7a5c9fea89554a7d4e6935f42c8cf852f9fc58f82d54dcf9fd6b0ce
   languageName: node
   linkType: hard
 
-"@metamask/snaps-execution-environments@github:danroc/snaps#workspace=@metamask/snaps-execution-environments&commit=9eb4df2dc23852d7751f2109c4a36cfa440352a3":
-  version: 2.0.1
-  resolution: "@metamask/snaps-execution-environments@https://github.com/danroc/snaps.git#workspace=%40metamask%2Fsnaps-execution-environments&commit=9eb4df2dc23852d7751f2109c4a36cfa440352a3"
+"@metamask/snaps-execution-environments@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "@metamask/snaps-execution-environments@npm:3.0.0"
   dependencies:
     "@metamask/object-multiplex": ^1.2.0
     "@metamask/post-message-stream": ^7.0.0
     "@metamask/providers": ^11.1.1
-    "@metamask/rpc-methods": ^2.0.0
-    "@metamask/snaps-utils": ^2.0.1
+    "@metamask/rpc-methods": ^3.0.0
+    "@metamask/snaps-utils": ^3.0.0
     "@metamask/utils": ^8.1.0
     eth-rpc-errors: ^4.0.3
     json-rpc-engine: ^6.1.0
     nanoid: ^3.1.31
     superstruct: ^1.0.3
-  checksum: 798fead1859eaec8a007ddee9dfb0e5b5b59e780f44f569b350edcd13e2c2666417e50819173f6cd8ec0488e6023a07d1b7fd019ead3e45ac8e677c31739edfd
+  checksum: 9ff27bc9ac443de4bd79ad966215485fcc7c6eb88a3907e9302e5f9b8197dce3afd63ae7bfaac06c2df5aa5d763b9a68729c0debe8f9edab10e8bf608e67d606
   languageName: node
   linkType: hard
 
@@ -3565,31 +3565,32 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@metamask/snaps-types@github:danroc/snaps#workspace=@metamask/snaps-types&commit=9eb4df2dc23852d7751f2109c4a36cfa440352a3":
-  version: 2.0.0
-  resolution: "@metamask/snaps-types@https://github.com/danroc/snaps.git#workspace=%40metamask%2Fsnaps-types&commit=9eb4df2dc23852d7751f2109c4a36cfa440352a3"
+"@metamask/snaps-types@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "@metamask/snaps-types@npm:3.0.0"
   dependencies:
     "@metamask/providers": ^11.1.1
-    "@metamask/rpc-methods": ^2.0.0
-    "@metamask/snaps-utils": ^2.0.1
+    "@metamask/rpc-methods": ^3.0.0
+    "@metamask/snaps-utils": ^3.0.0
     "@metamask/utils": ^8.1.0
-  checksum: 8c7b7f0ebe29dae643cda899ba524d6bea1b5b306c5676170a765917fd9ead76577f761c5a3467a25b0311ac6d28c441e4762dc34608031260c24f0f2a3fff27
+  checksum: ff265240b88846f0082b3665d677f787d248d17340a027ebdbda0ec8803edc713e41665459f42ef0d4104f9a36b245bb482c8340d84c91b0ab2082cbc937c5d2
   languageName: node
   linkType: hard
 
-"@metamask/snaps-ui@npm:^2.0.0":
-  version: 2.0.0
-  resolution: "@metamask/snaps-ui@npm:2.0.0"
+"@metamask/snaps-ui@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "@metamask/snaps-ui@npm:3.0.0"
   dependencies:
     "@metamask/utils": ^8.1.0
+    is-svg: ^4.4.0
     superstruct: ^1.0.3
-  checksum: 0a8886402aea3aeebc18dd8058f169b7c751f93aac22286a693dbb6f787b10e44f7da9efa40981dde427f2301ce3da11af93e37398157eb75fdce85c53f48dd8
+  checksum: b683fbc3d4bec071abe0cdd4399a0d99f03c024bbacd1284822e7df66da82053f37a81fb3455ce852cf847033710eb08eef343c2fbc885f4ebdd5cf94880d68a
   languageName: node
   linkType: hard
 
-"@metamask/snaps-utils@github:danroc/snaps#workspace=@metamask/snaps-utils&commit=9eb4df2dc23852d7751f2109c4a36cfa440352a3":
-  version: 2.0.1
-  resolution: "@metamask/snaps-utils@https://github.com/danroc/snaps.git#workspace=%40metamask%2Fsnaps-utils&commit=9eb4df2dc23852d7751f2109c4a36cfa440352a3"
+"@metamask/snaps-utils@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "@metamask/snaps-utils@npm:3.0.0"
   dependencies:
     "@babel/core": ^7.20.12
     "@babel/types": ^7.18.7
@@ -3597,7 +3598,7 @@ __metadata:
     "@metamask/key-tree": ^9.0.0
     "@metamask/permission-controller": ^4.1.2
     "@metamask/snaps-registry": ^2.0.0
-    "@metamask/snaps-ui": ^2.0.0
+    "@metamask/snaps-ui": ^3.0.0
     "@metamask/utils": ^8.1.0
     "@noble/hashes": ^1.3.1
     "@scure/base": ^1.1.1
@@ -3612,7 +3613,7 @@ __metadata:
     ses: ^0.18.8
     superstruct: ^1.0.3
     validate-npm-package-name: ^5.0.0
-  checksum: 3aea6a7233f71e2bc9e18956dd2e543e441084cc7adba31987787ab317c360ec29b71b531dc858f30796f6f56a504b69d1fd0348533e055e7b36c2191853159b
+  checksum: c4e8e595da22916313de482fc193236ab901944600e24c3c376361dc42b2d4eb4589326411dca843ab5a8771e43830ff4e0f6541f9a49d33a361060d6a07967b
   languageName: node
   linkType: hard
 
