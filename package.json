@@ -36,12 +36,7 @@
     "test": "yarn workspaces foreach --parallel --verbose run test"
   },
   "resolutions": {
-    "@metamask/rpc-methods": "^3.0.0",
-    "@metamask/snaps-controllers": "^3.0.0",
-    "@metamask/snaps-utils": "^3.0.0",
-    "@metamask/snaps-types": "^3.0.0",
-    "@metamask/snaps-execution-environments": "^3.0.0",
-    "@metamask/keyring-api": "github:MetaMask/keyring-api#bc70a7ac6fa760724b6a9e793a0eed855e50c216"
+    "@metamask/keyring-api": "github:MetaMask/keyring-api#v1.0.0-rc.1"
   },
   "devDependencies": {
     "@metamask/eslint-config": "^12.2.0",
