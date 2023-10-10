@@ -7,8 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ## [0.3.0]
-### Uncategorized
-- feat!: use `onKeyringRequest` to handle keyring methods ([#97](https://github.com/MetaMask/snap-simple-keyring/pull/97))
+### Changed
+- **BREAKING:** Use `onKeyringRequest` to handle keyring methods ([#97](https://github.com/MetaMask/snap-simple-keyring/pull/97)).
 
 ## [0.2.4]
 ### Fixed
