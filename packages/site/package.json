@@ -29,7 +29,7 @@
   "dependencies": {
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
-    "@metamask/keyring-api": "^0.2.5",
+    "@metamask/keyring-api": "^1.0.0-rc.1",
     "@metamask/providers": "^13.0.0",
     "@mui/icons-material": "^5.14.0",
     "@mui/material": "^5.14.0",
