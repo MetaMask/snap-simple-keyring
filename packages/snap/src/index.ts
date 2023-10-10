@@ -1,9 +1,11 @@
 import {
   MethodNotSupportedError,
   handleKeyringRequest,
-  isKeyringRpcMethod,
 } from '@metamask/keyring-api';
-import type { OnRpcRequestHandler } from '@metamask/snaps-types';
+import type {
+  OnKeyringRequestHandler,
+  OnRpcRequestHandler,
+} from '@metamask/snaps-types';
 
 import { SimpleKeyring } from './keyring';
 import { InternalMethod, originPermissions } from './permissions';
@@ -36,8 +38,8 @@ function hasPermission(origin: string, method: string): boolean {
 }
 
 export const onRpcRequest: OnRpcRequestHandler = async ({
-  request,
   origin,
+  request,
 }) => {
   // Log request.
   console.log(
@@ -50,11 +52,6 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
     throw new Error(
       `Origin '${origin}' is not allowed to call '${request.method}'`,
     );
-  }
-
-  // Handle keyring methods.
-  if (isKeyringRpcMethod(request.method)) {
-    return handleKeyringRequest(await getKeyring(), request as any);
   }
 
   // Handle custom methods.
@@ -71,4 +68,25 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
       throw new MethodNotSupportedError(request.method);
     }
   }
+};
+
+export const onKeyringRequest: OnKeyringRequestHandler = async ({
+  origin,
+  request,
+}) => {
+  // Log request.
+  console.log(
+    `Snap request (id=${request.id ?? 'null'}, origin=${origin}):`,
+    request,
+  );
+
+  // Check if origin is allowed to call method.
+  if (!hasPermission(origin, request.method)) {
+    throw new Error(
+      `Origin '${origin}' is not allowed to call '${request.method}'`,
+    );
+  }
+
+  // Handle keyring methods.
+  return handleKeyringRequest(await getKeyring(), request);
 };
