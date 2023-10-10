@@ -40,6 +40,7 @@ import {
   isUniqueAddress,
   throwError,
 } from './util';
+import packageInfo from '../package.json';
 
 export type KeyringState = {
   wallets: Record<string, Wallet>;
@@ -192,6 +193,31 @@ export class SimpleKeyring implements Keyring {
     await this.#saveState();
   }
 
+  #getCurrentUrl(): string {
+    const dappUrlPrefix: string | undefined =
+      process.env.GATSBY_PATH_PREFIX ?? undefined;
+    const dappVersion: string = packageInfo.version;
+
+    // Ensuring that both dappUrlPrefix and dappVersion are truthy
+    if (dappUrlPrefix && dappVersion) {
+      try {
+        // Attempting to create a new URL object
+        // Check if dappUrlPrefix includes protocol. If not, prepend 'https://'
+        const validPrefix =
+          dappUrlPrefix.startsWith('http://') ||
+          dappUrlPrefix.startsWith('https://')
+            ? dappUrlPrefix
+            : `https://${dappUrlPrefix}`;
+        return new URL(`${validPrefix}/${dappVersion}/`).toString();
+      } catch (error) {
+        // Log error and fall back to the default URL if the constructed URL is invalid
+        console.error('Constructed URL was invalid', error);
+      }
+    }
+    // Default URL if dappUrlPrefix or dappVersion are falsy, or if URL construction fails
+    return new URL('http://localhost:8000/').toString();
+  }
+
   async #asyncSubmitRequest(
     request: KeyringRequest,
   ): Promise<SubmitRequestResponse> {
@@ -199,7 +225,10 @@ export class SimpleKeyring implements Keyring {
     await this.#saveState();
     return {
       pending: true,
-      redirect: {},
+      redirect: {
+        url: 'http://localhost:8000/',
+        message: 'Redirecting to Snap Simple Keyring to sign transaction',
+      },
     };
   }
 
