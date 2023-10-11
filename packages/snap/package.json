@@ -34,7 +34,7 @@
     "lint:misc": "prettier '**/*.json' '**/*.md' '!CHANGELOG.md' '!snap.manifest.json' --check",
     "lint:types": "tsc --noEmit",
     "serve": "mm-snap serve",
-    "start": "mm-snap watch"
+    "start": "NODE_ENV='development' mm-snap watch"
   },
   "dependencies": {
     "@ethereumjs/common": "^3.1.2",

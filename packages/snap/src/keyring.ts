@@ -194,28 +194,18 @@ export class SimpleKeyring implements Keyring {
   }
 
   #getCurrentUrl(): string {
-    const dappUrlPrefix: string | undefined =
-      process.env.GATSBY_PATH_PREFIX ?? undefined;
+    const dappUrlPrefix =
+      process.env.NODE_ENV === 'production'
+        ? process.env.DAPP_ORIGIN_PRODUCTION
+        : process.env.DAPP_ORIGIN_DEVELOPMENT;
     const dappVersion: string = packageInfo.version;
 
     // Ensuring that both dappUrlPrefix and dappVersion are truthy
-    if (dappUrlPrefix && dappVersion) {
-      try {
-        // Attempting to create a new URL object
-        // Check if dappUrlPrefix includes protocol. If not, prepend 'https://'
-        const validPrefix =
-          dappUrlPrefix.startsWith('http://') ||
-          dappUrlPrefix.startsWith('https://')
-            ? dappUrlPrefix
-            : `https://${dappUrlPrefix}`;
-        return new URL(`${validPrefix}/${dappVersion}/`).toString();
-      } catch (error) {
-        // Log error and fall back to the default URL if the constructed URL is invalid
-        console.error('Constructed URL was invalid', error);
-      }
+    if (dappUrlPrefix && dappVersion && process.env.NODE_ENV === 'production') {
+      return `${dappUrlPrefix}${dappVersion}/`;
     }
     // Default URL if dappUrlPrefix or dappVersion are falsy, or if URL construction fails
-    return new URL('http://localhost:8000/').toString();
+    return dappUrlPrefix as string;
   }
 
   async #asyncSubmitRequest(
@@ -223,10 +213,11 @@ export class SimpleKeyring implements Keyring {
   ): Promise<SubmitRequestResponse> {
     this.#state.pendingRequests[request.id] = request;
     await this.#saveState();
+    const dappUrl = this.#getCurrentUrl();
     return {
       pending: true,
       redirect: {
-        url: 'http://localhost:8000/',
+        url: dappUrl,
         message: 'Redirecting to Snap Simple Keyring to sign transaction',
       },
     };
