@@ -309,7 +309,7 @@ const Index = () => {
     <Container>
       <AlertBanner
         title={
-          'This is a developer tool for testing purposes only. It should not be used to store any real funds. Use it with caution.'
+          'This is a developer tool for testing purposes only. It should not be used to store any real funds. Use with caution.'
         }
         alertType={AlertType.Failure}
       />
