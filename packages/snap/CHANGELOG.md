@@ -7,8 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ## [0.4.0]
-### Uncategorized
-- feat: add URL to async approval redirect ([#98](https://github.com/MetaMask/snap-simple-keyring/pull/98))
+### Added
+- Add URL and message to async approval redirect ([#98](https://github.com/MetaMask/snap-simple-keyring/pull/98)).
 
 ## [0.3.1]
 
