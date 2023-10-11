@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.0]
+
 ## [0.3.1]
 
 ### Changed
@@ -111,7 +113,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial release.
 
-[Unreleased]: https://github.com/MetaMask/snap-simple-keyring/compare/v0.3.1...HEAD
+[Unreleased]: https://github.com/MetaMask/snap-simple-keyring/compare/v0.4.0...HEAD
+[0.4.0]: https://github.com/MetaMask/snap-simple-keyring/compare/v0.3.1...v0.4.0
 [0.3.1]: https://github.com/MetaMask/snap-simple-keyring/compare/v0.3.0...v0.3.1
 [0.3.0]: https://github.com/MetaMask/snap-simple-keyring/compare/v0.2.4...v0.3.0
 [0.2.4]: https://github.com/MetaMask/snap-simple-keyring/compare/v0.2.3...v0.2.4
