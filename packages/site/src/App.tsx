@@ -15,6 +15,7 @@ const Wrapper = styled.div`
 `;
 
 const BannerWrapper = styled.div`
+  padding-top: 25px;
   padding-left: 5%;
   padding-right: 5%;
 `;
