@@ -9,6 +9,10 @@ const config: SnapConfig = {
     stream: true,
     crypto: true,
   },
+  environment: {
+    DAPP_ORIGIN_PRODUCTION: 'https://metamask.github.io/snap-simple-keyring/',
+    DAPP_ORIGIN_DEVELOPMENT: 'http://localhost:8000/',
+  },
   stats: {
     builtIns: {
       // The following builtins can be ignored. They are used by some of the

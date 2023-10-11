@@ -323,11 +323,11 @@ const Index = () => {
               button: (
                 <ConnectButton
                   onClick={handleConnectClick}
-                  disabled={!state.isFlask}
+                  disabled={!state.hasMetaMask}
                 />
               ),
             }}
-            disabled={!state.isFlask}
+            disabled={!state.hasMetaMask}
           />
         )}
       </CardContainer>
