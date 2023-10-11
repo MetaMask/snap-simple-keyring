@@ -9,8 +9,6 @@ import {
   Card,
   ConnectButton,
   Toggle,
-  AlertBanner,
-  AlertType,
 } from '../components';
 import {
   CardContainer,
@@ -307,12 +305,6 @@ const Index = () => {
 
   return (
     <Container>
-      <AlertBanner
-        title={
-          "This is a developer tool for testing purposes. Don't use it to store real assets. Use with caution."
-        }
-        alertType={AlertType.Failure}
-      />
       <CardContainer>
         {!state.installedSnap && (
           <Card
