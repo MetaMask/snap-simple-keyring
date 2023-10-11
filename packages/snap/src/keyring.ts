@@ -40,6 +40,7 @@ import {
   isUniqueAddress,
   throwError,
 } from './util';
+import packageInfo from '../package.json';
 
 export type KeyringState = {
   wallets: Record<string, Wallet>;
@@ -192,14 +193,33 @@ export class SimpleKeyring implements Keyring {
     await this.#saveState();
   }
 
+  #getCurrentUrl(): string {
+    const dappUrlPrefix =
+      process.env.NODE_ENV === 'production'
+        ? process.env.DAPP_ORIGIN_PRODUCTION
+        : process.env.DAPP_ORIGIN_DEVELOPMENT;
+    const dappVersion: string = packageInfo.version;
+
+    // Ensuring that both dappUrlPrefix and dappVersion are truthy
+    if (dappUrlPrefix && dappVersion && process.env.NODE_ENV === 'production') {
+      return `${dappUrlPrefix}${dappVersion}/`;
+    }
+    // Default URL if dappUrlPrefix or dappVersion are falsy, or if URL construction fails
+    return dappUrlPrefix as string;
+  }
+
   async #asyncSubmitRequest(
     request: KeyringRequest,
   ): Promise<SubmitRequestResponse> {
     this.#state.pendingRequests[request.id] = request;
     await this.#saveState();
+    const dappUrl = this.#getCurrentUrl();
     return {
       pending: true,
-      redirect: {},
+      redirect: {
+        url: dappUrl,
+        message: 'Redirecting to Snap Simple Keyring to sign transaction',
+      },
     };
   }
 
