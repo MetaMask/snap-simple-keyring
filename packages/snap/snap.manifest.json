@@ -21,7 +21,6 @@
     "snap_dialog": {},
     "endowment:keyring": {
       "allowedOrigins": [
-        "http://localhost:8000",
         "https://metamask.github.io"
       ]
     },
