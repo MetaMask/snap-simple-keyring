@@ -6,6 +6,8 @@ import styled from 'styled-components';
 import { Footer, Header, AlertBanner, AlertType } from './components';
 import { GlobalStyle } from './config/theme';
 
+// dummy commment
+
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
