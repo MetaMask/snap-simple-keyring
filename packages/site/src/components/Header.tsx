@@ -86,7 +86,7 @@ export const Header = () => {
         </div>
 
         <div>
-          <b>Snap version: </b>
+          <b>Snap version expected: </b>
           {snapPackageInfo.version}
         </div>
 
