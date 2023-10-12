@@ -3,7 +3,7 @@ import semver from 'semver';
 import styled from 'styled-components';
 
 import { HeaderButtons } from './Buttons';
-import packageInfo from '../../package.json';
+import snapPackageInfo from '../../../snap/package.json';
 import { defaultSnapOrigin } from '../config';
 import { MetamaskActions, MetaMaskContext } from '../hooks';
 import { connectSnap, getSnap } from '../utils';
@@ -53,7 +53,7 @@ export const Header = () => {
 
   const updateAvailable = Boolean(
     state?.installedSnap &&
-      semver.gt(packageInfo.version, state.installedSnap?.version),
+      semver.gt(snapPackageInfo.version, state.installedSnap?.version),
   );
 
   const handleConnectClick = async () => {
@@ -81,7 +81,7 @@ export const Header = () => {
       <VersionStyle>
         <div>
           <b>Dapp version: </b>
-          {packageInfo.version}
+          {snapPackageInfo.version}
         </div>
 
         {state.installedSnap ? (
@@ -90,7 +90,7 @@ export const Header = () => {
           </div>
         ) : (
           <div>
-            <b>Snap version to install: </b> {packageInfo.version}
+            <b>Snap version to install: </b> {snapPackageInfo.version}
           </div>
         )}
 
