@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Add alert banner for users ([#104](https://github.com/MetaMask/snap-simple-keyring/pull/104))
+- Add alert banner for users ([#104](https://github.com/MetaMask/snap-simple-keyring/pull/104)).
 
 ## [0.4.0]
 
