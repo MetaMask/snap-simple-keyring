@@ -41,12 +41,6 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
   origin,
   request,
 }) => {
-  // Log request.
-  console.log(
-    `Snap request (id=${request.id ?? 'null'}, origin=${origin}):`,
-    request,
-  );
-
   // Check if origin is allowed to call method.
   if (!hasPermission(origin, request.method)) {
     throw new Error(
@@ -74,12 +68,6 @@ export const onKeyringRequest: OnKeyringRequestHandler = async ({
   origin,
   request,
 }) => {
-  // Log request.
-  console.log(
-    `Snap request (id=${request.id ?? 'null'}, origin=${origin}):`,
-    request,
-  );
-
   // Check if origin is allowed to call method.
   if (!hasPermission(origin, request.method)) {
     throw new Error(
