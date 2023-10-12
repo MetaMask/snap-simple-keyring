@@ -3,8 +3,8 @@ import semver from 'semver';
 import styled from 'styled-components';
 
 import { HeaderButtons } from './Buttons';
-import packageInfo from '../../package.json';
 import snapPackageInfo from '../../../snap/package.json';
+import packageInfo from '../../package.json';
 import { defaultSnapOrigin } from '../config';
 import { MetamaskActions, MetaMaskContext } from '../hooks';
 import { connectSnap, getSnap } from '../utils';
