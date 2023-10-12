@@ -3,6 +3,7 @@ import semver from 'semver';
 import styled from 'styled-components';
 
 import { HeaderButtons } from './Buttons';
+import packageInfo from '../../package.json';
 import snapPackageInfo from '../../../snap/package.json';
 import { defaultSnapOrigin } from '../config';
 import { MetamaskActions, MetaMaskContext } from '../hooks';
@@ -81,6 +82,11 @@ export const Header = () => {
       <VersionStyle>
         <div>
           <b>Dapp version: </b>
+          {packageInfo.version}
+        </div>
+
+        <div>
+          <b>Snap version: </b>
           {snapPackageInfo.version}
         </div>
 
