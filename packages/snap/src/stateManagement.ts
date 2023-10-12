@@ -20,8 +20,6 @@ export async function getState(): Promise<KeyringState> {
     params: { operation: 'get' },
   })) as any;
 
-  console.log('[Snap] get state', state);
-
   return {
     ...defaultState,
     ...state,

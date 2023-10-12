@@ -392,9 +392,6 @@ export class SimpleKeyring implements Keyring {
   async toggleSyncApprovals(): Promise<void> {
     this.#state.useSyncApprovals = !this.#state.useSyncApprovals;
     await this.#saveState();
-    console.log(
-      `[SNAP] Synchronous approvals: ${this.#state.useSyncApprovals}`,
-    );
   }
 
   isSynchronousMode(): boolean {
