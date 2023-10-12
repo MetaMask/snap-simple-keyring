@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.0]
+
+### Added
+
+- Add alert banner for users ([#104](https://github.com/MetaMask/snap-simple-keyring/pull/104))
+
 ## [0.4.0]
 
 ## [0.3.1]
@@ -113,7 +119,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial release.
 
-[Unreleased]: https://github.com/MetaMask/snap-simple-keyring/compare/v0.4.0...HEAD
+[Unreleased]: https://github.com/MetaMask/snap-simple-keyring/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/MetaMask/snap-simple-keyring/compare/v0.4.0...v1.0.0
 [0.4.0]: https://github.com/MetaMask/snap-simple-keyring/compare/v0.3.1...v0.4.0
 [0.3.1]: https://github.com/MetaMask/snap-simple-keyring/compare/v0.3.0...v0.3.1
 [0.3.0]: https://github.com/MetaMask/snap-simple-keyring/compare/v0.2.4...v0.3.0
