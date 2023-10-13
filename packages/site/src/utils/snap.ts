@@ -1,4 +1,4 @@
-import packageInfo from '../../package.json';
+import snapPackageInfo from '../../../snap/package.json';
 import { defaultSnapOrigin } from '../config';
 import type { GetSnapsResponse, Snap } from '../types';
 
@@ -22,7 +22,7 @@ export const getSnaps = async (): Promise<GetSnapsResponse> => {
 export const connectSnap = async (
   snapId: string = defaultSnapOrigin,
   params: Record<'version' | string, unknown> = {
-    version: packageInfo.version,
+    version: snapPackageInfo.version,
   },
 ) => {
   await window.ethereum.request({
