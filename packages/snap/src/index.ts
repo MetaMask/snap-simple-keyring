@@ -8,6 +8,7 @@ import type {
 } from '@metamask/snaps-types';
 
 import { SimpleKeyring } from './keyring';
+import { logger } from './logger';
 import { InternalMethod, originPermissions } from './permissions';
 import { getState } from './stateManagement';
 
@@ -41,6 +42,11 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
   origin,
   request,
 }) => {
+  logger.debug(
+    `RPC request (origin="${origin}"):`,
+    JSON.stringify(request, undefined, 2),
+  );
+
   // Check if origin is allowed to call method.
   if (!hasPermission(origin, request.method)) {
     throw new Error(
@@ -68,6 +74,11 @@ export const onKeyringRequest: OnKeyringRequestHandler = async ({
   origin,
   request,
 }) => {
+  logger.debug(
+    `Keyring request (origin="${origin}"):`,
+    JSON.stringify(request, undefined, 2),
+  );
+
   // Check if origin is allowed to call method.
   if (!hasPermission(origin, request.method)) {
     throw new Error(
