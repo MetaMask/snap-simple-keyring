@@ -1,8 +1,9 @@
-import type { KeyringAccount } from '@metamask/keyring-api';
+import { type KeyringAccount } from '@metamask/keyring-api';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import React, { useState } from 'react';
 
+import { MethodButton } from './Buttons';
 import { CopyableItem } from './CopyableItem';
 import {
   AccountContainer,
@@ -14,7 +15,13 @@ import {
   AccountRowValue,
 } from './styledComponents';
 
-export const Account = ({ account }: { account: KeyringAccount }) => {
+export const Account = ({
+  account,
+  handleDelete,
+}: {
+  account: KeyringAccount;
+  handleDelete: (accountId: string) => Promise<void>;
+}) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   return (
@@ -63,6 +70,15 @@ export const Account = ({ account }: { account: KeyringAccount }) => {
           </AccountRow>
         </>
       )}
+      <AccountRow>
+        <MethodButton
+          width="30%"
+          onClick={async (): Promise<void> => {
+            await handleDelete(account.id);
+          }}
+          label="Delete"
+        />
+      </AccountRow>
     </AccountContainer>
   );
 };
