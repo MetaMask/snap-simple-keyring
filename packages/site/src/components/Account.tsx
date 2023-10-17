@@ -70,7 +70,7 @@ export const Account = ({
           </AccountRow>
         </>
       )}
-      <AccountRow>
+      <AccountRow alignItems="flex-end">
         <MethodButton
           width="30%"
           onClick={async (): Promise<void> => {
