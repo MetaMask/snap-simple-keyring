@@ -184,7 +184,13 @@ export const Method = ({
             title={failureMessage ?? 'Error request'}
             alertType={AlertType.Failure}
           />
-          <CopyableItem value={JSON.stringify(error, null, 2)} />
+          <CopyableItem
+            value={
+              error instanceof Error
+                ? error.message
+                : JSON.stringify(error, null, 2)
+            }
+          />
         </CopyableContainer>
       )}
     </Grid>
