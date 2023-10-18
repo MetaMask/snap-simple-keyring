@@ -108,8 +108,8 @@ const Index = () => {
     if (!accountObject) {
       return;
     }
-    const account = JSON.parse(accountObject);
-    await client.updateAccount(account as KeyringAccount);
+    const account: KeyringAccount = JSON.parse(accountObject);
+    await client.updateAccount(account);
     await syncAccounts();
   };
 
