@@ -123,20 +123,22 @@ export class SimpleKeyring implements Keyring {
       this.#state.wallets[account.id] ??
       throwError(`Account '${account.id}' not found`);
 
-    wallet.account = {
+    const newAccount: KeyringAccount = {
       ...wallet.account,
       ...account,
       // Restore read-only properties.
       address: wallet.account.address,
-      methods: wallet.account.methods,
-      type: wallet.account.type,
-      options: wallet.account.options,
     };
 
-    await this.#saveState();
-    await this.#emitEvent(KeyringEvent.AccountUpdated, {
-      account: wallet.account,
-    });
+    try {
+      await this.#emitEvent(KeyringEvent.AccountUpdated, {
+        account: newAccount,
+      });
+      wallet.account = newAccount;
+      await this.#saveState();
+    } catch (error) {
+      throwError((error as Error).message);
+    }
   }
 
   async deleteAccount(id: string): Promise<void> {
