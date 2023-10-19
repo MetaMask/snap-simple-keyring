@@ -122,7 +122,7 @@ export const AccountRow = styled.div<{
   flex-direction: ${({ flexDirection }) => flexDirection ?? 'column'};
   flex: 1;
   width: 100%;
-  align-items: ${({ alignItems }) => alignItems ?? 'flex-start'};
+  align-items: ${({ alignItems }) => alignItems ?? 'stretch'};
 `;
 
 const copyKeyframe = keyframes`
