@@ -45,6 +45,17 @@ const TextField = styled.input`
   border: 1px solid #bbc0c5;
 `;
 
+const TextArea = styled.textarea`
+  width: calc(95% - 16px);
+  height: 250px;
+  padding: 10px;
+  margin: 8px 2.5% 8px 16px;
+  background: transparent;
+  border-radius: 5px;
+  box-sizing: border-box;
+  border: 1px solid #bbc0c5;
+`;
+
 const CopyableContainer = styled.div`
   width: 95%;
   margin: 0px 2.5% 8px 8px;
@@ -83,6 +94,14 @@ export const Method = ({
       case InputType.TextField:
         return (
           <TextField
+            id={props.id}
+            placeholder={props.placeholder}
+            onChange={props.onChange}
+          />
+        );
+      case InputType.TextArea:
+        return (
+          <TextArea
             id={props.id}
             placeholder={props.placeholder}
             onChange={props.onChange}
@@ -165,7 +184,13 @@ export const Method = ({
             title={failureMessage ?? 'Error request'}
             alertType={AlertType.Failure}
           />
-          <CopyableItem value={JSON.stringify(error, null, 2)} />
+          <CopyableItem
+            value={
+              error instanceof Error
+                ? error.message
+                : JSON.stringify(error, null, 2)
+            }
+          />
         </CopyableContainer>
       )}
     </Grid>

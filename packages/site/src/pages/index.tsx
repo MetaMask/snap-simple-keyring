@@ -48,6 +48,7 @@ const Index = () => {
   // internal development and testing tool.
   const [privateKey, setPrivateKey] = useState<string | null>();
   const [accountId, setAccountId] = useState<string | null>();
+  const [accountObject, setAccountObject] = useState<string | null>();
   const [requestId, setRequestId] = useState<string | null>(null);
   // const [accountPayload, setAccountPayload] =
   //   useState<Pick<KeyringAccount, 'name' | 'options'>>();
@@ -76,13 +77,17 @@ const Index = () => {
     getState().catch((error) => console.error(error));
   }, [state.installedSnap]);
 
-  const createAccount = async () => {
-    const newAccount = await client.createAccount();
+  const syncAccounts = async () => {
     const accounts = await client.listAccounts();
     setSnapState({
       ...snapState,
       accounts,
     });
+  };
+
+  const createAccount = async () => {
+    const newAccount = await client.createAccount();
+    await syncAccounts();
     return newAccount;
   };
 
@@ -90,21 +95,22 @@ const Index = () => {
     const newAccount = await client.createAccount({
       privateKey: privateKey as string,
     });
-    const accounts = await client.listAccounts();
-    setSnapState({
-      ...snapState,
-      accounts,
-    });
+    await syncAccounts();
     return newAccount;
   };
 
   const deleteAccount = async () => {
     await client.deleteAccount(accountId as string);
-    const accounts = await client.listAccounts();
-    setSnapState({
-      ...snapState,
-      accounts,
-    });
+    await syncAccounts();
+  };
+
+  const updateAccount = async () => {
+    if (!accountObject) {
+      return;
+    }
+    const account: KeyringAccount = JSON.parse(accountObject);
+    await client.updateAccount(account);
+    await syncAccounts();
   };
 
   const handleConnectClick = async () => {
@@ -221,6 +227,25 @@ const Index = () => {
         label: 'Remove Account',
       },
       successMessage: 'Account Removed',
+    },
+    {
+      name: 'Update account',
+      description: 'Update an account',
+      inputs: [
+        {
+          id: 'update-account-account-object',
+          title: 'Account Object',
+          type: InputType.TextArea,
+          placeholder: 'E.g. { id: ... }',
+          onChange: (event: any) => setAccountObject(event.currentTarget.value),
+        },
+      ],
+      action: {
+        disabled: Boolean(accountId),
+        callback: async () => await updateAccount(),
+        label: 'Update Account',
+      },
+      successMessage: 'Account Updated',
     },
   ];
 
