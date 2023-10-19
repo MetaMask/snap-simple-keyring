@@ -59,10 +59,8 @@ export const Account = ({
           <AccountRow>
             <AccountRowTitle>Account Supported Methods</AccountRowTitle>
             <ul style={{ padding: '0px 0px 0px 16px' }}>
-              {account.methods.map((method, methodIndex) => (
-                <AccountRowValue
-                  key={`account-${account.id}-method-${methodIndex}`}
-                >
+              {account.methods.map((method) => (
+                <AccountRowValue key={`account-${account.id}-method-${method}`}>
                   <li>{method}</li>
                 </AccountRowValue>
               ))}
