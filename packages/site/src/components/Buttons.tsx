@@ -73,21 +73,28 @@ const ConnectedIndicator = styled.div`
 
 type ActionButtonProps = {
   width?: string;
+  margin?: string;
 };
 
 const ActionButton = styled.button<ActionButtonProps>`
-  width: ${(props) => props.width ?? '95%'};
+  width: ${(props) => props.width};
   background-color: #0376c9;
   border-radius: 999px;
   border: none;
   padding: 5px 20px;
-  margin: 8px 2.5% 8px 8px;
+  margin: ${(props) => props.margin};
 
   &:hover {
     background-color: #0376ff;
+    border: none;
     color: #fff;
   }
 `;
+
+ActionButton.defaultProps = {
+  width: '95%',
+  margin: '8px 8px 8px 8px',
+};
 
 export const InstallMetaMaskButton = () => (
   <Link href="https://metamask.io/" target="_blank">
@@ -166,6 +173,7 @@ export const MethodButton = (props: any) => {
       disabled={props.disabled}
       onClick={props.onClick}
       width={props.width}
+      margin={props.margin}
     >
       {props.label}
     </ActionButton>
