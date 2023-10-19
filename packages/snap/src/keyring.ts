@@ -39,6 +39,7 @@ import {
   serializeTransaction,
   isUniqueAddress,
   throwError,
+  runSensitive,
 } from './util';
 import packageInfo from '../package.json';
 
@@ -249,9 +250,13 @@ export class SimpleKeyring implements Keyring {
     privateKey: string;
     address: string;
   } {
-    const privateKeyBuffer = privateKey
-      ? toBuffer(addHexPrefix(privateKey))
-      : Buffer.from(crypto.getRandomValues(new Uint8Array(32)));
+    const privateKeyBuffer: Buffer = runSensitive(
+      () =>
+        privateKey
+          ? toBuffer(addHexPrefix(privateKey))
+          : Buffer.from(crypto.getRandomValues(new Uint8Array(32))),
+      'Invalid private key',
+    );
 
     if (!isValidPrivate(privateKeyBuffer)) {
       throw new Error('Invalid private key');
