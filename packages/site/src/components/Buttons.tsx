@@ -71,8 +71,12 @@ const ConnectedIndicator = styled.div`
   background-color: green;
 `;
 
-const ActionButton = styled.button`
-  width: 95%;
+type ActionButtonProps = {
+  width?: string;
+};
+
+const ActionButton = styled.button<ActionButtonProps>`
+  width: ${(props) => props.width ?? '95%'};
   background-color: #0376c9;
   border-radius: 999px;
   border: none;
@@ -158,7 +162,11 @@ export const HeaderButtons = ({
 
 export const MethodButton = (props: any) => {
   return (
-    <ActionButton disabled={props.disabled} onClick={props.onClick}>
+    <ActionButton
+      disabled={props.disabled}
+      onClick={props.onClick}
+      width={props.width}
+    >
       {props.label}
     </ActionButton>
   );

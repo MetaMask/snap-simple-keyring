@@ -370,7 +370,17 @@ const Index = () => {
           <Grid item xs={4} sm={2} md={1}>
             <Divider />
             <DividerTitle>Accounts</DividerTitle>
-            <AccountList accounts={snapState.accounts} />
+            <AccountList
+              accounts={snapState.accounts}
+              handleDelete={async (accountIdToDelete) => {
+                await client.deleteAccount(accountIdToDelete);
+                const accounts = await client.listAccounts();
+                setSnapState({
+                  ...snapState,
+                  accounts,
+                });
+              }}
+            />
           </Grid>
         </Grid>
       </StyledBox>

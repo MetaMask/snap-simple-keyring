@@ -114,11 +114,15 @@ export const AccountContainer = styled.div`
   box-shadow: 0px 2px 40px 0px rgba(0, 0, 0, 0.1);
 `;
 
-export const AccountRow = styled.div`
+export const AccountRow = styled.div<{
+  alignItems?: string;
+  flexDirection?: string;
+}>`
   display: flex;
-  flex-direction: column;
+  flex-direction: ${({ flexDirection }) => flexDirection ?? 'column'};
   flex: 1;
   width: 100%;
+  align-items: ${({ alignItems }) => alignItems ?? 'flex-start'};
 `;
 
 const copyKeyframe = keyframes`
