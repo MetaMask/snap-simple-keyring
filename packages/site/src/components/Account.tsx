@@ -68,17 +68,18 @@ export const Account = ({
               ))}
             </ul>
           </AccountRow>
+          <AccountRow alignItems="flex-end">
+            <MethodButton
+              width="30%"
+              margin="8px 0px 8px 8px"
+              onClick={async (): Promise<void> => {
+                await handleDelete(account.id);
+              }}
+              label="Delete"
+            />
+          </AccountRow>
         </>
       )}
-      <AccountRow alignItems="flex-end">
-        <MethodButton
-          width="30%"
-          onClick={async (): Promise<void> => {
-            await handleDelete(account.id);
-          }}
-          label="Delete"
-        />
-      </AccountRow>
     </AccountContainer>
   );
 };
