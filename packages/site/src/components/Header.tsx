@@ -86,17 +86,17 @@ export const Header = () => {
         </div>
 
         <div>
-          <b>Snap version expected: </b>
+          <b>Snap version (expected): </b>
           {snapPackageInfo.version}
         </div>
 
         {state.installedSnap ? (
           <div>
-            <b>Snap version installed: </b> {state.installedSnap?.version}
+            <b>Snap version (installed): </b> {state.installedSnap?.version}
           </div>
         ) : (
           <div>
-            <b>Snap version to install: </b> {snapPackageInfo.version}
+            <b>Snap version (to install): </b> {snapPackageInfo.version}
           </div>
         )}
 
