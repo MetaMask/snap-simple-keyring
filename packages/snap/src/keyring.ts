@@ -159,6 +159,12 @@ export class SimpleKeyring implements Keyring {
   }
 
   async submitRequest(request: KeyringRequest): Promise<SubmitRequestResponse> {
+    // Verify that the account has a private key before trying to handle a
+    // signing request.
+    if (!this.#state.wallets[request.account]?.privateKey) {
+      throw new Error(`Account '${request.account}' is watch-only`);
+    }
+
     return this.#state.useSyncApprovals
       ? this.#syncSubmitRequest(request)
       : this.#asyncSubmitRequest(request);
