@@ -29,10 +29,6 @@ import {
   toggleSynchronousApprovals,
 } from '../utils';
 
-const provider = new BrowserProvider(window.ethereum);
-
-const snapId = defaultSnapOrigin;
-
 const initialState: {
   pendingRequests: KeyringRequest[];
   accounts: KeyringAccount[];
@@ -57,7 +53,9 @@ const Index = () => {
   // internal development and testing tool.
   const [privateKey, setPrivateKey] = useState<string | null>();
 
+  const snapId = defaultSnapOrigin;
   const client = new KeyringSnapRpcClient(snapId, window.ethereum);
+  const provider = new BrowserProvider(window.ethereum);
 
   useEffect(() => {
     /**

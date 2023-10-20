@@ -16,8 +16,6 @@ import {
   AccountRowValue,
 } from './styledComponents';
 
-const provider = new BrowserProvider(window.ethereum);
-
 export const Account = ({
   account,
   handleDelete,
@@ -28,6 +26,7 @@ export const Account = ({
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [header, setHeader] = useState(account.address);
 
+  const provider = new BrowserProvider(window.ethereum);
   provider
     .lookupAddress(account.address)
     .then((name) => setHeader(name ?? account.address))
