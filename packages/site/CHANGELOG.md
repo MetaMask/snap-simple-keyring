@@ -7,6 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.0]
+
+### Added
+
+- Add delete button to account ([#117](https://github.com/MetaMask/snap-simple-keyring/pull/117)).
+- Add "Update Account" to companion dapp ([#118](https://github.com/MetaMask/snap-simple-keyring/pull/118)).
+
+### Changed
+
+- Add parenthesis around details of the Snap version ([#123](https://github.com/MetaMask/snap-simple-keyring/pull/123)).
+- Move "Delete" button into account details ([#121](https://github.com/MetaMask/snap-simple-keyring/pull/121)).
+- Move "Delete" button into account details ([#122](https://github.com/MetaMask/snap-simple-keyring/pull/122)).
+- Change `packageInfo` to `snapPackageInfo` ([#114](https://github.com/MetaMask/snap-simple-keyring/pull/114)).
+
+### Fixed
+
+- Remove cache before building site ([#124](https://github.com/MetaMask/snap-simple-keyring/pull/124)).
+- Use `stretch` as default alignment in `AccountRow` ([#120](https://github.com/MetaMask/snap-simple-keyring/pull/120)).
+- Use the Snap `package.json` for the update check ([#112](https://github.com/MetaMask/snap-simple-keyring/pull/112)).
+
 ## [1.0.0]
 
 ### Added
@@ -119,7 +139,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial release.
 
-[Unreleased]: https://github.com/MetaMask/snap-simple-keyring/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/MetaMask/snap-simple-keyring/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/MetaMask/snap-simple-keyring/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/MetaMask/snap-simple-keyring/compare/v0.4.0...v1.0.0
 [0.4.0]: https://github.com/MetaMask/snap-simple-keyring/compare/v0.3.1...v0.4.0
 [0.3.1]: https://github.com/MetaMask/snap-simple-keyring/compare/v0.3.0...v0.3.1

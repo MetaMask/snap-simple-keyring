@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.0]
+
+### Added
+
+- Add logger utility ([#116](https://github.com/MetaMask/snap-simple-keyring/pull/116)).
+- Add "Update Account" to companion dapp ([#118](https://github.com/MetaMask/snap-simple-keyring/pull/118)).
+
+### Fixed
+
+- Remove `localhost` from `allowedOrigin` ([#125](https://github.com/MetaMask/snap-simple-keyring/pull/125)).
+- Sanitize error message when importing invalid private key ([#119](https://github.com/MetaMask/snap-simple-keyring/pull/119)).
+
 ## [1.0.1]
 
 ### Changed
@@ -104,7 +116,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial release.
 
-[Unreleased]: https://github.com/MetaMask/snap-simple-keyring/compare/v1.0.1...HEAD
+[Unreleased]: https://github.com/MetaMask/snap-simple-keyring/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/MetaMask/snap-simple-keyring/compare/v1.0.1...v1.1.0
 [1.0.1]: https://github.com/MetaMask/snap-simple-keyring/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/MetaMask/snap-simple-keyring/compare/v0.4.0...v1.0.0
 [0.4.0]: https://github.com/MetaMask/snap-simple-keyring/compare/v0.3.1...v0.4.0
