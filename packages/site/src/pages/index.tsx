@@ -1,6 +1,7 @@
 import type { KeyringAccount, KeyringRequest } from '@metamask/keyring-api';
 import { KeyringSnapRpcClient } from '@metamask/keyring-api';
 import Grid from '@mui/material/Grid';
+import { BrowserProvider } from 'ethers';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 
 import {
@@ -28,6 +29,8 @@ import {
   toggleSynchronousApprovals,
 } from '../utils';
 
+const provider = new BrowserProvider(window.ethereum);
+
 const snapId = defaultSnapOrigin;
 
 const initialState: {
@@ -43,15 +46,17 @@ const initialState: {
 const Index = () => {
   const [state, dispatch] = useContext(MetaMaskContext);
   const [snapState, setSnapState] = useState<KeyringState>(initialState);
+  const [requestId, setRequestId] = useState<string | null>(null);
+  const [accountId, setAccountId] = useState<string | null>();
+  const [accountObject, setAccountObject] = useState<string | null>();
+  const [accountDomain, setAccountDomain] = useState<string | null>();
+  const [accountAddress, setAccountAddress] = useState<string | null>();
+
   // Is not a good practice to store sensitive data in the state of
   // a component but for this case it should be ok since this is an
   // internal development and testing tool.
   const [privateKey, setPrivateKey] = useState<string | null>();
-  const [accountId, setAccountId] = useState<string | null>();
-  const [accountObject, setAccountObject] = useState<string | null>();
-  const [requestId, setRequestId] = useState<string | null>(null);
-  // const [accountPayload, setAccountPayload] =
-  //   useState<Pick<KeyringAccount, 'name' | 'options'>>();
+
   const client = new KeyringSnapRpcClient(snapId, window.ethereum);
 
   useEffect(() => {
@@ -93,7 +98,11 @@ const Index = () => {
 
   const importAccount = async () => {
     const newAccount = await client.createAccount({
-      privateKey: privateKey as string,
+      ...(privateKey && { privateKey }),
+      ...(accountAddress && { address: accountAddress }),
+      ...(accountDomain && {
+        address: await provider.resolveName(accountDomain),
+      }),
     });
     await syncAccounts();
     return newAccount;
@@ -150,7 +159,7 @@ const Index = () => {
     },
     {
       name: 'Import account',
-      description: 'Import an account using a private key',
+      description: 'Import an account using a private key, address, or domain',
       inputs: [
         {
           id: 'import-account-private-key',
@@ -159,7 +168,27 @@ const Index = () => {
           type: InputType.TextField,
           placeholder:
             'E.g. 0000000000000000000000000000000000000000000000000000000000000000',
+          disabled: Boolean(accountAddress) || Boolean(accountDomain),
           onChange: (event: any) => setPrivateKey(event.currentTarget.value),
+        },
+        {
+          id: 'import-account-address',
+          title: 'Address',
+          value: accountAddress,
+          type: InputType.TextField,
+          placeholder: 'E.g. 0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045',
+          disabled: Boolean(privateKey) || Boolean(accountDomain),
+          onChange: (event: any) =>
+            setAccountAddress(event.currentTarget.value),
+        },
+        {
+          id: 'import-account-address',
+          title: 'Domain',
+          value: accountDomain,
+          type: InputType.TextField,
+          placeholder: 'E.g. vitalik.eth',
+          disabled: Boolean(accountAddress) || Boolean(privateKey),
+          onChange: (event: any) => setAccountDomain(event.currentTarget.value),
         },
       ],
       action: {

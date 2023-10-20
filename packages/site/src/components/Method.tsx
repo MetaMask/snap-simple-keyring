@@ -43,6 +43,10 @@ const TextField = styled.input`
   border-radius: 5px;
   box-sizing: border-box;
   border: 1px solid #bbc0c5;
+
+  :disabled {
+    background: #eeeeee;
+  }
 `;
 
 const TextArea = styled.textarea`
@@ -54,6 +58,10 @@ const TextArea = styled.textarea`
   border-radius: 5px;
   box-sizing: border-box;
   border: 1px solid #bbc0c5;
+
+  :disabled {
+    background: #eeeeee;
+  }
 `;
 
 const CopyableContainer = styled.div`
@@ -69,6 +77,7 @@ export type MethodProps = {
     placeholder: string;
     onChange: () => null;
     type: InputType;
+    disabled?: boolean;
   }[];
   action: {
     callback: () => Promise<unknown>;
@@ -97,6 +106,7 @@ export const Method = ({
             id={props.id}
             placeholder={props.placeholder}
             onChange={props.onChange}
+            disabled={props.disabled}
           />
         );
       case InputType.TextArea:
@@ -105,6 +115,7 @@ export const Method = ({
             id={props.id}
             placeholder={props.placeholder}
             onChange={props.onChange}
+            disabled={props.disabled}
           />
         );
       case InputType.Dropdown:

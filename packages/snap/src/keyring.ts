@@ -75,33 +75,29 @@ export class SimpleKeyring implements Keyring {
   async createAccount(
     options: Record<string, Json> = {},
   ): Promise<KeyringAccount> {
-    const { privateKey, address } = this.#getKeyPair(
-      options?.privateKey as string | undefined,
-    );
+    const { privateKey, address } = options?.address
+      ? { privateKey: '', address: options.address as string }
+      : this.#getKeyPair(options?.privateKey as string | undefined);
 
     if (!isUniqueAddress(address, Object.values(this.#state.wallets))) {
       throw new Error(`Account address already in use: ${address}`);
-    }
-    // The private key should not be stored in the account options since the
-    // account object is exposed to external components, such as MetaMask and
-    // the snap UI.
-    if (options?.privateKey) {
-      delete options.privateKey;
     }
 
     try {
       const account: KeyringAccount = {
         id: uuid(),
-        options,
+        options: {},
         address,
-        methods: [
-          EthMethod.PersonalSign,
-          EthMethod.Sign,
-          EthMethod.SignTransaction,
-          EthMethod.SignTypedDataV1,
-          EthMethod.SignTypedDataV3,
-          EthMethod.SignTypedDataV4,
-        ],
+        methods: privateKey
+          ? [
+              EthMethod.PersonalSign,
+              EthMethod.Sign,
+              EthMethod.SignTransaction,
+              EthMethod.SignTypedDataV1,
+              EthMethod.SignTypedDataV3,
+              EthMethod.SignTypedDataV4,
+            ]
+          : [],
         type: EthAccountType.Eoa,
       };
       await this.#emitEvent(KeyringEvent.AccountCreated, { account });

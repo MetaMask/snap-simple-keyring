@@ -1,6 +1,7 @@
 import { type KeyringAccount } from '@metamask/keyring-api';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { BrowserProvider } from 'ethers';
 import React, { useState } from 'react';
 
 import { MethodButton } from './Buttons';
@@ -15,6 +16,8 @@ import {
   AccountRowValue,
 } from './styledComponents';
 
+const provider = new BrowserProvider(window.ethereum);
+
 export const Account = ({
   account,
   handleDelete,
@@ -23,11 +26,17 @@ export const Account = ({
   handleDelete: (accountId: string) => Promise<void>;
 }) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [header, setHeader] = useState(account.address);
+
+  provider
+    .lookupAddress(account.address)
+    .then((name) => setHeader(name ?? account.address))
+    .catch(() => setHeader(account.address));
 
   return (
     <AccountContainer>
       <AccountTitleContainer>
-        <AccountTitle>{account.address}</AccountTitle>
+        <AccountTitle>{header}</AccountTitle>
         <AccountTitleIconContainer>
           {isCollapsed ? (
             <ExpandMoreIcon
@@ -58,13 +67,17 @@ export const Account = ({
           </AccountRow>
           <AccountRow>
             <AccountRowTitle>Account Supported Methods</AccountRowTitle>
-            <ul style={{ padding: '0px 0px 0px 16px' }}>
-              {account.methods.map((method) => (
-                <AccountRowValue key={`account-${account.id}-method-${method}`}>
-                  <li>{method}</li>
-                </AccountRowValue>
-              ))}
-            </ul>
+            {account.methods.length > 0 ? (
+              <ul style={{ padding: '0px 0px 0px 16px' }}>
+                {account.methods.map((method) => (
+                  <AccountRowValue key={`account-${account.id}-method-${method}`}>
+                    <li>{method}</li>
+                  </AccountRowValue>
+                ))}
+              </ul>
+            ) : (
+              <AccountRowValue>Watch-only account</AccountRowValue>
+            )}
           </AccountRow>
           <AccountRow alignItems="flex-end">
             <MethodButton
