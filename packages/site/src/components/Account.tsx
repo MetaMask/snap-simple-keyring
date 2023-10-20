@@ -59,26 +59,25 @@ export const Account = ({
           <AccountRow>
             <AccountRowTitle>Account Supported Methods</AccountRowTitle>
             <ul style={{ padding: '0px 0px 0px 16px' }}>
-              {account.methods.map((method, methodIndex) => (
-                <AccountRowValue
-                  key={`account-${account.id}-method-${methodIndex}`}
-                >
+              {account.methods.map((method) => (
+                <AccountRowValue key={`account-${account.id}-method-${method}`}>
                   <li>{method}</li>
                 </AccountRowValue>
               ))}
             </ul>
           </AccountRow>
+          <AccountRow alignItems="flex-end">
+            <MethodButton
+              width="30%"
+              margin="8px 0px 8px 8px"
+              onClick={async (): Promise<void> => {
+                await handleDelete(account.id);
+              }}
+              label="Delete"
+            />
+          </AccountRow>
         </>
       )}
-      <AccountRow alignItems="flex-end">
-        <MethodButton
-          width="30%"
-          onClick={async (): Promise<void> => {
-            await handleDelete(account.id);
-          }}
-          label="Delete"
-        />
-      </AccountRow>
     </AccountContainer>
   );
 };
