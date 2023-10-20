@@ -56,6 +56,15 @@ export class Logger {
   }
 
   /**
+   * Sets the logging level.
+   *
+   * @param level - Log level to set.
+   */
+  setLevel(level: LogLevel): void {
+    this.#context.threshold = level;
+  }
+
+  /**
    * Logs a message at the specified level.
    *
    * @param level - Log level of the message.
