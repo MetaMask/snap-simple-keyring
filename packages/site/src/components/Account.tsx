@@ -2,7 +2,7 @@ import { type KeyringAccount } from '@metamask/keyring-api';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { BrowserProvider } from 'ethers';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { MethodButton } from './Buttons';
 import { CopyableItem } from './CopyableItem';
@@ -26,11 +26,13 @@ export const Account = ({
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [header, setHeader] = useState(account.address);
 
-  const provider = new BrowserProvider(window.ethereum);
-  provider
-    .lookupAddress(account.address)
-    .then((name) => setHeader(name ?? account.address))
-    .catch(() => setHeader(account.address));
+  useEffect(() => {
+    const provider = new BrowserProvider(window.ethereum);
+    provider
+      .lookupAddress(account.address)
+      .then((name) => setHeader(name ?? account.address))
+      .catch(() => setHeader(account.address));
+  });
 
   return (
     <AccountContainer>
@@ -69,7 +71,9 @@ export const Account = ({
             {account.methods.length > 0 ? (
               <ul style={{ padding: '0px 0px 0px 16px' }}>
                 {account.methods.map((method) => (
-                  <AccountRowValue key={`account-${account.id}-method-${method}`}>
+                  <AccountRowValue
+                    key={`account-${account.id}-method-${method}`}
+                  >
                     <li>{method}</li>
                   </AccountRowValue>
                 ))}
