@@ -140,6 +140,7 @@ export const Toggle = ({
         onClick={() => {
           handleChange().catch(console.error);
         }}
+        data-testid="use-sync-flow-toggle"
       >
         <ToggleContainer checked={checked} enabled={enabled}>
           <CheckedContainer checked={checked}>
@@ -150,11 +151,7 @@ export const Toggle = ({
           </UncheckedContainer>
         </ToggleContainer>
         <ToggleCircle checked={checked} enabled={enabled} />
-        <ToggleInput
-          id="use-sync-flow-toggle"
-          type="checkbox"
-          aria-label="Toggle Button"
-        />
+        <ToggleInput type="checkbox" aria-label="Toggle Button" />
       </ToggleWrapper>
       <Label>{title}</Label>
     </div>
