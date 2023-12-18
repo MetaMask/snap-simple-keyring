@@ -1,5 +1,5 @@
 {
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "An example of a key management snap for a simple keyring.",
   "proposedName": "MetaMask Simple Snap Keyring",
   "repository": {
@@ -7,7 +7,7 @@
     "url": "git+https://github.com/MetaMask/snap-simple-keyring.git"
   },
   "source": {
-    "shasum": "6LvLUNssp12iYOIQ/j5Ee3G+TKywMxFrWbe1v7/zdVk=",
+    "shasum": "kTIqxcFUYPRiaV7etXM0HpD+fSaJw/+ePbFgjXW3Btk=",
     "location": {
       "npm": {
         "filePath": "dist/bundle.js",
