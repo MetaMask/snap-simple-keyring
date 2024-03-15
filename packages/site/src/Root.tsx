@@ -2,7 +2,7 @@ import type { FunctionComponent, ReactNode } from 'react';
 import React, { createContext, useCallback, useState } from 'react';
 import { ThemeProvider } from 'styled-components';
 
-import { dark, light } from './config/theme';
+import { light } from './config/theme';
 import { MetaMaskProvider } from './hooks';
 import { getThemePreference, setLocalStorage } from './utils';
 
@@ -26,7 +26,7 @@ export const Root: FunctionComponent<RootProps> = ({ children }) => {
 
   return (
     <ToggleThemeContext.Provider value={toggleTheme}>
-      <ThemeProvider theme={darkTheme ? dark : light}>
+      <ThemeProvider theme={light}>
         <MetaMaskProvider>{children}</MetaMaskProvider>
       </ThemeProvider>
     </ToggleThemeContext.Provider>
