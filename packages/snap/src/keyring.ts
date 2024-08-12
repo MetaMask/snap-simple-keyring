@@ -104,7 +104,7 @@ export class SimpleKeyring implements Keyring {
         ],
         type: EthAccountType.Eoa,
       };
-      await this.#emitEvent(KeyringEvent.AccountCreated, { account });
+      await this.#emitEvent(KeyringEvent.AccountCreated, { account, accountNameSuggestion: 'SSK Account' });
       this.#state.wallets[account.id] = { account, privateKey };
       await this.#saveState();
       return account;
