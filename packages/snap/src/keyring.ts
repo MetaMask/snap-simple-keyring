@@ -106,7 +106,7 @@ export class SimpleKeyring implements Keyring {
       };
       await this.#emitEvent(KeyringEvent.AccountCreated, {
         account,
-        accountNameSuggestion: 'SSK Account'
+        accountNameSuggestion: 'SSK Account',
       });
       this.#state.wallets[account.id] = { account, privateKey };
       await this.#saveState();
