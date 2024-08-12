@@ -7,8 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ## [1.1.2]
-### Uncategorized
-- feat: add account name suggestion ([#144](https://github.com/MetaMask/snap-simple-keyring/pull/144))
+### Added
+- Add account name suggestion to `"notify:accountCreated"` event ([#144](https://github.com/MetaMask/snap-simple-keyring/pull/144))
 
 ## [1.1.1]
 ### Changed
