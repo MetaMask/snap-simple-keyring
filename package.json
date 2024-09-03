@@ -33,8 +33,7 @@
     "lint:misc": "yarn workspaces foreach --parallel --verbose run lint:misc",
     "lint:types": "yarn workspaces foreach --parallel --verbose run lint:types",
     "start": "yarn workspaces foreach --parallel --verbose --interlaced run start",
-    "test": "yarn workspaces foreach --parallel --verbose run test",
-    "build-preinstalled-snap": "node scripts/build-preinstalled-snap.js"
+    "test": "yarn workspaces foreach --parallel --verbose run test"
   },
   "devDependencies": {
     "@metamask/eslint-config": "^12.2.0",
