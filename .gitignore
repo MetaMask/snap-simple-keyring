@@ -1,5 +1,12 @@
 .DS_Store
-dist/
+
+# Ignore everything in the dist directory
+dist/*
+packages/snap/dist/*
+
+# Allow only the preinstalled-snap.json in the packages/snap/dist/ folder
+!packages/snap/dist/preinstalled-snap.json
+
 build/
 coverage/
 
