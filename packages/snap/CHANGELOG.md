@@ -7,8 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ## [1.1.3]
-### Uncategorized
-- patch: Include yarn build-preinstalled-snap in main build steps ([#148](https://github.com/MetaMask/snap-simple-keyring/pull/148))
+### Added
+- Include `preinstalled-snap.json` in release ([#148](https://github.com/MetaMask/snap-simple-keyring/pull/148)).
+- Script to generate `preinstalled-snap.json` ([#146](https://github.com/MetaMask/snap-simple-keyring/pull/146)).
 
 ## [1.1.2]
 ### Added
