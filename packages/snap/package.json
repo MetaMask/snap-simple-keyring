@@ -26,7 +26,7 @@
   "scripts": {
     "build": "mm-snap build && yarn build-preinstalled-snap",
     "build:clean": "yarn clean && yarn build",
-    "build-preinstalled-snap": "node ../../scripts/build-preinstalled-snap.js",
+    "build-preinstalled-snap": "node scripts/build-preinstalled-snap.js",
     "clean": "rimraf dist",
     "lint": "yarn lint:eslint && yarn lint:misc && yarn lint:deps && yarn lint:types",
     "lint:deps": "depcheck",
