@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.4]
+
+### Added
+
+- Allow the origin `metamask.github.io` to call snap methods ([#151](https://github.com/MetaMask/snap-simple-keyring/pull/151)).
+
+### Fixed
+
+- Moved `build-preinstalled-snap.js` script inside snap package and fixed bundle paths for pre installed snaps ([#150](https://github.com/MetaMask/snap-simple-keyring/pull/150))
+
 ## [1.1.3]
 
 ### Added
@@ -135,7 +145,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial release.
 
-[Unreleased]: https://github.com/MetaMask/snap-simple-keyring/compare/v1.1.3...HEAD
+[Unreleased]: https://github.com/MetaMask/snap-simple-keyring/compare/v1.1.4...HEAD
+[1.1.4]: https://github.com/MetaMask/snap-simple-keyring/compare/v1.1.3...v1.1.4
 [1.1.3]: https://github.com/MetaMask/snap-simple-keyring/compare/v1.1.2...v1.1.3
 [1.1.2]: https://github.com/MetaMask/snap-simple-keyring/compare/v1.1.1...v1.1.2
 [1.1.1]: https://github.com/MetaMask/snap-simple-keyring/compare/v1.1.0...v1.1.1
