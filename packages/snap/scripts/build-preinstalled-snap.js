@@ -23,9 +23,9 @@ function readFileContents(filePath) {
 }
 
 // Paths to the files
-const bundlePath = require.resolve('../packages/snap/dist/bundle.js');
-const iconPath = require.resolve('../packages/snap/images/icon.svg');
-const manifestPath = require.resolve('../packages/snap/snap.manifest.json');
+const bundlePath = require.resolve('../dist/bundle.js');
+const iconPath = require.resolve('../images/icon.svg');
+const manifestPath = require.resolve('../snap.manifest.json');
 
 // File Contents
 const bundle = readFileContents(bundlePath);
@@ -59,11 +59,11 @@ const preinstalledSnap = {
   manifest: JSON.parse(manifest),
   files: [
     {
-      path: '../packages/snap/images/icon.svg',
+      path: 'images/icon.svg',
       value: icon,
     },
     {
-      path: '../packages/snap/dist/bundle.js',
+      path: 'dist/bundle.js',
       value: bundle,
     },
   ],
@@ -73,10 +73,7 @@ const preinstalledSnap = {
 // Write preinstalled-snap file
 try {
   // Preinstalled Snap File
-  const outputPath = join(
-    __dirname,
-    '../packages/snap/dist/preinstalled-snap.json',
-  );
+  const outputPath = join(__dirname, '..', 'dist/preinstalled-snap.json');
   writeFileSync(outputPath, JSON.stringify(preinstalledSnap, null, 0));
 
   console.log(
