@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.5]
+
+### Added
+
+- Add "metamask.github.io" to `allowedOrigins` list in the `endowment:keyring` ([#153](https://github.com/MetaMask/snap-simple-keyring/pull/153))
+
 ## [1.1.4]
 
 ### Added
@@ -145,7 +151,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial release.
 
-[Unreleased]: https://github.com/MetaMask/snap-simple-keyring/compare/v1.1.4...HEAD
+[Unreleased]: https://github.com/MetaMask/snap-simple-keyring/compare/v1.1.5...HEAD
+[1.1.5]: https://github.com/MetaMask/snap-simple-keyring/compare/v1.1.4...v1.1.5
 [1.1.4]: https://github.com/MetaMask/snap-simple-keyring/compare/v1.1.3...v1.1.4
 [1.1.3]: https://github.com/MetaMask/snap-simple-keyring/compare/v1.1.2...v1.1.3
 [1.1.2]: https://github.com/MetaMask/snap-simple-keyring/compare/v1.1.1...v1.1.2
