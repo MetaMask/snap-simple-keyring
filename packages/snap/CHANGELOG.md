@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.1.5]
 
 ### Added
+
 - Add "metamask.github.io" to `allowedOrigins` list in the `endowment:keyring` ([#153](https://github.com/MetaMask/snap-simple-keyring/pull/153))
 
 ## [1.1.4]
