@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.6]
+
+### Changed
+
+- Bump `@metamask/keyring-api` from `^8.1.0` to `^8.1.3` ([#155](https://github.com/MetaMask/snap-simple-keyring/pull/155))
+  - This version is now built slightly differently and is part of the [accounts monorepo](https://github.com/MetaMask/accounts).
+
 ## [1.1.5]
 
 ### Added
@@ -151,7 +158,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial release.
 
-[Unreleased]: https://github.com/MetaMask/snap-simple-keyring/compare/v1.1.5...HEAD
+[Unreleased]: https://github.com/MetaMask/snap-simple-keyring/compare/v1.1.6...HEAD
+[1.1.6]: https://github.com/MetaMask/snap-simple-keyring/compare/v1.1.5...v1.1.6
 [1.1.5]: https://github.com/MetaMask/snap-simple-keyring/compare/v1.1.4...v1.1.5
 [1.1.4]: https://github.com/MetaMask/snap-simple-keyring/compare/v1.1.3...v1.1.4
 [1.1.3]: https://github.com/MetaMask/snap-simple-keyring/compare/v1.1.2...v1.1.3
