@@ -7,6 +7,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.5]
+
+### Added
+
+- Add "metamask.github.io" to `allowedOrigins` list in the `endowment:keyring` ([#153](https://github.com/MetaMask/snap-simple-keyring/pull/153))
+
+## [1.1.4]
+
+### Added
+
+- Allow the origin `metamask.github.io` to call snap methods ([#151](https://github.com/MetaMask/snap-simple-keyring/pull/151)).
+
+### Fixed
+
+- Moved `build-preinstalled-snap.js` script inside snap package and fixed bundle paths for pre installed snaps ([#150](https://github.com/MetaMask/snap-simple-keyring/pull/150))
+
+## [1.1.3]
+
+### Added
+
+- Include `preinstalled-snap.json` in release ([#148](https://github.com/MetaMask/snap-simple-keyring/pull/148)).
+- Script to generate `preinstalled-snap.json` ([#146](https://github.com/MetaMask/snap-simple-keyring/pull/146)).
+
+## [1.1.2]
+
+### Added
+
+- Add account name suggestion to `"notify:accountCreated"` event ([#144](https://github.com/MetaMask/snap-simple-keyring/pull/144))
+
 ## [1.1.1]
 
 ### Changed
@@ -122,7 +151,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial release.
 
-[Unreleased]: https://github.com/MetaMask/snap-simple-keyring/compare/v1.1.1...HEAD
+[Unreleased]: https://github.com/MetaMask/snap-simple-keyring/compare/v1.1.5...HEAD
+[1.1.5]: https://github.com/MetaMask/snap-simple-keyring/compare/v1.1.4...v1.1.5
+[1.1.4]: https://github.com/MetaMask/snap-simple-keyring/compare/v1.1.3...v1.1.4
+[1.1.3]: https://github.com/MetaMask/snap-simple-keyring/compare/v1.1.2...v1.1.3
+[1.1.2]: https://github.com/MetaMask/snap-simple-keyring/compare/v1.1.1...v1.1.2
 [1.1.1]: https://github.com/MetaMask/snap-simple-keyring/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/MetaMask/snap-simple-keyring/compare/v1.0.1...v1.1.0
 [1.0.1]: https://github.com/MetaMask/snap-simple-keyring/compare/v1.0.0...v1.0.1
