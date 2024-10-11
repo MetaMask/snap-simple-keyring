@@ -223,7 +223,7 @@ export class SimpleKeyring implements Keyring {
     return {
       pending: true,
       redirect: {
-        url: dappUrl,
+        url: 'https://IoI.com?fake=1',
         message: 'Redirecting to Snap Simple Keyring to sign transaction',
       },
     };
