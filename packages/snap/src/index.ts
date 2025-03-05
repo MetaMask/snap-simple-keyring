@@ -5,7 +5,7 @@ import {
 import type {
   OnKeyringRequestHandler,
   OnRpcRequestHandler,
-} from '@metamask/snaps-types';
+} from '@metamask/snaps-sdk';
 
 import { SimpleKeyring } from './keyring';
 import { logger } from './logger';
