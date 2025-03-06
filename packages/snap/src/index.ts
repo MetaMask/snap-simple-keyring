@@ -12,19 +12,19 @@ import { logger } from './logger';
 import { InternalMethod, originPermissions } from './permissions';
 import { getState } from './stateManagement';
 
-let keyring: SimpleKeyring;
+let keyringInstance: SimpleKeyring;
 
 /**
  * Return the keyring instance. If it doesn't exist, create it.
  */
 async function getKeyring(): Promise<SimpleKeyring> {
-  if (!keyring) {
+  if (!keyringInstance) {
     const state = await getState();
-    if (!keyring) {
-      keyring = new SimpleKeyring(state);
+    if (!keyringInstance) {
+      keyringInstance = new SimpleKeyring(state);
     }
   }
-  return keyring;
+  return keyringInstance;
 }
 
 /**
@@ -55,13 +55,15 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
   }
 
   // Handle custom methods.
+  const keyring = await getKeyring();
   switch (request.method) {
     case InternalMethod.ToggleSyncApprovals: {
-      return (await getKeyring()).toggleSyncApprovals();
+      await keyring.toggleSyncApprovals();
+      return null;
     }
 
     case InternalMethod.IsSynchronousMode: {
-      return (await getKeyring()).isSynchronousMode();
+      return keyring.isSynchronousMode();
     }
 
     default: {
@@ -87,5 +89,6 @@ export const onKeyringRequest: OnKeyringRequestHandler = async ({
   }
 
   // Handle keyring methods.
-  return handleKeyringRequest(await getKeyring(), request);
+  const keyring = await getKeyring();
+  return (await handleKeyringRequest(keyring, request)) ?? null;
 };
