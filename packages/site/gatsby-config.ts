@@ -50,11 +50,9 @@ const config: GatsbyConfig = {
             // ----------------------------------------------------------------
             // Regular
             {
-              family: 'Euclid Circular B',
+              family: 'CentraNo1',
               urls: {
-                woff2: `fonts/EuclidCircularB-Regular.woff2`,
-                woff: `fonts/EuclidCircularB-Regular.woff`,
-                ttf: `fonts/Euclid Circular B Regular.ttf`,
+                woff2: `fonts/CentraNo1-Book.woff2`,
               },
               fontStyle: 'normal',
               fontWeight: 400,
@@ -63,11 +61,9 @@ const config: GatsbyConfig = {
             // ----------------------------------------------------------------
             // Medium
             {
-              family: 'Euclid Circular B',
+              family: 'CentraNo1',
               urls: {
-                woff2: `fonts/EuclidCircularB-Medium.woff2`,
-                woff: `fonts/EuclidCircularB-Medium.woff`,
-                ttf: `fonts/Euclid Circular B Medium.ttf`,
+                woff2: `fonts/CentraNo1-Medium.woff2`,
               },
               fontStyle: 'normal',
               fontWeight: 500,
@@ -76,11 +72,9 @@ const config: GatsbyConfig = {
             // ----------------------------------------------------------------
             // Bold
             {
-              family: 'Euclid Circular B',
+              family: 'CentraNo1',
               urls: {
-                woff2: `fonts/EuclidCircularB-Bold.woff2`,
-                woff: `fonts/EuclidCircularB-Bold.woff`,
-                ttf: `fonts/Euclid Circular B Bold.ttf`,
+                woff2: `fonts/CentraNo1-Bold.woff2`,
               },
               fontStyle: 'normal',
               fontWeight: 700,
