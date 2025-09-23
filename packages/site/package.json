@@ -12,8 +12,7 @@
     "lint:fix": "yarn lint:eslint --fix && yarn lint:misc --write",
     "lint:misc": "prettier '**/*.json' '**/*.md' '!CHANGELOG.md' --check",
     "lint:types": "tsc --noEmit",
-    "start": "rimraf .cache && cross-env GATSBY_TELEMETRY_DISABLED=1 gatsby develop",
-    "prepublishOnly": "yarn build"
+    "start": "rimraf .cache && cross-env GATSBY_TELEMETRY_DISABLED=1 gatsby develop"
   },
   "files": [
     "public/"
