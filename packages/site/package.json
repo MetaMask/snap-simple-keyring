@@ -1,7 +1,7 @@
 {
   "name": "@metamask/snap-simple-keyring-site",
   "version": "1.1.6",
-  "private": true,
+  "description": "A snap simple keyring dapp used in MetaMask e2e tests.",
   "license": "(MIT-0 OR Apache-2.0)",
   "scripts": {
     "build": "rimraf .cache && cross-env GATSBY_TELEMETRY_DISABLED=1 gatsby build --prefix-paths",
@@ -13,6 +13,12 @@
     "lint:misc": "prettier '**/*.json' '**/*.md' '!CHANGELOG.md' --check",
     "lint:types": "tsc --noEmit",
     "start": "rimraf .cache && cross-env GATSBY_TELEMETRY_DISABLED=1 gatsby develop"
+  },
+  "files": [
+    "public/"
+  ],
+  "publishConfig": {
+    "access": "public"
   },
   "browserslist": {
     "production": [
