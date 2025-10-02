@@ -7,14 +7,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [2.0.0]
-
-### Changed
-
-- Make @metamask/snap-simple-keyring-site publishable ([#163](https://github.com/MetaMask/snap-simple-keyring/pull/163))
-- Use new CentraNo1 font ([#160](https://github.com/MetaMask/snap-simple-keyring/pull/160))
-- Bump `crypto-browserify@^3.12.1` + `snaps-*` ([#159](https://github.com/MetaMask/snap-simple-keyring/pull/159))
-
 ## [1.1.6]
 
 ### Changed
@@ -166,8 +158,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial release.
 
-[Unreleased]: https://github.com/MetaMask/snap-simple-keyring/compare/v2.0.0...HEAD
-[2.0.0]: https://github.com/MetaMask/snap-simple-keyring/compare/v1.1.6...v2.0.0
+[Unreleased]: https://github.com/MetaMask/snap-simple-keyring/compare/v1.1.6...HEAD
 [1.1.6]: https://github.com/MetaMask/snap-simple-keyring/compare/v1.1.2...v1.1.6
 [1.1.2]: https://github.com/MetaMask/snap-simple-keyring/compare/v1.1.1...v1.1.2
 [1.1.1]: https://github.com/MetaMask/snap-simple-keyring/compare/v1.1.0...v1.1.1
