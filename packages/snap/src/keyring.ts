@@ -20,6 +20,7 @@ import {
 import type {
   Keyring,
   KeyringAccount,
+  KeyringEventPayload,
   KeyringRequest,
   SubmitRequestResponse,
 } from '@metamask/keyring-api';
@@ -394,9 +395,9 @@ export class SimpleKeyring implements Keyring {
     await saveState(this.#state);
   }
 
-  async #emitEvent(
-    event: KeyringEvent,
-    data: Record<string, Json>,
+  async #emitEvent<Event extends KeyringEvent>(
+    event: Event,
+    data: KeyringEventPayload<Event>,
   ): Promise<void> {
     await emitSnapKeyringEvent(snap, event, data);
   }
