@@ -1,7 +1,7 @@
 import {
   MethodNotSupportedError,
   handleKeyringRequest,
-} from '@metamask/keyring-api';
+} from '@metamask/keyring-snap-sdk';
 import type {
   OnKeyringRequestHandler,
   OnRpcRequestHandler,
