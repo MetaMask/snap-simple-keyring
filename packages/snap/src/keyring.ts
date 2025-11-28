@@ -44,6 +44,7 @@ import {
   runSensitive,
 } from './util';
 import packageInfo from '../package.json';
+import { cp } from 'fs';
 
 export type KeyringState = {
   wallets: Record<string, Wallet>;
@@ -81,6 +82,7 @@ export class SimpleKeyring implements Keyring {
       options?.privateKey as string | undefined,
     );
 
+
     if (!isUniqueAddress(address, Object.values(this.#state.wallets))) {
       throw new Error(`Account address already in use: ${address}`);
     }
@@ -111,6 +113,11 @@ export class SimpleKeyring implements Keyring {
         account,
         accountNameSuggestion: 'SSK Account',
       });
+
+      // FIXME: For some reason the client doesnt let us have `scopes` when we list accounts 
+      // so I remove it here:
+      delete (account as any).scopes;
+
       this.#state.wallets[account.id] = { account, privateKey };
       await this.#saveState();
       return account;
