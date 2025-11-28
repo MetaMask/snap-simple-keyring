@@ -20,15 +20,17 @@ import {
 import type {
   Keyring,
   KeyringAccount,
+  KeyringEventPayload,
   KeyringRequest,
   SubmitRequestResponse,
 } from '@metamask/keyring-api';
 import {
   EthAccountType,
   EthMethod,
-  emitSnapKeyringEvent,
+  EthScope,
+  KeyringEvent,
 } from '@metamask/keyring-api';
-import { KeyringEvent } from '@metamask/keyring-api/dist/events';
+import { emitSnapKeyringEvent } from '@metamask/keyring-snap-sdk';
 import { type Json, type JsonRpcRequest } from '@metamask/utils';
 import { Buffer } from 'buffer';
 import { v4 as uuid } from 'uuid';
@@ -94,6 +96,7 @@ export class SimpleKeyring implements Keyring {
         id: uuid(),
         options,
         address,
+        scopes: [EthScope.Eoa],
         methods: [
           EthMethod.PersonalSign,
           EthMethod.Sign,
@@ -392,9 +395,9 @@ export class SimpleKeyring implements Keyring {
     await saveState(this.#state);
   }
 
-  async #emitEvent(
-    event: KeyringEvent,
-    data: Record<string, Json>,
+  async #emitEvent<Event extends KeyringEvent>(
+    event: Event,
+    data: KeyringEventPayload<Event>,
   ): Promise<void> {
     await emitSnapKeyringEvent(snap, event, data);
   }
