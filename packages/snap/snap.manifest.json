@@ -27,6 +27,6 @@
     "snap_manageAccounts": {},
     "snap_manageState": {}
   },
-  "platformVersion": "6.19.0",
+  "platformVersion": "7.1.0",
   "manifestVersion": "0.1"
 }
