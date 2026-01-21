@@ -44,7 +44,7 @@
     "@metamask/eth-sig-util": "^7.0.1",
     "@metamask/keyring-api": "^21.0.0",
     "@metamask/keyring-snap-sdk": "^7.0.0",
-    "@metamask/snaps-sdk": "^6.19.0",
+    "@metamask/snaps-sdk": "7.1.0",
     "@metamask/utils": "^8.1.0",
     "uuid": "^9.0.0"
   },

@@ -3561,7 +3561,7 @@ __metadata:
     "@metamask/keyring-api": ^21.0.0
     "@metamask/keyring-snap-sdk": ^7.0.0
     "@metamask/snaps-cli": ^6.7.0
-    "@metamask/snaps-sdk": ^6.19.0
+    "@metamask/snaps-sdk": 7.1.0
     "@metamask/utils": ^8.1.0
     "@types/node": ^20.6.2
     "@typescript-eslint/eslint-plugin": ^5.33.0
@@ -3679,7 +3679,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@metamask/snaps-sdk@npm:^6.15.0, @metamask/snaps-sdk@npm:^6.17.0, @metamask/snaps-sdk@npm:^6.17.1, @metamask/snaps-sdk@npm:^6.19.0":
+"@metamask/snaps-sdk@npm:7.1.0":
+  version: 7.1.0
+  resolution: "@metamask/snaps-sdk@npm:7.1.0"
+  dependencies:
+    "@metamask/key-tree": ^10.1.1
+    "@metamask/providers": ^22.1.0
+    "@metamask/rpc-errors": ^7.0.2
+    "@metamask/superstruct": ^3.2.1
+    "@metamask/utils": ^11.4.0
+  checksum: 9d21b7193ce7dfc388188c9b8ad3983decc3d71f6478af23318933b214a6d42e5e152eb44815a0cdfc9b20eb1cee0a44e87793c3027bcbbdb4d9aa566e8c7743
+  languageName: node
+  linkType: hard
+
+"@metamask/snaps-sdk@npm:^6.15.0, @metamask/snaps-sdk@npm:^6.17.0, @metamask/snaps-sdk@npm:^6.17.1":
   version: 6.19.0
   resolution: "@metamask/snaps-sdk@npm:6.19.0"
   dependencies:
@@ -3777,6 +3790,25 @@ __metadata:
     semver: ^7.5.4
     uuid: ^9.0.1
   checksum: f3befb538783f50ac0573468a44ae1331b39318263fd895ff24119f26c57a7c4ab90d4f8593d13bc558023802a07b031aed555c1a096aee0ab6b7ff4cbaa81e1
+  languageName: node
+  linkType: hard
+
+"@metamask/utils@npm:^11.4.0":
+  version: 11.9.0
+  resolution: "@metamask/utils@npm:11.9.0"
+  dependencies:
+    "@ethereumjs/tx": ^4.2.0
+    "@metamask/superstruct": ^3.1.0
+    "@noble/hashes": ^1.3.1
+    "@scure/base": ^1.1.3
+    "@types/debug": ^4.1.7
+    "@types/lodash": ^4.17.20
+    debug: ^4.3.4
+    lodash: ^4.17.21
+    pony-cause: ^2.1.10
+    semver: ^7.5.4
+    uuid: ^9.0.1
+  checksum: 467d9c1835dfe9bf9f67af0e0a472ca1805aa7f7a3969f439e4d14d9db2fa9c8da7611c8299c81f65ef6a63cb72725b227bac28080ed467375115c3ad6227d7a
   languageName: node
   linkType: hard
 
