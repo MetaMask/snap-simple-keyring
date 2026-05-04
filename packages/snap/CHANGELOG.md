@@ -9,13 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.1.0]
 
-### Added
-
-- Add `@metamask/keyring-snap-sdk@^7.0.0` ([#169](https://github.com/MetaMask/snap-simple-keyring/pull/169))
-
 ### Changed
 
 - Bump `@metamask/keyring-api` from `^8.1.3` to `^23.1.0` ([#169](https://github.com/MetaMask/snap-simple-keyring/pull/169), [#173](https://github.com/MetaMask/snap-simple-keyring/pull/173))
+- Add `@metamask/keyring-snap-sdk@^7.0.0` ([#169](https://github.com/MetaMask/snap-simple-keyring/pull/169))
+  - Some code that the snap was relying on was moved from `@metamask/keyring-api` to `@metamask/keyring-snap-sdk`
 - Bump `@metamask/keyring-snap-sdk` from `^7.0.0` to `^9.0.1` ([#173](https://github.com/MetaMask/snap-simple-keyring/pull/173))
 - Bump `@metamask/snaps-sdk` from `6.19.0` to `^11.1.0` ([#169](https://github.com/MetaMask/snap-simple-keyring/pull/169), [#173](https://github.com/MetaMask/snap-simple-keyring/pull/173))
   - `platformVersion` in `snap.manifest.json` is updated from `7.1.0` to `11.1.0` to match.
