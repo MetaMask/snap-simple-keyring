@@ -9,10 +9,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.1.1]
 
-### Added
-
-- Add comment explaining package versions ([#179](https://github.com/MetaMask/snap-simple-keyring/pull/179))
-
 ### Changed
 
 - Bump bundled snap version reference from `@metamask/snap-simple-keyring-snap@2.0.1` to `@metamask/snap-simple-keyring-snap@2.1.0` ([#178](https://github.com/MetaMask/snap-simple-keyring/pull/178))
