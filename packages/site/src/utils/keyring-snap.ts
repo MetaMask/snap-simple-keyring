@@ -1,17 +1,11 @@
 import type { KeyringAccount, KeyringRequest } from '@metamask/keyring-api';
 
+import { getEthereumProvider } from './provider';
+
 export type KeyringState = {
   pendingRequests: KeyringRequest[];
   accounts: KeyringAccount[];
   useSynchronousApprovals: boolean;
-};
-
-const getEthereumProvider = () => {
-  if (!window.ethereum) {
-    throw new Error('MetaMask is not available.');
-  }
-
-  return window.ethereum;
 };
 
 /**

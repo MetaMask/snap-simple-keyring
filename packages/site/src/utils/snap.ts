@@ -3,14 +3,7 @@ import snapPackageInfo from '../../../snap/package.json';
 // dapp installs whichever snap version was bundled with this site release.
 import { defaultSnapOrigin } from '../config';
 import type { GetSnapsResponse, Snap } from '../types';
-
-const getEthereumProvider = () => {
-  if (!window.ethereum) {
-    throw new Error('MetaMask is not available.');
-  }
-
-  return window.ethereum;
-};
+import { getEthereumProvider } from './provider';
 
 /**
  * Get the installed snaps in MetaMask.
