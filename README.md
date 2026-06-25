@@ -38,7 +38,7 @@ organization, you probably want to run `./scripts/cleanup.sh` to remove some
 files that will not work properly outside the MetaMask GitHub organization.
 
 Note that the `action-publish-release.yml` workflow contains a step that
-publishes the frontend of this snap (contained in the `public/` directory) to
+publishes the frontend of this snap (contained in the `dist/` directory) to
 GitHub pages. If you do not want to publish the frontend to GitHub pages,
 simply remove the step named "Publish to GitHub Pages" in that workflow.
 

@@ -35,7 +35,6 @@ jobs:
         with:
           path: |
             ./packages/*/dist
-            ./packages/*/public
             ./node_modules/.yarn-state.yml
           key: ${{ github.sha }}
 
@@ -51,7 +50,6 @@ jobs:
         with:
           path: |
             ./packages/*/dist
-            ./packages/*/public
             ./node_modules/.yarn-state.yml
           key: ${{ github.sha }}
       - name: Dry Run Publish
@@ -76,7 +74,6 @@ jobs:
         with:
           path: |
             ./packages/*/dist
-            ./packages/*/public
             ./node_modules/.yarn-state.yml
           key: ${{ github.sha }}
       - name: Publish

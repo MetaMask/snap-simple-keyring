@@ -3,7 +3,7 @@ import type { SnapConfig } from '@metamask/snaps-cli';
 const config: SnapConfig = {
   bundler: 'webpack',
   input: 'src/index.ts',
-  server: { port: 8080 },
+  server: { port: 8081 },
   polyfills: {
     buffer: true,
     stream: true,

@@ -4,13 +4,21 @@ import snapPackageInfo from '../../../snap/package.json';
 import { defaultSnapOrigin } from '../config';
 import type { GetSnapsResponse, Snap } from '../types';
 
+const getEthereumProvider = () => {
+  if (!window.ethereum) {
+    throw new Error('MetaMask is not available.');
+  }
+
+  return window.ethereum;
+};
+
 /**
  * Get the installed snaps in MetaMask.
  *
  * @returns The snaps installed in MetaMask.
  */
 export const getSnaps = async (): Promise<GetSnapsResponse> => {
-  return (await window.ethereum.request({
+  return (await getEthereumProvider().request({
     method: 'wallet_getSnaps',
   })) as unknown as GetSnapsResponse;
 };
@@ -27,7 +35,7 @@ export const connectSnap = async (
     version: snapPackageInfo.version,
   },
 ) => {
-  await window.ethereum.request({
+  await getEthereumProvider().request({
     method: 'wallet_requestSnaps',
     params: {
       [snapId]: params,
@@ -60,7 +68,7 @@ export const getSnap = async (version?: string): Promise<Snap | undefined> => {
  */
 
 export const sendHello = async () => {
-  await window.ethereum.request({
+  await getEthereumProvider().request({
     method: 'wallet_invokeSnap',
     params: {
       snapId: defaultSnapOrigin,
@@ -74,7 +82,7 @@ export const sendHello = async () => {
  */
 
 export const toggleSynchronousApprovals = async () => {
-  await window.ethereum.request({
+  await getEthereumProvider().request({
     method: 'wallet_invokeSnap',
     params: {
       snapId: defaultSnapOrigin,
@@ -84,7 +92,7 @@ export const toggleSynchronousApprovals = async () => {
 };
 
 export const isSynchronousMode = async (): Promise<boolean> => {
-  return (await window.ethereum.request({
+  return (await getEthereumProvider().request({
     method: 'wallet_invokeSnap',
     params: {
       snapId: defaultSnapOrigin,

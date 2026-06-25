@@ -6,6 +6,14 @@ export type KeyringState = {
   useSynchronousApprovals: boolean;
 };
 
+const getEthereumProvider = () => {
+  if (!window.ethereum) {
+    throw new Error('MetaMask is not available.');
+  }
+
+  return window.ethereum;
+};
+
 /**
  * Send a request to a snap.
  *
@@ -17,7 +25,7 @@ export async function sendMessageToSnap(
   snapId: string,
   request: any,
 ): Promise<unknown> {
-  return window.ethereum.request({
+  return getEthereumProvider().request({
     method: 'wallet_invokeSnap',
     params: {
       snapId,
