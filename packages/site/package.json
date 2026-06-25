@@ -5,7 +5,7 @@
   "license": "(MIT-0 OR Apache-2.0)",
   "scripts": {
     "build": "yarn clean && cross-env NODE_ENV=production node ./scripts/build.js",
-    "clean": "rimraf dist public .cache",
+    "clean": "rimraf dist",
     "lint": "yarn lint:eslint && yarn lint:misc && yarn lint:deps && yarn lint:types",
     "lint:deps": "depcheck",
     "lint:eslint": "eslint . --cache --ext js,jsx,ts,tsx",
