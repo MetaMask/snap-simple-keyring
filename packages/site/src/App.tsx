@@ -104,11 +104,16 @@ const ValueBlock: FunctionComponent<{ value: string }> = ({ value }) => (
   <pre className={valueBlockClassName}>{value}</pre>
 );
 
+const ResultTitle: FunctionComponent<{ variant: 'success' | 'danger' }> = ({
+  variant,
+}) => <p>{`${variant === 'success' ? 'Successful' : 'Error'} request:`}</p>;
+
 const Result: FunctionComponent<{
   value: string;
-  variant: 'primary' | 'danger';
+  variant: 'success' | 'danger';
 }> = ({ value, variant }) => (
   <div className={`alert alert-${variant} mb-0`} role="alert">
+    <ResultTitle variant={variant} />
     <ValueBlock value={value} />
   </div>
 );
@@ -191,7 +196,7 @@ const Method: FunctionComponent<MethodConfig> = ({
         {isSubmitting ? 'Running' : action.label}
       </button>
       {response !== undefined && (
-        <Result value={formatResponse(response)} variant="primary" />
+        <Result value={formatResponse(response)} variant="success" />
       )}
       {error !== undefined && <Result value={error} variant="danger" />}
     </form>
