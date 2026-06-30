@@ -72,7 +72,7 @@ export const MetaMaskProvider = ({ children }: { children: ReactNode }) => {
        * Detect if MetaMask is installed.
        */
       async function detectMetaMask() {
-        const isMetaMaskDetected = await hasMetaMask();
+        const isMetaMaskDetected = await hasMetaMask(window);
 
         dispatch({
           type: MetamaskActions.SetMetaMaskDetected,
@@ -99,7 +99,7 @@ export const MetaMaskProvider = ({ children }: { children: ReactNode }) => {
     };
 
     detectInstallation().catch(console.error);
-  }, [state.hasMetaMask]);
+  }, [state.hasMetaMask, window]);
 
   useEffect(() => {
     let timeoutId: number;
