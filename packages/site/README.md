@@ -13,7 +13,7 @@ Keyring snap.
 ## Environment Variables
 
 `SNAP_ORIGIN` defines the snap origin installed by the site. It defaults to
-`local:http://localhost:8081`.
+`local:http://localhost:8080`.
 
 `PATH_PREFIX` defines the public asset prefix for static deployments, such as
 GitHub Pages subdirectories.
