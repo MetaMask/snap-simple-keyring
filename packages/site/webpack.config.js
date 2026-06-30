@@ -1,5 +1,6 @@
 /* eslint-disable n/no-process-env */
 
+const CopyPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { resolve } = require('path');
 const TerserPlugin = require('terser-webpack-plugin');
@@ -103,6 +104,9 @@ module.exports = {
       NODE_ENV: mode,
       SNAP_ORIGIN: null,
     }),
+    new CopyPlugin({
+      patterns: [{ from: resolve(__dirname, 'static') }],
+    }),
   ],
   optimization: {
     minimize: mode === 'production',
@@ -123,8 +127,5 @@ module.exports = {
     host: 'localhost',
     port: 8000,
     historyApiFallback: true,
-    static: {
-      directory: resolve(__dirname, 'static'),
-    },
   },
 };
