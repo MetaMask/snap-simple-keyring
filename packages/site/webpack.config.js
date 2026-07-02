@@ -9,6 +9,23 @@ const { EnvironmentPlugin } = require('webpack');
 const mode =
   process.env.NODE_ENV === 'production' ? 'production' : 'development';
 
+const productionConfig = {
+  origin: 'npm:@metamask/snap-simple-keyring-snap',
+  output: 'static/js/[name].[contenthash:8].js',
+  devtool: 'source-map',
+  minimize: true,
+};
+
+const developmentConfig = {
+  origin: 'local:http://localhost:8080',
+  output: 'static/js/[name].js',
+  devtool: 'eval-source-map',
+  minimize: false,
+};
+
+const { origin, output, devtool, minimize } =
+  mode === 'production' ? productionConfig : developmentConfig;
+
 const normalizePublicPath = (pathPrefix) => {
   if (!pathPrefix) {
     return '/';
@@ -25,13 +42,10 @@ module.exports = {
   mode,
   entry: './src/index.tsx',
   stats: 'errors-only',
-  devtool: mode === 'production' ? 'source-map' : 'eval-source-map',
+  devtool,
   output: {
     path: resolve(__dirname, 'dist'),
-    filename:
-      mode === 'production'
-        ? 'static/js/[name].[contenthash:8].js'
-        : 'static/js/[name].js',
+    filename: output,
     assetModuleFilename: 'static/media/[name].[contenthash:8][ext]',
     clean: true,
     publicPath: normalizePublicPath(process.env.PATH_PREFIX),
@@ -102,14 +116,14 @@ module.exports = {
     }),
     new EnvironmentPlugin({
       NODE_ENV: mode,
-      SNAP_ORIGIN: null,
+      SNAP_ORIGIN: origin,
     }),
     new CopyPlugin({
       patterns: [{ from: resolve(__dirname, 'static') }],
     }),
   ],
   optimization: {
-    minimize: mode === 'production',
+    minimize,
     minimizer: [
       new TerserPlugin({
         minify: TerserPlugin.swcMinify,
