@@ -17,9 +17,10 @@ export const hasEthereumProvider = () => {
  * @returns The `window.ethereum` EIP-1193 provider.
  */
 export const getEthereumProvider = (): MetaMaskInpageProvider => {
-  if (!window.ethereum) {
+  if (!hasEthereumProvider()) {
     throw new Error('MetaMask is not available.');
   }
 
-  return window.ethereum;
+  // Type-cast here since we have already checked for its existence.
+  return window.ethereum as MetaMaskInpageProvider;
 };
