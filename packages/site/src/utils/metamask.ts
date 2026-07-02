@@ -1,4 +1,4 @@
-import { getEthereumProvider } from './provider';
+import { hasEthereumProvider } from './provider';
 
 /**
  * Detect if MetaMask is installed.
@@ -6,5 +6,5 @@ import { getEthereumProvider } from './provider';
  * @returns `true` if the MetaMask is installed, `false` otherwise.
  */
 export const hasMetaMask = async () => {
-  return getEthereumProvider() !== undefined;
+  return hasEthereumProvider();
 };
