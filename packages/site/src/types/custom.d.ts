@@ -9,7 +9,7 @@ declare global {
   /* eslint-disable @typescript-eslint/naming-convention */
   const process: {
     env: {
-      NODE_ENV?: 'development' | 'production' | 'test';
+      NODE_ENV?: 'development' | 'production';
       SNAP_ORIGIN?: string | null;
     };
   };
