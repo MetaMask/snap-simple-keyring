@@ -1,4 +1,4 @@
 {
   "ignore-patterns": ["dist/", "public/", ".cache/"],
-  "ignores": ["@swc/core"]
+  "ignores": ["@swc/core", "webpack-cli", "webpack-dev-server"]
 }
