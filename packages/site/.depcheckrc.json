@@ -1,9 +1,4 @@
 {
-  "ignore-patterns": [".cache/"],
-  "ignores": [
-    "@metamask/auto-changelog",
-    "@svgr/webpack",
-    "gatsby-plugin-*",
-    "react-scripts"
-  ]
+  "ignore-patterns": ["dist/", "public/", ".cache/"],
+  "ignores": ["@swc/core", "webpack-cli", "webpack-dev-server"]
 }

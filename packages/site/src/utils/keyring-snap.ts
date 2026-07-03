@@ -1,5 +1,7 @@
 import type { KeyringAccount, KeyringRequest } from '@metamask/keyring-api';
 
+import { getEthereumProvider } from './provider';
+
 export type KeyringState = {
   pendingRequests: KeyringRequest[];
   accounts: KeyringAccount[];
@@ -17,7 +19,7 @@ export async function sendMessageToSnap(
   snapId: string,
   request: any,
 ): Promise<unknown> {
-  return window.ethereum.request({
+  return getEthereumProvider().request({
     method: 'wallet_invokeSnap',
     params: {
       snapId,

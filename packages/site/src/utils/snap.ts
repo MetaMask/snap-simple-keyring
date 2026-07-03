@@ -1,3 +1,4 @@
+import { getEthereumProvider } from './provider';
 import snapPackageInfo from '../../../snap/package.json';
 // Snap version is read from the snap package's manifest at build time so the
 // dapp installs whichever snap version was bundled with this site release.
@@ -10,7 +11,7 @@ import type { GetSnapsResponse, Snap } from '../types';
  * @returns The snaps installed in MetaMask.
  */
 export const getSnaps = async (): Promise<GetSnapsResponse> => {
-  return (await window.ethereum.request({
+  return (await getEthereumProvider().request({
     method: 'wallet_getSnaps',
   })) as unknown as GetSnapsResponse;
 };
@@ -27,7 +28,7 @@ export const connectSnap = async (
     version: snapPackageInfo.version,
   },
 ) => {
-  await window.ethereum.request({
+  await getEthereumProvider().request({
     method: 'wallet_requestSnaps',
     params: {
       [snapId]: params,
@@ -60,7 +61,7 @@ export const getSnap = async (version?: string): Promise<Snap | undefined> => {
  */
 
 export const sendHello = async () => {
-  await window.ethereum.request({
+  await getEthereumProvider().request({
     method: 'wallet_invokeSnap',
     params: {
       snapId: defaultSnapOrigin,
@@ -74,7 +75,7 @@ export const sendHello = async () => {
  */
 
 export const toggleSynchronousApprovals = async () => {
-  await window.ethereum.request({
+  await getEthereumProvider().request({
     method: 'wallet_invokeSnap',
     params: {
       snapId: defaultSnapOrigin,
@@ -84,7 +85,7 @@ export const toggleSynchronousApprovals = async () => {
 };
 
 export const isSynchronousMode = async (): Promise<boolean> => {
-  return (await window.ethereum.request({
+  return (await getEthereumProvider().request({
     method: 'wallet_invokeSnap',
     params: {
       snapId: defaultSnapOrigin,

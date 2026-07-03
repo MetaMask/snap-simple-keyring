@@ -64,10 +64,6 @@ const reducer: Reducer<MetamaskState, MetamaskDispatch> = (state, action) => {
  * @returns JSX.
  */
 export const MetaMaskProvider = ({ children }: { children: ReactNode }) => {
-  if (typeof window === 'undefined') {
-    return <>{children}</>;
-  }
-
   const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
@@ -103,7 +99,10 @@ export const MetaMaskProvider = ({ children }: { children: ReactNode }) => {
     };
 
     detectInstallation().catch(console.error);
-  }, [state.hasMetaMask, window.ethereum]);
+  }, [
+    state.hasMetaMask,
+    window.ethereum /* Trigger reactive updates when MetaMask is installed or removed */,
+  ]);
 
   useEffect(() => {
     let timeoutId: number;
