@@ -26,6 +26,8 @@ setup the development environment:
 yarn install && yarn start
 ```
 
+If you encounter any errors, ensure you're using Node.js version 18 (LTS).
+
 ## Cloning
 
 This repository contains GitHub Actions that you may find useful, see
